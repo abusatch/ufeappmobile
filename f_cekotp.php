@@ -51,7 +51,7 @@ if($de2 == 0){
   
   
     $to = "abusatch@gmail.com,".$kg2['username'];
-$subject = "Pemberitahuan Akun";
+$subject = "Demande de déblocage refusée";
 
 $message = "
 <html>
