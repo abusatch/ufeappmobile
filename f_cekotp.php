@@ -2,7 +2,7 @@
 	include 'db.php';
 // 	$response = array();
 
-	
+// test
 // 		$response['result'] = "0";
 // 		$response['msg'] = "tes".$_POST['emailtujuan'];
 		  
