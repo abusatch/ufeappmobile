@@ -59,7 +59,8 @@ $message = "
     </tr>
     </table>
 
-<p style='font-size:15px;text-align:justify;'><b>Bonjour ".$namanya.",</b> <br><br><br>Terima kasih, tim kami akan mereview permintaan anda, jika permintaan anda diterima, kami akan memberitahukan via email
+<p style='font-size:15px;text-align:justify;'><b>Bonjour ".$namanya.",</b> <br><br><br>
+Merci, notre équipe examinera votre demande, si votre demande est acceptée, nous vous en informerons par e-mail
 </p>
 <br>
 <table style='width:100%;border-top:1px solid #D1D1D1;margin-top:20px;'>
