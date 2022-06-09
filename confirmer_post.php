@@ -92,10 +92,7 @@ $headers .= 'From: UFE Indonésie<info@ufe-section-indonesie.org>' . "\r\n";
 $headers .= 'Cc: abusatch@gmail.com' . "\r\n";
 
 mail($to,$subject,$message,$headers);
-        ?>
-
-
-<?php
+        ?><?php
 	
 
 	
@@ -166,9 +163,7 @@ $qw[] = $tyu['token_push'];
 	}
 
 }
-?>
-
-<?php 
+?><?php 
 
 $bagian = $_GET['dsafds'];
 $nama = $_GET['fdfvcx'];
@@ -202,9 +197,7 @@ $callNoti = new startSendNotification();
 $callNoti->sendNoti($titleNoti, $bodyNoti,$gambarrr);
 
 
-?>
-
-<?php
+?><?php
         
         echo "success";
     }
