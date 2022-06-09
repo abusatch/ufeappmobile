@@ -243,8 +243,8 @@ $fro2 = mysqli_fetch_array($fro);
 
 
 // How to use
-$titleNoti = "Dear Member";
-$bodyNoti = "Masa Aktif Member Anda akan segera habis";
+$titleNoti = "Cher Membre";
+$bodyNoti = "La période active de votre membre est sur le point d'expirer";
 $actionNoti = ".creche.Creche2Activity";
 $gambarrr = "https://icons.iconarchive.com/icons/hopstarter/gloss-mac/256/Get-Info-icon.png";
 $callNoti = new startSendNotification();

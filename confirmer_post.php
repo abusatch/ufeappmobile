@@ -92,7 +92,119 @@ $headers .= 'From: UFE Indonésie<info@ufe-section-indonesie.org>' . "\r\n";
 $headers .= 'Cc: abusatch@gmail.com' . "\r\n";
 
 mail($to,$subject,$message,$headers);
-        
+        ?>
+
+
+<?php
+	
+
+	
+date_default_timezone_set('Asia/Jakarta');
+
+$hariini = date('Y-m-d');
+
+$tanggal7 = date('Y-m-d', strtotime($hariini . ' +7 day'));
+	
+	
+class startSendNotification
+{
+    
+   
+	
+		function sendNoti($titleNoti, $bodyNoti,$gambarrr){
+
+		define( 'API_ACCESS_KEY', 'AAAARVfjooY:APA91bEAKbWGNffjb80WnOsnE4U_iNWJOUhW1UqiMsnLiJXah2oFmEcn2Y5EcBvUeCWHWgAfBwmFZHhnCdKvyvrUf4m7okrNCICisXtzNyxfKu4F8FxfhXcnxPICACaUrLQJekNqYZPy');
+        include 'db.php';
+
+
+ date_default_timezone_set('Asia/Jakarta');
+
+$hariini = date('Y-m-d');
+
+$tanggal7 = date('Y-m-d', strtotime($hariini . ' +7 day'));
+
+		$ewww = mysqli_query($koneksi,"select * from user where username = '$_POST[email]'");
+while ($tyu = mysqli_fetch_array($ewww)){
+	
+	
+$qw[] = $tyu['token_push'];
+
+
+}
+		$fcmMsg = array(
+			'title' => $titleNoti,
+			'body' => $bodyNoti,
+				'icon' => 'image/look24-logo-s.png',
+            'sound' => 'default',
+            'image' => $gambarrr
+    
+		);
+		
+		$fcmFields = array(
+	
+			'registration_ids' => $qw,
+			
+			'priority' => 'high',
+			'notification' => $fcmMsg
+		);
+
+		$headers = array(
+			'Authorization: key=' . API_ACCESS_KEY,
+			'Content-Type: application/json'
+		);
+		
+		$ch = curl_init();
+		curl_setopt( $ch,CURLOPT_URL, 'https://fcm.googleapis.com/fcm/send' );
+		curl_setopt( $ch,CURLOPT_POST, true );
+		curl_setopt( $ch,CURLOPT_HTTPHEADER, $headers );
+		curl_setopt( $ch,CURLOPT_RETURNTRANSFER, true );
+		curl_setopt( $ch,CURLOPT_SSL_VERIFYPEER, false );
+		curl_setopt( $ch,CURLOPT_POSTFIELDS, json_encode( $fcmFields ) );
+		$result = curl_exec($ch );
+		curl_close( $ch );
+		echo $result . "\n\n".$qw;
+	}
+
+}
+?>
+
+<?php 
+
+$bagian = $_GET['dsafds'];
+$nama = $_GET['fdfvcx'];
+$tujuan = $_GET['vsde'];
+
+
+
+
+include('db.php');
+
+
+$ewww = mysqli_query($koneksi,"select * from user where username = '$_POST[email]'");
+$ewww2 = mysqli_fetch_assoc($ewww);
+
+if(empty($ewww2['first_name'])){
+    $namanya = $ewww2['username'];
+}else{
+    $namanya = $ewww2['first_name']." ".$ewww2['second_name'];
+}
+
+
+$titleNoti = "Bonjour ".$namanya;
+$bodyNoti = "Merci, notre équipe examinera votre demande, si votre demande est acceptée, nous vous en informerons par e-mail";
+$actionNoti = ".creche.Creche2Activity";
+$gambarrr = "https://icons.iconarchive.com/icons/hopstarter/gloss-mac/256/Get-Info-icon.png";
+$callNoti = new startSendNotification();
+
+
+
+
+$callNoti->sendNoti($titleNoti, $bodyNoti,$gambarrr);
+
+
+?>
+
+<?php
         
         echo "success";
     }
