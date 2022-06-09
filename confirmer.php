@@ -58,7 +58,7 @@ echo "Access denied";
                </table>
                
                  <table id="tb5" style="width:100%;margin-top:20px;">
-                   <tr><td style="text-align:left;">Phone Number:</td></tr>
+                   <tr><td style="text-align:left;">Numéro de téléphone:</td></tr>
                </table>
                
           
@@ -76,7 +76,7 @@ echo "Access denied";
                </table>
                
                 <table id="tb4" style="width:100%;margin-top:20px;">
-                   <tr><td style="text-align:left;">Reason:</td></tr>
+                   <tr><td style="text-align:left;">Raison:</td></tr>
                </table>
                
                <?php 
@@ -106,7 +106,7 @@ echo "Access denied";
                   onclick="subb()"
                    style="cursor:pointer;
                    border:1px blue solid;padding:5px 20px 5px 20px;
-                   margin-right:2px;color:blue;border-radius:5px;">SUBMIT</span></td></tr>
+                   margin-right:2px;color:blue;border-radius:5px;">NOUS FAIRE PARVENIR</span></td></tr>
                </table>
                
                <script>
