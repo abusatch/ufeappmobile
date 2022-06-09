@@ -1,7 +1,8 @@
 deployment:
   tasks:
     - export DEPLOYPATH=/home/t49403/public_html/ufeapp/
-    - /bin/cp index.php $DEPLOYPATH
-    - /bin/cp f_cekotp.php $DEPLOYPATH
-    - /bin/cp f_login.php $DEPLOYPATH
-    - /bin/cp post_notif.php $DEPLOYPATH
+    - /bin/cp -R index.php $DEPLOYPATH
+    - /bin/cp -R f_cekotp.php $DEPLOYPATH
+    - /bin/cp -R f_login.php $DEPLOYPATH
+    - /bin/cp -R post_notif.php $DEPLOYPATH
+    - /bin/cp -R admin $DEPLOYPATH
