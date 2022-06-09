@@ -97,7 +97,7 @@ echo "Access denied";
                </table>
                
                  <table id="tb2" style="display:none;width:100%;margin-top:20px;">
-                   <tr><td style="text-align:left;color:blue;">Thankyou, Pesan Anda telah kami simpan. Ikuti perkembangan selanjutnya melalui informasi yang kami kirim via email</td></tr>
+                   <tr><td style="text-align:left;color:blue;">Merci, Nous avons enregistré votre message. Suivez les développements ultérieurs grâce aux informations que nous envoyons par e-mail</td></tr>
                </table>
                
                
@@ -114,9 +114,9 @@ echo "Access denied";
                   
                   
                   if(document.getElementById("reasonn").value == ""){
-                      alert("Reason cannot be empty");
+                      alert("La raison ne peut pas être vide");
                   }else if(document.getElementById("mobilee").value == ""){
-                       alert("Phone number cannot be empty");
+                       alert("Le numéro de téléphone ne peut pas être vide");
                   }else{
                   
                         $.post("confirmer_post.php",
