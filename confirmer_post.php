@@ -197,9 +197,7 @@ $callNoti = new startSendNotification();
 $callNoti->sendNoti($titleNoti, $bodyNoti,$gambarrr);
 
 
-?><?php
-        
-        echo "success";
+?><?php echo "success";
     }
 }
 

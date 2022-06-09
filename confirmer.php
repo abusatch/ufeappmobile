@@ -137,7 +137,7 @@ echo "Access denied";
     document.getElementById("tb6").style.display = "none";              
         document.getElementById("tb2").style.display = "inherit";
       }else{
-    alert("Error");
+    alert("Error"+data+"-");
       }
   });
                   }
