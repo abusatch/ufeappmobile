@@ -1,4 +1,7 @@
-<?php if($_COOKIE['email'] == ""){ ?>
+<?php if($_COOKIE['email'] == ""){ 
+  //oke
+  
+  ?>
 
 
 
