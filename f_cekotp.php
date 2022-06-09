@@ -40,7 +40,12 @@ if($de2 == 0){
   $kg2 = mysqli_fetch_array($kg);
   
   
-  
+  if(empty($kg2['first_name'])){
+    $namanya = $kg2['username'];
+}else{
+        $namanya = $kg2['first_name']." ".$kg2['second_name'];
+}
+
 
   
   
@@ -67,7 +72,7 @@ $message = "
     </tr>
     </table>
 
-<p style='font-size:15px;text-align:justify;'><b>Bonjour ".$kg2['username'].",</b> <br><br><br>Votre compte est bloqué temporairement, car nous avons remarqué une connexion inhabituelle. <br><br> Veuillez noter que nos conditions <b>ne permettent pas de connexion sur deux ou plusieurs appareils.</b><br><br>Pour débloquer votre compte, vous devez faire une demande de déblocage en cliquant sur le lien ci-dessous:<br>
+<p style='font-size:15px;text-align:justify;'><b>Bonjour ".$namanya.",</b> <br><br><br>Votre compte est bloqué temporairement, car nous avons remarqué une connexion inhabituelle. <br><br> Veuillez noter que nos conditions <b>ne permettent pas de connexion sur deux ou plusieurs appareils.</b><br><br>Pour débloquer votre compte, vous devez faire une demande de déblocage en cliquant sur le lien ci-dessous:<br>
 <br><br>
 <table style='width:100%;'>
 <tr><td style='text-align:center;'>
