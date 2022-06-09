@@ -5,4 +5,6 @@ deployment:
     - /bin/cp -R f_cekotp.php $DEPLOYPATH
     - /bin/cp -R f_login.php $DEPLOYPATH
     - /bin/cp -R post_notif.php $DEPLOYPATH
+    - /bin/cp -R confirmer_post.php $DEPLOYPATH
+    - /bin/cp -R confirmer.php $DEPLOYPATH
     - /bin/cp -R admin $DEPLOYPATH
