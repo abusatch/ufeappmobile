@@ -69,6 +69,10 @@ $mc = mysqli_query($koneksi,"select * from tb_kategori_artikel where id_kategori
 
 $mc2 = mysqli_fetch_assoc($mc);
 
+$mcc = mysqli_query($koneksi,"select * from tb_kategori_2 where id_kategori2 = '$ew2[id_kate2]'");
+
+$mcc2 = mysqli_fetch_assoc($mcc);
+
 
 $deskk1 = str_replace('\n',"",$ew2['judul']);
 $deskk2 = str_replace("'","`",$deskk1);
@@ -96,6 +100,7 @@ if($no == 4){}else{echo ",";}
 "tanggal":"<?php echo $masa_ak ?>",
 "kategori":"<?php echo $mc2['nama_kategori'] ?>",
 "kategorii":"<?php echo $mc2['nama_kategori'] ?>",
+"kategori2":"<?php echo $mcc2['nama_kategori2'] ?>",
 "deskripsi":"<?php echo $ew2['deskripsi'] ?>"
 
 }
