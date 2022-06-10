@@ -11,3 +11,8 @@ deployment:
     - /bin/cp -R helper.php $DEPLOYPATH
     - /bin/cp -R reading_advert.php $DEPLOYPATH
     - /bin/cp -R tambah_advert.php $DEPLOYPATH
+
+deployment:
+  task:
+  - export DEPLOYPATH=/home/t49403/public_html/ufeapp/images/advert/
+  - /bin/cp -R images/advert/test.php $DEPLOYPATH
