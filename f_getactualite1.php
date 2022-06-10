@@ -97,7 +97,7 @@ $deskk7 = str_replace(".","",$deskk6);
 
 "judul":"<?php echo $deskk7 ?>",
 "kategori":"<?php echo $mc2['nama_kategori'] ?>",
-"kategori2":"<?php echo $mc2['nama_kategori2'] ?>",
+"kategori2":"<?php echo $mcc2['nama_kategori2'] ?>",
 "tanggal":"<?php echo $masa_ak ?>",
 "deskripsi":"<?php echo $ew2['deskripsi'] ?>"
 
