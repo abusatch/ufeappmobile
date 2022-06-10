@@ -93,7 +93,7 @@ if(!empty($email)) {
         "id_member" => $row->id_member,
         "judul" => $deskk13,
         "deskripsi" => substr($desk10,0,100),
-        "gambar" => "https://ufe-section-indonesie.org/ufeapp/images/actualite/".$row->gambar,
+        "gambar" => "https://ufe-section-indonesie.org/ufeapp/images/advert/".$row->gambar,
         "tanggal" => $row->tanggal,
         "tanggal2" => $row->tanggal2,
         "url" => $row->linkweb,
