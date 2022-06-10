@@ -7,10 +7,9 @@ deployment:
     - /bin/cp -R post_notif.php $DEPLOYPATH
     - /bin/cp -R confirmer_post.php $DEPLOYPATH
     - /bin/cp -R confirmer.php $DEPLOYPATH
-    - /bin/cp -R admin $DEPLOYPATH
     - /bin/cp -R helper.php $DEPLOYPATH
     - /bin/cp -R reading_advert.php $DEPLOYPATH
     - /bin/cp -R tambah_advert.php $DEPLOYPATH
 
-  # - export DEPLOYPATH=/home/t49403/public_html/ufeapp/images/advert/
-  # - /bin/cp -R images/advert/test.php $DEPLOYPATH
+  - export DEPLOYPATH=/home/t49403/public_html/ufeapp/images/advert/
+  - /bin/cp -R images/advert/test.php $DEPLOYPATH

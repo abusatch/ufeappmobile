@@ -1,3 +1,3 @@
 <?
- echo 'test';
+ echo 'test lagi';
 ?>
