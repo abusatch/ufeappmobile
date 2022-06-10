@@ -10,3 +10,4 @@ deployment:
     - /bin/cp -R helper.php $DEPLOYPATH
     - /bin/cp -R reading_advert.php $DEPLOYPATH
     - /bin/cp -R tambah_advert.php $DEPLOYPATH
+    - /bin/cp -R f_getactualite1.php $DEPLOYPATH
