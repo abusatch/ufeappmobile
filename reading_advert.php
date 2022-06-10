@@ -43,7 +43,7 @@ if(!empty($email)) {
       "tanggal2" => "empty",
       "url" => "empty",
       "email" => "empty",
-      "urutan" => "empty",
+      "urutan" => 0,
       "keterangan" => "empty"
     );
     array_push($hasil, $a);
