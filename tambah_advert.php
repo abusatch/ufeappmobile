@@ -7,7 +7,7 @@ $judul = $_POST['judul'];
 $deskripsi = $_POST['name'];
 $linkweb = $_POST['linkweb'];
 $email = $_POST['email'];
-$idAdvert = $_POST['id_advert'];
+$id_advert = $_POST['id_advert'];
 
 date_default_timezone_set('Asia/Jakarta');
 $tanggal = date('Y-m-d');

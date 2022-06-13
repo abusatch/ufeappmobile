@@ -26,7 +26,7 @@ if(!empty($email)) {
     if($jenis == "pending"){
       $sql_get_data = "SELECT * FROM tb_advert where id_member = '$idUser' and keterangan = 'pending' and visibility = '1' ORDER BY id_advert DESC limit 5 offset $offset";
     } else {
-      $sql_get_data = "SELECT * FROM tb_advert where id_member = '$idUser' and keterangan = 'release' and visibility = '1' ORDER BY id_advert DES Climit 5 offset $offset";
+      $sql_get_data = "SELECT * FROM tb_advert where id_member = '$idUser' and keterangan = 'release' and visibility = '1' ORDER BY id_advert DESC limit 5 offset $offset";
     }   
   }
   
