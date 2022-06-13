@@ -31,11 +31,11 @@ $desk7 = str_replace(".","",$desk6);
 "tree":[
     <?php 
     $nooo = 1;
-        $nk = mysqli_query($koneksi,"select * from tb_demar2 where id_kategori = '$ew2[id_menu]'");
+        $nk = mysqli_query($koneksi,"select * from tb_demar2 where id_kategori = '$ew2[id_menu]' and visibility = '1'");
         while($nk2 = mysqli_fetch_array($nk)){
             if($nooo == 1){}else{echo ",";}
         ?>
-           { "text" : "Child 1","text3" : "Child 3" }
+           { "judull" : "<?php echo $nk2['judul'] ?>","gambarr" : "https://ufe-section-indonesie.org/ufeapp/images/actualite/<?php echo $nk2['gambar'] ?>" }
         
            <?php $nooo++;} ?>
                     ],
