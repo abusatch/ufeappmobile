@@ -36,6 +36,7 @@ if(!empty($email)) {
     $a = array(
       "id_actualite" => "empty",
       "id_member" => "empty",
+      "id_category" => "empty",
       "judul" => "empty",
       "deskripsi" => "empty",
       "gambar" => "empty",
@@ -91,6 +92,7 @@ if(!empty($email)) {
       $a = array(
         "id_actualite" => $row->id_advert,
         "id_member" => $row->id_member,
+        "id_category" => $row->id_category,
         "judul" => $deskk13,
         "deskripsi" => substr($desk10,0,100),
         "gambar" => "https://ufe-section-indonesie.org/ufeapp/images/advert/".$row->gambar,
