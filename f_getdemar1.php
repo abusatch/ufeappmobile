@@ -25,6 +25,8 @@ $desk7 = str_replace(".","",$desk6);
 "id_actualite":"<?php echo $ew2['id_menu'] ?>",
 "id_actualite2":"<?php echo $ew2['id_menu'] ?>",
 "url":"<?php echo $ew2['url'] ?>",
+"menu_bg" : "<?php echo $ew2['menu_bg'] ?>",
+"menu_drop" : "<?php echo $ew2['menu_drop1'] ?>",
 "gambar":"https://ufe-section-indonesie.org/ufeapp/images/menu/<?php echo $ew2['gambar2'] ?>",
 
 "judul":"<?php echo $ew2['nama_menu'] ?>",
@@ -37,8 +39,6 @@ $desk7 = str_replace(".","",$desk6);
         ?>
            { "judull" : "<?php echo $nk2['judul'] ?>",
             "gambarr" : "https://ufe-section-indonesie.org/ufeapp/images/menu/<?php echo $nk2['gambar'] ?>",
-            "menu_bg" : "<?php echo $nk2['menu_bg'] ?>",
-            "menu_drop" : "<?php echo $nk2['menu_drop1'] ?>",
             "id_kategorii" : "<?php echo $nk2['id_kategori'] ?>"
         }
         
