@@ -1,8 +1,6 @@
 deployment:
   tasks:
-    # - export DEPLOYPATH=/home/t49403/public_html/ufeapp/
-    - export DEPLOYPATH=/home/t49403/public_html/ufeapp/download/
-    - /bin/cp -R download/ufe.apk $DEPLOYPATH
+    - export DEPLOYPATH=/home/t49403/public_html/ufeapp/
     - /bin/cp -R index.php $DEPLOYPATH
     - /bin/cp -R f_cekotp.php $DEPLOYPATH
     - /bin/cp -R f_login.php $DEPLOYPATH
@@ -14,5 +12,6 @@ deployment:
     - /bin/cp -R tambah_advert.php $DEPLOYPATH
     - /bin/cp -R f_getactualite1.php $DEPLOYPATH
     - /bin/cp -R f_getactualite2.php $DEPLOYPATH
+    - /bin/cp -R f_getdemar1tree.php $DEPLOYPATH
 
     
