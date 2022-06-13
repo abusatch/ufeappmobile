@@ -29,8 +29,15 @@ $desk7 = str_replace(".","",$desk6);
 
 "judul":"<?php echo $ew2['nama_menu'] ?>",
 "tree":[
-           { "text" : "Child 1","text3" : "Child 3" },
-           { "text2" : "Child 2" }
+    <?php 
+    $nooo = 1;
+        $nk = mysqli_query($koneksi,"select * from tb_demar2 where id_kategori = '$ew2[id_menu]'");
+        while($nk2 = mysqli_fetch_array($nk)){
+            if($nooo == 1){}else{echo ",";}
+        ?>
+           { "text" : "Child 1","text3" : "Child 3" }
+        
+           <?php $nooo++;} ?>
                     ],
 "deskripsi":"<?php echo $desk7; ?>"
 
