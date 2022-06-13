@@ -28,6 +28,10 @@ $desk7 = str_replace(".","",$desk6);
 "gambar":"https://ufe-section-indonesie.org/ufeapp/images/menu/<?php echo $ew2['gambar2'] ?>",
 
 "judul":"<?php echo $ew2['nama_menu'] ?>",
+"tree":[
+           { 'text' : 'Child 1','text3' : 'Child 3' },
+           { 'text2' : 'Child 2' },
+                    ],
 "deskripsi":"<?php echo $desk7; ?>"
 
 }
