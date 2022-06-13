@@ -29,8 +29,8 @@ $desk7 = str_replace(".","",$desk6);
 
 "judul":"<?php echo $ew2['nama_menu'] ?>",
 "tree":[
-           { 'text' : 'Child 1','text3' : 'Child 3' },
-           { 'text2' : 'Child 2' }
+           { "text" : "Child 1","text3" : "Child 3" },
+           { "text2" : "Child 2" }
                     ],
 "deskripsi":"<?php echo $desk7; ?>"
 
