@@ -15,5 +15,6 @@ deployment:
     - /bin/cp -R f_getactualite2.php $DEPLOYPATH
     - /bin/cp -R f_getdemar1tree.php $DEPLOYPATH
     - /bin/cp -R f_getdemar1.php $DEPLOYPATH
+    - /bin/cp -R get_advert_category.php $DEPLOYPATH
 
     
