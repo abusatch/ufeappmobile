@@ -35,7 +35,10 @@ $desk7 = str_replace(".","",$desk6);
         while($nk2 = mysqli_fetch_array($nk)){
             if($nooo == 1){}else{echo ",";}
         ?>
-           { "judull" : "<?php echo $nk2['judul'] ?>","gambarr" : "https://ufe-section-indonesie.org/ufeapp/images/menu/<?php echo $nk2['gambar'] ?>",
+           { "judull" : "<?php echo $nk2['judul'] ?>",
+            "gambarr" : "https://ufe-section-indonesie.org/ufeapp/images/menu/<?php echo $nk2['gambar'] ?>",
+            "menu_bg" : "<?php echo $nk2['menu_bg'] ?>",
+            "menu_drop" : "<?php echo $nk2['menu_drop1'] ?>",
             "id_kategorii" : "<?php echo $nk2['id_kategori'] ?>"
         }
         
