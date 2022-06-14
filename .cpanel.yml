@@ -12,6 +12,7 @@ deployment:
     - /bin/cp -R tambah_advert.php $DEPLOYPATH
     - /bin/cp -R delete_advert.php $DEPLOYPATH
     - /bin/cp -R f_getactualite1.php $DEPLOYPATH
+    - /bin/cp -R f_getactualite1member.php $DEPLOYPATH
     - /bin/cp -R f_getactualite2.php $DEPLOYPATH
     - /bin/cp -R f_getdemar1tree.php $DEPLOYPATH
     - /bin/cp -R f_getdemar1.php $DEPLOYPATH
