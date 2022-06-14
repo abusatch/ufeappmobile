@@ -9,7 +9,6 @@ $kategori = $_GET['kategori'];
 $id_advert = $_GET['id_advert'];
 
 $where = "";
-$offset = "";
 
 if(!empty($email)) {
   $sql = "SELECT * from user where username = '$email'";
@@ -32,13 +31,12 @@ if(!empty($id_advert)) {
   $where = " AND id_advert = '$id_advert'";
 }
 
-if(!empty($halaman)) {
-  $urutan = (5 * $halaman )+1;
-  $jmloffset = $halaman * 5;
-  $offset = " offset $jmloffset";
-} else {
-  $urutan = 1;
+if(empty($halaman)) {
+  $halaman = 0;  
 }
+
+$urutan = $halaman + 1;
+$offset = " offset $halaman";
 
 $sql_get_data = "SELECT a.*, b.username, b.first_name, b.second_name
   FROM tb_advert a
@@ -130,6 +128,6 @@ if(count($data) == 0) {
   }
 }
   
-AFhelper::kirimJson($hasil, $sql_get_data);
+AFhelper::kirimJson($hasil);
 
 ?>
