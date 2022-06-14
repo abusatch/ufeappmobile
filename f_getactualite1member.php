@@ -88,15 +88,19 @@ $deskk6 = str_replace("<br>","",$deskk5);
 $deskk7 = str_replace(".","",$deskk6);
 
 
+
+$nf = mysqli_query($koneksi,"select * from user where idUser = '$ew2[id_member]'");
+$nf2 = mysqli_fetch_assoc($nf);
+
 ?>
 {
-"id_actualite":"<?php echo $ew2['id_actualite'] ?>",
-"id_actualite2":"<?php echo $ew2['id_actualite'] ?>",
-"url":"<?php echo $ew2['url'] ?>",
-"gambar":"https://ufe-section-indonesie.org/ufeapp/images/actualite/<?php echo $ew2['gambar'] ?>",
+"id_actualite":"<?php echo $ew2['id_advert'] ?>",
+"id_actualite2":"<?php echo $nf2['first_name']." ".$nf2['second_name']; ?>",
+"url":"<?php echo $ew2['linkweb'] ?>",
+"gambar":"https://ufe-section-indonesie.org/ufeapp/images/advert/<?php echo $ew2['gambar'] ?>",
 
 "judul":"<?php echo $deskk7 ?>",
-"kategori":"<?php echo $mc2['nama_kategori'] ?>",
+"kategori":"https://ufe-section-indonesie.org/ufeapp/images/propic/<?php echo $nf2['propic'] ?>",
 "kategori2":"<?php echo $mcc2['nama_kategori2'] ?>",
 "tanggal":"<?php echo $masa_ak ?>",
 "deskripsi":"<?php echo $ew2['deskripsi'] ?>"
