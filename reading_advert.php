@@ -107,6 +107,8 @@ if(count($data) == 0) {
     $deskk12 = str_replace("à","-akiri-",$deskk11);
     $deskk13 = str_replace("è","-ekiri-",$deskk12);
 
+    $tgl = explode("-", $row->tanggal);
+
     $a = array(
       "id_advert" => $row->id_advert,
       "id_member" => $row->id_member,
@@ -114,7 +116,7 @@ if(count($data) == 0) {
       "judul" => $deskk13,
       "deskripsi" => substr($desk10,0,100),
       "gambar" => "https://ufe-section-indonesie.org/ufeapp/images/advert/".$row->gambar,
-      "tanggal" => $row->tanggal,
+      "tanggal" => $tgl[2]."/".$tgl[1]."/".$tgl[0],
       "tanggal2" => $row->tanggal2,
       "url" => $row->linkweb,
       "email" => $row->username,
