@@ -95,14 +95,14 @@ $nf2 = mysqli_fetch_assoc($nf);
 ?>
 {
 "id_actualite":"<?php echo $ew2['id_advert'] ?>",
-"id_actualite2":"<?php echo $nf2['first_name']." ".$nf2['second_name']; ?>",
+"id_actualite2":"<?php echo  $nf2['first_name']." ".$nf2['second_name']; ?>",
 "url":"<?php echo $ew2['linkweb'] ?>",
 "gambar":"https://ufe-section-indonesie.org/ufeapp/images/advert/<?php echo $ew2['gambar'] ?>",
 
 "judul":"<?php echo $deskk7 ?>",
 "kategori":"https://ufe-section-indonesie.org/ufeapp/images/propic/<?php echo $nf2['propic'] ?>",
 "kategori2":"<?php echo $mcc2['nama_kategori2'] ?>",
-"tanggal":"<?php echo $masa_ak ?>",
+"tanggal":"<?php echo $nf2['first_name']." ".$nf2['second_name']." - ".date('d/M/y', strtotime($ew2['tanggal'];)); ?>",
 "deskripsi":"<?php echo $ew2['deskripsi'] ?>"
 
 }
