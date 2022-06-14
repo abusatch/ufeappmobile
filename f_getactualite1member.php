@@ -102,7 +102,7 @@ $nf2 = mysqli_fetch_assoc($nf);
 "judul":"<?php echo $deskk7 ?>",
 "kategori":"https://ufe-section-indonesie.org/ufeapp/images/propic/<?php echo $nf2['propic'] ?>",
 "kategori2":"<?php echo $mcc2['nama_kategori2'] ?>",
-"tanggal":"<?php echo $nf2['first_name']." ".$nf2['second_name']." - ".date('d/M/y', strtotime($ew2['tanggal'];)); ?>",
+"tanggal":"<?php echo $nf2['first_name']." ".$nf2['second_name']." - ".date('d/M/y', strtotime($ew2['tanggal'])); ?>",
 "deskripsi":"<?php echo $ew2['deskripsi'] ?>"
 
 }
