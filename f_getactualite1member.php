@@ -3,7 +3,7 @@
 echo '[';
 include('db.php');
 $no = 1;
-$ew = mysqli_query($koneksi,"select * from tb_actualite where visibility = '1' order by id_actualite desc limit 3");
+$ew = mysqli_query($koneksi,"select * from tb_advert where visibility = '1' order by id_advert desc limit 3");
 while($ew2 = mysqli_fetch_array($ew)){
 if($no == 1){}else{echo ",";}
 
