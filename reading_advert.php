@@ -46,86 +46,26 @@ $sql_get_data = "SELECT a.*, b.username, b.first_name, b.second_name
 $data = AFhelper::dbSelectAll($sql_get_data);
 $hasil = array();
 
-if(count($data) == 0) {
+foreach ($data as $row) {
+  $tgl = explode("-", $row->tanggal);
   $a = array(
-    "id_advert" => "empty",
-    "id_member" => "empty",
-    "id_category" => "empty",
-    "judul" => "empty",
-    "deskripsi" => "empty",
-    "gambar" => "empty",
-    "tanggal" => "empty",
-    "tanggal2" => "empty",
-    "url" => "empty",
-    "email" => "empty",
-    "urutan" => 0,
-    "keterangan" => "empty",
-    "first_name" => "empty",
-    "second_name" => "empty"
+    "id_advert" => $row->id_advert,
+    "id_member" => $row->id_member,
+    "id_category" => $row->id_category,
+    "judul" => AFhelper::formatText($row->judul),
+    "deskripsi" => AFhelper::formatText($row->deskripsi),
+    "gambar" => "https://ufe-section-indonesie.org/ufeapp/images/advert/".$row->gambar,
+    "tanggal" => $tgl[2]."/".$tgl[1]."/".$tgl[0],
+    "tanggal2" => $row->tanggal2,
+    "url" => $row->linkweb,
+    "email" => $row->username,
+    "urutan" => $urutan,
+    "keterangan" =>  AFhelper::formatText($row->keterangan),
+    "first_name" => $row->first_name,
+    "second_name" => $row->second_name
   );
   array_push($hasil, $a);
-} else {
-  foreach ($data as $row) {
-    $desk1 = str_replace('\n',"-enter-",$row->deskripsi);
-    $desk2 = str_replace("'","`",$desk1);
-    $desk3 = str_replace('"',"-petikdua-",$desk2);
-    $desk4 = str_replace(str_split('\\/:*?"<>|'), ' ', $desk3);
-    $desk5 = trim(preg_replace('/\s\s+/', ' ', $desk4));
-    $desk6 = str_replace("<br>","-enter-",$desk5);
-    $desk7 = str_replace(".","-titik-",$desk6);
-    $desk8 = nl2br($desk7);
-    $desk9 = preg_replace("/\r\n|\r|\n/", '-enter-', $desk8);
-    $desk10 = str_replace(array("\r\n","\r","\n","\\r","\\n","\\r\\n"),"-enter-",$desk9);
-
-    $deskx1 = str_replace('\n',"-enter-",$row->keterangan);
-    $deskx2 = str_replace("'","`",$deskx1);
-    $deskx3 = str_replace('"',"-petikdua-",$deskx2);
-    $deskx4 = str_replace(str_split('\\/:*?"<>|'), ' ', $deskx3);
-    $deskx5 = trim(preg_replace('/\s\s+/', ' ', $deskx4));
-    $deskx6 = str_replace("<br>","-enter-",$deskx5);
-    $deskx7 = str_replace(".","-titik-",$deskx6);
-    $deskx8 = str_replace("-","-",$deskx7);
-    $deskx9 = str_replace("!","-tandaseru-",$deskx8);
-    $deskx10 = str_replace("’"," ",$deskx9);
-    $deskx11 = str_replace("é","-ekanan-",$deskx10);
-    $deskx12 = str_replace("à","-akiri-",$deskx11);
-    $deskx13 = str_replace("è","-ekiri-",$deskx12);
-
-    $deskk1 = str_replace('\n',"-enter-",$row->judul);
-    $deskk2 = str_replace("'","`",$deskk1);
-    $deskk3 = str_replace('"',"-petikdua-",$deskk2);
-    $deskk4 = str_replace(str_split('\\/:*?"<>|'), ' ', $deskk3);
-    $deskk5 = trim(preg_replace('/\s\s+/', ' ', $deskk4));
-    $deskk6 = str_replace("<br>","-enter-",$deskk5);
-    $deskk7 = str_replace(".","-titik-",$deskk6);
-    $deskk8 = str_replace("-","-",$deskk7);
-    $deskk9 = str_replace("!","-tandaseru-",$deskk8);
-    $deskk10 = str_replace("’"," ",$deskk9);
-    $deskk11 = str_replace("é","-ekanan-",$deskk10);
-    $deskk12 = str_replace("à","-akiri-",$deskk11);
-    $deskk13 = str_replace("è","-ekiri-",$deskk12);
-
-    $tgl = explode("-", $row->tanggal);
-
-    $a = array(
-      "id_advert" => $row->id_advert,
-      "id_member" => $row->id_member,
-      "id_category" => $row->id_category,
-      "judul" => $deskk13,
-      "deskripsi" => substr($desk10,0,100),
-      "gambar" => "https://ufe-section-indonesie.org/ufeapp/images/advert/".$row->gambar,
-      "tanggal" => $tgl[2]."/".$tgl[1]."/".$tgl[0],
-      "tanggal2" => $row->tanggal2,
-      "url" => $row->linkweb,
-      "email" => $row->username,
-      "urutan" => $urutan,
-      "keterangan" =>  $deskx13,
-      "first_name" => $row->first_name,
-      "second_name" => $row->second_name
-    );
-    array_push($hasil, $a);
-    $urutan++;
-  }
+  $urutan++;
 }
   
 AFhelper::kirimJson($hasil);
