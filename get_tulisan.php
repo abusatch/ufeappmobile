@@ -618,7 +618,7 @@ $tulisann21 = str_replace("&petiksatu&","'",$fr2['tulisan21']);
     "tulisan20":"",
     "tulisan21":"",
     "bg":"https://ufe-section-indonesie.org/ufeapp/admin/bg/<?php echo $wd2['bg'] ?>",
-     "bg2":"https://ufe-section-indonesie.org/ufeapp/admin/bg/<?php echo $wd4['gambar'] ?>"    
+     "bg2":"<?php echo $wd2['short_desc'] ?>"    
     }
       
       <?php
