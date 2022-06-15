@@ -59,7 +59,7 @@ $dw2 = mysqli_num_rows($dw);
 
 
 
-$sql_get_fasilitas = "select * from tb_activites where id_jenis = '2' order by id_activites desc limit 2";
+$sql_get_fasilitas = "select * from tb_activites where id_jenis = '2' order by id_activites desc limit 1";
 
 $koneksi->set_charset("utf8");
 

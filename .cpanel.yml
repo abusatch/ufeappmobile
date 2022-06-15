@@ -19,5 +19,5 @@ deployment:
     - /bin/cp -R f_getdemar1.php $DEPLOYPATH
     - /bin/cp -R get_advert_category.php $DEPLOYPATH
     - /bin/cp -R get_tulisan.php $DEPLOYPATH
-
+    - /bin/cp -R get_menu_bawah.php $DEPLOYPATH
     
