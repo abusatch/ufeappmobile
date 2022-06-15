@@ -45,7 +45,7 @@ class ReadingAdvert
             );
             array_push($hasil, $a);
         }
-        AFhelper::kirimJson($hasil, 'Get Comment');
+        AFhelper::kirimJson($hasil, 'Get Like');
     }
 
     function tambah()
@@ -64,7 +64,7 @@ class ReadingAdvert
 
         $sql = "INSERT INTO tb_advert_favorit(id_advert, id_user, tanggal, tanggal2, jenis) 
             VALUES ('$id_advert', '$idUser', '$tanggal', '$tanggal2', '$jenis')";
-        AFhelper::dbSave($sql, null);
+        AFhelper::dbSave($sql, "add like success");
 
     }
 
@@ -79,7 +79,7 @@ class ReadingAdvert
         $idUser = $user->idUser;
 
         $sql = "DELETE FROM tb_advert_favorit WHERE id_advert = '$id_advert' AND id_user = '$idUser' AND jenis = '$jenis'";
-        AFhelper::dbSave($sql, null);
+        AFhelper::dbSave($sql, "remove like success");
 
     }
 }

@@ -25,7 +25,7 @@ class ReadingAdvert
            b.username, b.first_name, b.second_name, b.propic 
             FROM tb_advert_komentar a
             JOIN user b ON(a.id_user = b.idUser) 
-            WHERE a.isi = 'LIKE' AND a.id_advert = '$id_advert'";
+            WHERE a.id_advert = '$id_advert'";
         $data = AFhelper::dbSelectAll($sql);
         $hasil = array();
         foreach ($data as $row) {
@@ -61,7 +61,7 @@ class ReadingAdvert
 
         $sql = "INSERT INTO tb_advert_komentar(id_advert, id_user, tanggal, tanggal2, isi) 
             VALUES ('$id_advert', '$idUser', '$tanggal', '$tanggal2', '$isi')";
-        AFhelper::dbSave($sql, null);
+        AFhelper::dbSave($sql, "add comment success");
 
     }
 
@@ -76,7 +76,7 @@ class ReadingAdvert
         $idUser = $user->idUser;
 
         $sql = "DELETE FROM tb_advert_komentar WHERE id_advert = '$id_advert' AND id_user = '$idUser'";
-        AFhelper::dbSave($sql, null);
+        AFhelper::dbSave($sql, "delete comment success");
 
     }
 }
