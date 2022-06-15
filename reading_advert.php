@@ -38,7 +38,7 @@ if(empty($halaman)) {
 $urutan = $halaman + 1;
 $offset = " offset $halaman";
 
-$sql_get_data = "SELECT a.*, b.username, b.first_name, b.second_name
+$sql_get_data = "SELECT a.*, b.username, b.first_name, b.second_name, b.propic
   FROM tb_advert a
   JOIN user b ON(a.id_member = b.idUser) 
   where a.visibility = '1' $where ORDER BY a.id_advert DESC limit 5 $offset";
@@ -62,7 +62,8 @@ foreach ($data as $row) {
     "urutan" => $urutan,
     "keterangan" =>  AFhelper::formatText($row->keterangan),
     "first_name" => $row->first_name,
-    "second_name" => $row->second_name
+    "second_name" => $row->second_name,
+    "propic" => "https://ufe-section-indonesie.org/ufeapp/images/propic/".$row->propic,
   );
   array_push($hasil, $a);
   $urutan++;
