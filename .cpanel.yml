@@ -22,4 +22,5 @@ deployment:
     - /bin/cp -R get_menu_bawah.php $DEPLOYPATH
     - /bin/cp -R reading_advert_favorit.php $DEPLOYPATH
     - /bin/cp -R reading_advert_komentar.php $DEPLOYPATH
+    - /bin/cp -R reading_advert_view.php $DEPLOYPATH
     
