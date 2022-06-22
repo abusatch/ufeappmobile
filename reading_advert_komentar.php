@@ -25,7 +25,8 @@ class ReadingAdvert
            b.username, b.first_name, b.second_name, b.propic 
             FROM tb_advert_komentar a
             JOIN user b ON(a.id_user = b.idUser) 
-            WHERE a.id_advert = '$id_advert'";
+            WHERE a.id_advert = '$id_advert'
+            ORDER BY a.id_komentar DESC";
         $data = AFhelper::dbSelectAll($sql);
         $hasil = array();
         foreach ($data as $row) {
