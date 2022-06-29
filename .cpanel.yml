@@ -24,3 +24,4 @@ deployment:
     - /bin/cp -R reading_advert_komentar.php $DEPLOYPATH
     - /bin/cp -R reading_advert_view.php $DEPLOYPATH
     - /bin/cp -R reading_activites.php $DEPLOYPATH
+    - /bin/cp -R reading_actualite.php $DEPLOYPATH
