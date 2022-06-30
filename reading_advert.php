@@ -38,16 +38,20 @@ if(empty($halaman)) {
 $urutan = $halaman + 1;
 $offset = " offset $halaman";
 
-$sql_get_data = "SELECT a.*, b.username, b.first_name, b.second_name, b.propic
+$sql_get_data = "SELECT a.*, b.username, b.first_name, b.second_name, b.propic, COALESCE(c.jumlah_view,0) AS jumlah_view
   FROM tb_advert a
-  JOIN user b ON(a.id_member = b.idUser) 
-  where a.visibility = '1' $where ORDER BY a.id_advert DESC limit 5 $offset";
+  JOIN user b ON(a.id_member = b.idUser)
+  LEFT JOIN (
+    SELECT id_advert, COUNT(*) AS jumlah_view FROM tb_advert_view GROUP BY id_advert
+  ) c ON(a.id_advert = c.id_advert)
+  WHERE a.visibility = '1' $where ORDER BY a.id_advert DESC limit 5 $offset";
 
 $data = AFhelper::dbSelectAll($sql_get_data);
 $hasil = array();
 
 foreach ($data as $row) {
   $tgl = explode("-", $row->tanggal);
+  $propic = $row->propic ? "https://ufe-section-indonesie.org/ufeapp/images/propic/".$row->propic : '';
   $a = array(
     "id_advert" => $row->id_advert,
     "id_member" => $row->id_member,
@@ -63,7 +67,8 @@ foreach ($data as $row) {
     "keterangan" =>  AFhelper::formatText($row->keterangan),
     "first_name" => $row->first_name,
     "second_name" => $row->second_name,
-    "propic" => "https://ufe-section-indonesie.org/ufeapp/images/propic/".$row->propic,
+    "propic" => $propic,
+    "jumlah_view" => $row->jumlah_view,
   );
   array_push($hasil, $a);
   $urutan++;
