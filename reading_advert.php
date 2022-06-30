@@ -14,7 +14,7 @@ if(!empty($email)) {
   $sql = "SELECT * from user where username = '$email'";
   $user = AFhelper::dbSelectOne($sql);
   $idUser = $user->idUser;
-  $where .= " AND id_member = '$idUser'";
+  $where .= " AND a.id_member = '$idUser'";
 }
 
 if($jenis == "pending") {
@@ -28,7 +28,7 @@ if(!empty($kategori) && $kategori != "all") {
 }
 
 if(!empty($id_advert)) {
-  $where = " AND id_advert = '$id_advert'";
+  $where = " AND a.id_advert = '$id_advert'";
 }
 
 if(empty($halaman)) {
@@ -74,6 +74,6 @@ foreach ($data as $row) {
   $urutan++;
 }
   
-AFhelper::kirimJson($hasil, $sql_get_data);
+AFhelper::kirimJson($hasil);
 
 ?>
