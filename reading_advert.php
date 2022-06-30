@@ -74,6 +74,6 @@ foreach ($data as $row) {
   $urutan++;
 }
   
-AFhelper::kirimJson($hasil);
+AFhelper::kirimJson($hasil, $sql_get_data);
 
 ?>
