@@ -23,10 +23,16 @@ switch ($mode) {
 class ReadingDemarche
 {
   function menu() {
+    $id = $_GET['id'];
+    $where = "";
+    if(!empty($id)) {
+      $where = "AND id_menu = '$id'";
+    }
+
     $sql = "SELECT id_menu, id_kategori, jenis, nama_menu, short_desc, long_desc, gambar, gambar2, gambar3, bg, bg2, ket, 
       tanggal, tanggal2, linkweb, id_kate, menu_bg, menu_drop1, menu_drop2, sort 
     FROM tb_menu
-    WHERE jenis = 'DEMARCHES' 
+    WHERE jenis = 'DEMARCHES' $where 
     ORDER BY sort";
 
     $data = AFhelper::dbSelectAll($sql);
@@ -44,13 +50,21 @@ class ReadingDemarche
       array_push($hasil, $a);
     }
       
-    AFhelper::kirimJson($hasil, $sql);
+    AFhelper::kirimJson($hasil);
   }
 
   function demar2() {
+    $id = $_GET['id'];
+    
+    $where = "AND id_kategori = '$_GET[kategori]'";
+
+    if(!empty($id)) {
+      $where = "AND id_demar = '$id'";
+    }
+
     $sql = "SELECT id_demar, id_kategori, judul, judul2, short_desc, long_desc, gambar, bg, visibility 
       FROM tb_demar2 
-      WHERE visibility = '1' AND id_kategori = '$_GET[id_menu]'
+      WHERE visibility = '1' $where
       ORDER BY id_kategori";
 
     $data = AFhelper::dbSelectAll($sql);
@@ -68,13 +82,21 @@ class ReadingDemarche
       array_push($hasil, $a);
     }
       
-    AFhelper::kirimJson($hasil, $sql);
+    AFhelper::kirimJson($hasil);
   }
 
   function demar3() {
+    $id = $_GET['id'];
+    
+    $where = "AND id_kategori = '$_GET[kategori]'";
+    
+    if(!empty($id)) {
+      $where = "AND id_demar = '$id'";
+    }
+
     $sql = "SELECT id_demar, id_kategori, judul, judul2, short_desc, long_desc, gambar, visibility, ket2
     FROM tb_demar3 
-    WHERE visibility = '1' AND id_kategori = '$_GET[id_kategori]'";
+    WHERE visibility = '1' $where";
 
     $data = AFhelper::dbSelectAll($sql);
     $hasil = array();
@@ -90,7 +112,7 @@ class ReadingDemarche
       array_push($hasil, $a);
     }
       
-    AFhelper::kirimJson($hasil, $sql);
+    AFhelper::kirimJson($hasil);
   }
 
 }
