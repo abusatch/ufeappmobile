@@ -27,8 +27,8 @@ $data = AFhelper::dbSelectAll($sql);
 $hasil = array();
 
 foreach ($data as $row) {
-    $logo = $row->gambar ? "'https://ufe-section-indonesie.org/ufeapp/images/agent/".$row->gambar : '';
-    $gambar = $row->gambar2 ? "'https://ufe-section-indonesie.org/ufeapp/images/agent/".$row->gambar2 : '';
+    $logo = $row->gambar ? "https://ufe-section-indonesie.org/ufeapp/images/agent/".$row->gambar : '';
+    $gambar = $row->gambar2 ? "https://ufe-section-indonesie.org/ufeapp/images/agent/".$row->gambar2 : '';
     $a = array(
     "id_agent" => $row->id_agent,
     "id_kategori" => $row->id_kategori,
