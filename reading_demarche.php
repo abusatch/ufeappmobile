@@ -26,14 +26,14 @@ class ReadingDemarche
     $id = $_GET['id'];
     $where = "";
     if(!empty($id)) {
-      $where = "AND id_menu = '$id'";
+      $where = "AND a.id_menu = '$id'";
     }
 
-    $sql = "SELECT id_menu, id_kategori, jenis, nama_menu, short_desc, long_desc, gambar, gambar2, gambar3, bg, bg2, ket, 
-      tanggal, tanggal2, linkweb, id_kate, menu_bg, menu_drop1, menu_drop2, sort 
-    FROM tb_menu
-    WHERE jenis = 'DEMARCHES' $where 
-    ORDER BY sort";
+    $sql = "SELECT a.id_menu, a.id_kategori, a.jenis, a.nama_menu, a.short_desc, a.long_desc, a.gambar, a.gambar2, a.gambar3, a.bg, a.bg2, a.ket, 
+      a.tanggal, a.tanggal2, a.linkweb, a.id_kate, a.menu_bg, a.menu_drop1, a.menu_drop2, a.sort 
+    FROM tb_menu a
+    WHERE a.jenis = 'DEMARCHES' $where 
+    ORDER BY a.sort";
 
     $data = AFhelper::dbSelectAll($sql);
     $hasil = array();
@@ -56,28 +56,34 @@ class ReadingDemarche
   function demar2() {
     $id = $_GET['id'];
     
-    $where = "AND id_kategori = '$_GET[kategori]'";
+    $where = "AND b.id_kategori = '$_GET[kategori]'";
 
     if(!empty($id)) {
-      $where = "AND id_demar = '$id'";
+      $where = "AND b.id_demar = '$id'";
     }
 
-    $sql = "SELECT id_demar, id_kategori, judul, judul2, short_desc, long_desc, gambar, bg, visibility 
-      FROM tb_demar2 
-      WHERE visibility = '1' $where
-      ORDER BY id_kategori";
+    $sql = "SELECT b.id_demar, b.id_kategori, b.judul, b.judul2, b.short_desc, b.long_desc, b.gambar, b.bg, b.visibility,
+        a.nama_menu, a.gambar2 AS gambar_kategori 
+      FROM tb_demar2 b
+      JOIN tb_menu a ON(b.id_kategori = a.id_menu) 
+      WHERE b.visibility = '1' $where
+      ORDER BY b.id_kategori";
 
     $data = AFhelper::dbSelectAll($sql);
     $hasil = array();
     
     foreach ($data as $row) {
       $gambar = $row->gambar ? "https://ufe-section-indonesie.org/ufeapp/images/menu/".$row->gambar : '';
+      $gambar_kategori = $row->gambar_kategori ? "https://ufe-section-indonesie.org/ufeapp/images/menu/".$row->gambar_kategori : '';
       $a = array(
         "id_demar" => $row->id_demar,
         "judul" => $row->judul,
         "short_desc" => $row->short_desc,
         "long_desc" => $row->long_desc,
         "gambar" => $gambar,
+        "id_kategori" => $row->id_kategori,
+        "judul_kategori" => $row->nama_menu,
+        "gambar_kategori" => $gambar_kategori,  
       );
       array_push($hasil, $a);
     }

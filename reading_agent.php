@@ -5,10 +5,10 @@ require_once "helper.php";
 $id = $_GET['id'];
 $halaman = $_GET['halaman'];
     
-$where = "AND id_kategori = '$_GET[kategori]'";
+$where = "AND a.id_kategori = '$_GET[kategori]'";
 
 if(!empty($id)) {
-    $where = "AND id_agent = '$id'";
+    $where = "AND a.id_agent = '$id'";
 }
 
 if(empty($halaman)) {
@@ -17,11 +17,14 @@ if(empty($halaman)) {
 
 $offset = " offset $halaman";
 
-$sql = "SELECT id_agent, id_kategori, judul, judul2, short_desc, long_desc, gambar, gambar2, namaagent, gmaps, alamatagent, alamat2agent, 
-    kotaagent, kodeposagent, telpagent, mobileagent, emailagent, webagent, fbagent, twiteragent, igagent, playstoreagent, rating1, rating2, rating3, visibility 
-    FROM tb_agent 
-    WHERE visibility = '1' $where
-    ORDER BY rating1 DESC, rating2 DESC, rating3 DESC, namaagent, id_agent LIMIT 5 $offset";
+$sql = "SELECT a.id_agent, a.id_kategori, a.judul, a.judul2, a.short_desc, a.long_desc, a.gambar, a.gambar2, a.namaagent, a.gmaps, a.alamatagent, a.alamat2agent, 
+        a.kotaagent, a.kodeposagent, a.telpagent, a.mobileagent, a.emailagent, a.webagent, a.fbagent, a.twiteragent, a.igagent, a.playstoreagent,
+        a.rating1, a.rating2, a.rating3, a.visibility, b.judul AS judul_kategori, b.gambar AS gambar_kategori, c.id_menu, c.nama_menu AS judul_menu, c.gambar2 AS gambar_menu
+    FROM tb_agent a
+    JOIN tb_demar2 b ON(a.id_kategori = b.id_demar)
+    JOIN tb_menu c ON(b.id_kategori = c.id_menu)
+    WHERE a.visibility = '1' $where
+    ORDER BY a.rating1 DESC, a.rating2 DESC, a.rating3 DESC, a.namaagent, a.id_agent LIMIT 5 $offset";
 
 $data = AFhelper::dbSelectAll($sql);
 $hasil = array();
@@ -29,9 +32,10 @@ $hasil = array();
 foreach ($data as $row) {
     $logo = $row->gambar ? "https://ufe-section-indonesie.org/ufeapp/images/agent/".$row->gambar : '';
     $gambar = $row->gambar2 ? "https://ufe-section-indonesie.org/ufeapp/images/agent/".$row->gambar2 : '';
+    $gambar_kategori = $row->gambar_kategori ? "https://ufe-section-indonesie.org/ufeapp/images/menu/".$row->gambar_kategori : '';
+    $gambar_menu = $row->gambar_menu ? "https://ufe-section-indonesie.org/ufeapp/images/menu/".$row->gambar_menu : '';
     $a = array(
     "id_agent" => $row->id_agent,
-    "id_kategori" => $row->id_kategori,
     "deskripsi" => AFhelper::formatText($row->long_desc),
     "nama" => $row->namaagent,
     "alamat" => AFhelper::formatText($row->alamatagent),
@@ -49,6 +53,12 @@ foreach ($data as $row) {
     "rating1" => $row->rating1,
     "rating2" => $row->rating2,
     "rating3" => $row->rating3,
+    "id_kategori" => $row->id_kategori,
+    "judul_kategori" => $row->judul_kategori,
+    "gambar_kategori" => $row->gambar_kategori,
+    "id_menu" => $row->id_menu,
+    "judul_menu" => $row->judul_menu,
+    "gambar_menu" => $row->gambar_menu,
     );
     array_push($hasil, $a);
 }
