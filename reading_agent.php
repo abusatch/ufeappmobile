@@ -55,10 +55,10 @@ foreach ($data as $row) {
     "rating3" => $row->rating3,
     "id_kategori" => $row->id_kategori,
     "judul_kategori" => $row->judul_kategori,
-    "gambar_kategori" => $row->gambar_kategori,
+    "gambar_kategori" => $gambar_kategori,
     "id_menu" => $row->id_menu,
     "judul_menu" => $row->judul_menu,
-    "gambar_menu" => $row->gambar_menu,
+    "gambar_menu" => $gambar_menu,
     );
     array_push($hasil, $a);
 }
