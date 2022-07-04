@@ -32,9 +32,9 @@ foreach ($data as $row) {
     $a = array(
     "id_agent" => $row->id_agent,
     "id_kategori" => $row->id_kategori,
-    "deskripsi" => $row->long_desc,
+    "deskripsi" => AFhelper::formatText($row->long_desc),
     "nama" => $row->namaagent,
-    "alamat" => $row->alamatagent,
+    "alamat" => AFhelper::formatText($row->alamatagent),
     "gmaps" => $row->gmaps,
     "phone" => $row->telpagent,
     "mobile" => $row->mobileagent,
