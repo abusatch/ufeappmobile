@@ -11,7 +11,7 @@ if(!empty($id)) {
 }
 
 $sql = "SELECT id_agent, id_kategori, judul, judul2, short_desc, long_desc, gambar, gambar2, namaagent, gmaps, alamatagent, alamat2agent, 
-    kotaagent, kodeposagent, telpagent, mobileagent, emailagent, webagent, fbagent, twiteragent, igagent, playstoreagent, visibility 
+    kotaagent, kodeposagent, telpagent, mobileagent, emailagent, webagent, fbagent, twiteragent, igagent, playstoreagent, rating1, rating2, rating3, visibility 
     FROM tb_agent 
     WHERE visibility = '1' $where";
 
@@ -38,6 +38,9 @@ foreach ($data as $row) {
     "playstore" => $row->playstoreagent,
     "logo" => $logo,
     "gambar" => $gambar,
+    "rating1" => $row->rating1,
+    "rating2" => $row->rating2,
+    "rating3" => $row->rating3,
     );
     array_push($hasil, $a);
 }
