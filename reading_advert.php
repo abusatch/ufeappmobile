@@ -44,7 +44,7 @@ $sql_get_data = "SELECT a.*, b.username, b.first_name, b.second_name, b.propic, 
   LEFT JOIN (
     SELECT id_advert, COUNT(*) AS jumlah_view FROM tb_advert_view GROUP BY id_advert
   ) c ON(a.id_advert = c.id_advert)
-  WHERE a.visibility = '1' $where ORDER BY a.id_advert DESC limit 5 $offset";
+  WHERE a.visibility = '1' $where ORDER BY a.id_advert DESC limit 10 $offset";
 
 $data = AFhelper::dbSelectAll($sql_get_data);
 $hasil = array();

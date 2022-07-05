@@ -24,7 +24,7 @@ $sql = "SELECT a.id_agent, a.id_kategori, a.judul, a.judul2, a.short_desc, a.lon
     JOIN tb_demar2 b ON(a.id_kategori = b.id_demar)
     JOIN tb_menu c ON(b.id_kategori = c.id_menu)
     WHERE a.visibility = '1' $where
-    ORDER BY a.rating1 DESC, a.rating2 DESC, a.rating3 DESC, a.namaagent, a.id_agent LIMIT 5 $offset";
+    ORDER BY a.rating1 DESC, a.rating2 DESC, a.rating3 DESC, a.namaagent, a.id_agent LIMIT 10 $offset";
 
 $data = AFhelper::dbSelectAll($sql);
 $hasil = array();

@@ -71,7 +71,7 @@ class ReadingActualite
       FROM tb_actualite a
       JOIN tb_kategori_artikel b ON(a.id_kate = b.id_kategori) 
       where a.visibility = '1' $where 
-      ORDER BY a.tanggal DESC LIMIT 5 $offset";
+      ORDER BY a.tanggal DESC LIMIT 10 $offset";
 
     $data = AFhelper::dbSelectAll($sql);
     $hasil = array();
