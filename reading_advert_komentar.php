@@ -20,6 +20,7 @@ switch ($mode) {
 class ReadingAdvert
 {
     function lihat() {
+        $hariini = $tanggal = date('Y-m-d');
         $id_advert = $_POST['id_advert'];
         $sql = "SELECT a.id_komentar, a.id_advert, a.id_user, a.tanggal, a.tanggal2, a.isi, 
            b.username, b.first_name, b.second_name, b.propic 
@@ -30,7 +31,13 @@ class ReadingAdvert
         $data = AFhelper::dbSelectAll($sql);
         $hasil = array();
         foreach ($data as $row) {
-            $tgl = explode("-", $row->tanggal);
+            if($row->tanggal == $hariini) {
+                $tanggal = substr($row->tanggal2, 11, 5);
+            } else {
+                $tgl = explode("-", $row->tanggal);
+                $tanggal = $tgl[2]."/".$tgl[1]."/".$tgl[0];
+            }
+            
             $a = array(
                 "id_komentar" => $row->id_komentar,
                 "id_advert" => $row->id_advert,
@@ -38,7 +45,7 @@ class ReadingAdvert
                 "email_user" => $row->username,
                 "nama_user" => $row->first_name.' '.$row->second_name,
                 "foto_user" => "https://ufe-section-indonesie.org/ufeapp/images/propic/".$row->propic,
-                "tanggal" => $tgl[2]."/".$tgl[1]."/".$tgl[0],
+                "tanggal" => $tanggal,
                 "isi" => $row->isi,
             );
             array_push($hasil, $a);
