@@ -34,11 +34,14 @@ foreach ($data as $row) {
     $gambar = $row->gambar2 ? "https://ufe-section-indonesie.org/ufeapp/images/agent/".$row->gambar2 : '';
     $gambar_kategori = $row->gambar_kategori ? "https://ufe-section-indonesie.org/ufeapp/images/menu/".$row->gambar_kategori : '';
     $gambar_menu = $row->gambar_menu ? "https://ufe-section-indonesie.org/ufeapp/images/menu/".$row->gambar_menu : '';
+    $kota = str_replace($row->kodeposagent, "", $row->kotaagent);
     $a = array(
     "id_agent" => $row->id_agent,
     "deskripsi" => AFhelper::formatText($row->long_desc),
     "nama" => $row->namaagent,
     "alamat" => AFhelper::formatText($row->alamatagent),
+    "kota" => $kota,
+    "kode_pos" => $row->kodeposagent,
     "gmaps" => $row->gmaps,
     "phone" => $row->telpagent,
     "mobile" => $row->mobileagent,
