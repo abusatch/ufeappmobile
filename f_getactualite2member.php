@@ -3,7 +3,7 @@
 echo '[';
 include('db.php');
 $no = 1;
-$ew = mysqli_query($koneksi,"select * from tb_advert where visibility = '1' order by id_advert desc limit 6");
+$ew = mysqli_query($koneksi,"select * from tb_advert where visibility = '1' and keterangan = 'release' order by id_advert desc limit 6");
 while($ew2 = mysqli_fetch_array($ew)){
 
 
