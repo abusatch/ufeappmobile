@@ -1,3 +1,7 @@
+<html>
+<head>
+</head>
+<body>
 <script
   src="https://code.jquery.com/jquery-2.2.4.min.js"
   integrity="sha256-BbhdlvQf/xTY9gja0Dq3HiwQF8LaCRTXxZKRutelT44="
@@ -45,6 +49,10 @@ $tanggal = date('Y-m-d H:i:s');
 
 ?>
 
-writeUserData("2", "<?php echo $tanggal; ?>");
-alert("Sukses");
+$(document).ready(function(){
+  writeUserData("2", "<?php echo $tanggal; ?>");
+});
+
 </script>
+</body>
+</html>
