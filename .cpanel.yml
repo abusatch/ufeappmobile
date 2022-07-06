@@ -27,4 +27,4 @@ deployment:
     - /bin/cp -R reading_actualite.php $DEPLOYPATH
     - /bin/cp -R reading_demarche.php $DEPLOYPATH
     - /bin/cp -R reading_agent.php $DEPLOYPATH
-    - /bin/cp -R write_firebase.html $DEPLOYPATH
+    - /bin/cp -R write_firebase.php $DEPLOYPATH

@@ -31,10 +31,20 @@
  };
  firebase.initializeApp(config);
  var database = firebase.database();
-function writeUserData(id_user) {
+function writeUserData(id_user, tanggal) {
     database.ref('komentar').child("1").set({
-        id_user:id_user
+        id_user:id_user,
+        tanggal:tanggal
     });
-} 
-writeUserData("2");
+}
+
+<?php
+
+date_default_timezone_set('Asia/Jakarta');
+$tanggal = date('Y-m-d H:i:s');
+
+?>
+
+writeUserData("2", "<?php echo $tanggal; ?>");
+alert("Sukses");
 </script>
