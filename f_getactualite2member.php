@@ -75,6 +75,7 @@ $mcc2 = mysqli_fetch_assoc($mcc);
 
 
 $deskk1 = str_replace('\n',"",$ew2['judul']);
+$deskk1 = str_replace('-spasi-'," ",$deskk1);
 $deskk2 = str_replace("'","`",$deskk1);
 $deskk3 = str_replace('"',"`",$deskk2);
 $deskk4 = str_replace(str_split('\\/:*?"<>|'), ' ', $deskk3);
