@@ -12,6 +12,12 @@ switch ($mode) {
     case 'detil':
         $reading->detil();
         break;
+    case 'jadwal':
+        $reading->jadwal();
+        break;
+    case 'harga':
+        $reading->harga();
+        break;
     default:
         echo "Mode Not Found";
         break;
@@ -40,6 +46,34 @@ class ReadingActivites
             AFhelper::kirimJson($data, 'Get Activites');
         } else {
             AFhelper::kirimJson(null, 'ID harus diisi', 0);
+        }
+        
+    }
+
+    function harga() {
+        $id = $_POST['id_activites'];
+        if($id) {
+            $sql = "SELECT id_harga, id_activites, harga, keterangan 
+                FROM tb_harga_program 
+                WHERE id_activites = $id";
+            $data = AFhelper::dbSelectAll($sql);
+            AFhelper::kirimJson($data, 'Get List Price');
+        } else {
+            AFhelper::kirimJson(null, 'ID Aktifitas harus diisi', 0);
+        }
+        
+    }
+
+    function jadwal() {
+        $id = $_POST['id_activites'];
+        if($id) {
+            $sql = "SELECT id_jadwal, id_activites, jadwal, keterangan 
+                FROM tb_jadwal_program 
+                WHERE id_activites = $id";
+            $data = AFhelper::dbSelectAll($sql);
+            AFhelper::kirimJson($data, 'Get List Schedule');
+        } else {
+            AFhelper::kirimJson(null, 'ID Aktifitas harus diisi', 0);
         }
         
     }
