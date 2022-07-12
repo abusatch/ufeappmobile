@@ -17,7 +17,9 @@ if(!empty($email)) {
   $where .= " AND a.id_member = '$idUser'";
 }
 
-if($jenis == "pending") {
+if($jenis == "all") {
+  $where .= "";
+} else if($jenis == "pending") {
   $where .= " AND a.keterangan = 'pending'";
 } else {
   $where .= " AND a.keterangan = 'release'";
