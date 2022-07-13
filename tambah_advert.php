@@ -15,7 +15,7 @@ $tanggal = date('Y-m-d');
 $tanggal2 = date('Y-m-d H:i:s');
 
 if (empty($deskripsi)) {
-    AFhelper::kirimJson(null, "Deskripsi tidak boleh kosong", 0);
+    AFhelper::kirimJson(null, "Description cannot be empty", 0);
 } else {
     $sql = "SELECT * from user where username = '$email'";
     $user = AFhelper::dbSelectOne($sql);
@@ -26,7 +26,7 @@ if (empty($deskripsi)) {
     
     if($id_advert == "") {
         if (!$_FILES['image']['tmp_name']) {
-            AFhelper::kirimJson(null, "Gambar tidak boleh kosong", 0);
+            AFhelper::kirimJson(null, "Image cannot be empty", 0);
         } else {
             $tmp_name = $_FILES['image']['tmp_name'];
             $inputimage = move_uploaded_file($tmp_name,$path2);
@@ -42,7 +42,7 @@ if (empty($deskripsi)) {
                     'pending', '1', '$image')";
                 $hasil = AFhelper::dbSaveCek($sql);
                 if($hasil[0]) {
-                    $isipesan = "Thank You. Iklan akan segera di publish";
+                    $isipesan = "Thank You. Data saved successfully";
                     $sql2 = "INSERT INTO tb_notifikasi (
                         judul, isi, kepada,
                         dibaca, dihapus, tanggal,tanggal2) values (
@@ -66,14 +66,14 @@ if (empty($deskripsi)) {
             $sql = "UPDATE tb_advert set id_category = '$kategori', judul = '$judul', deskripsi = '$deskripsi', linkweb = '$linkweb', 
                 tanggal_edit = '$tanggal', tanggal_edit2 = '$tanggal2', user_edit = '$idUser', 
                 keterangan = 'pending' where id_advert = '$id_advert'";
-            AFhelper::dbSave($sql, null, 'Data berhasil di ubah');
+            AFhelper::dbSave($sql, null, 'Data changed successfully');
         } else {
             $tmp_name = $_FILES['image']['tmp_name'];
             $inputimage = move_uploaded_file($tmp_name,$path2);
             $sql = "UPDATE tb_advert set id_category = '$kategori', judul = '$judul', deskripsi = '$deskripsi', linkweb = '$linkweb', 
                 tanggal_edit = '$tanggal', tanggal_edit2 = '$tanggal2', user_edit = '$idUser', 
-                gambar = '$path'  where id_advert = '$id_advert'"; 
-            AFhelper::dbSave($sql, null, 'Data berhasil di ubah 2');
+                keterangan = 'pending', gambar = '$path'  where id_advert = '$id_advert'"; 
+            AFhelper::dbSave($sql, null, 'Data changed successfully');
         }
     }
 }
