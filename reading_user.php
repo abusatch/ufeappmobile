@@ -26,6 +26,7 @@ class ReadingUser
             FROM user 
             WHERE username = '$email'";
         $data = AFhelper::dbSelectOne($sql);
+        $data->propic = $data->propic ? "https://ufe-section-indonesie.org/ufeapp/images/propic/".$data->propic : '';
         AFhelper::kirimJson($data, 'Get Detail User');
     }
 }
