@@ -9,6 +9,9 @@ switch ($mode) {
     case 'detil':
         $reading->detil();
         break;
+    case 'edit':
+        $reading->edit();
+        break;
     default:
         echo "Mode tidak sesuai";
         break;
@@ -28,6 +31,41 @@ class ReadingUser
         $data = AFhelper::dbSelectOne($sql);
         $data->propic = $data->propic ? "https://ufe-section-indonesie.org/ufeapp/images/propic/".$data->propic : '';
         AFhelper::kirimJson($data, 'Get Detail User');
+    }
+
+    function edit() {
+        $username = $_POST['username'];
+        $firstname = $_POST['firstname'];
+        $lastname = $_POST['lastname'];
+        $address = $_POST['address'];
+        $phone = $_POST['phone'];
+        $mobile = $_POST['mobile'];
+        $profession = $_POST['profession'];
+        $company = $_POST['company'];
+
+        if (!$_FILES['image']['tmp_name']) {
+            $sql = "UPDATE user 
+                SET first_name = '$firstname', second_name = '$lastname', alamat = '$address', phone = '$phone', mobile = '$mobile', 
+                    employement = '$profession', company = '$company' 
+                WHERE username = '$username'";
+        } else {
+            $path = $username.substr(date('YmdHis'),0,-1).".png";
+            $path2 = "images/propic/".$path;
+            $tmp_name = $_FILES['image']['tmp_name'];
+            $inputimage = move_uploaded_file($tmp_name,$path2);
+            if($inputimage) {
+                $sql = "UPDATE user 
+                    SET first_name = '$firstname', second_name = '$lastname', alamat = '$address', phone = '$phone', mobile = '$mobile', 
+                        employement = '$profession', company = '$company', propic = '$path' 
+                    WHERE username = '$username'";
+            } else {
+                $sql = "UPDATE user 
+                    SET first_name = '$firstname', second_name = '$lastname', alamat = '$address', phone = '$phone', mobile = '$mobile', 
+                        employement = '$profession', company = '$company' 
+                    WHERE username = '$username'";
+            }
+        }
+        AFhelper::dbSave($sql, null, 'Data changed successfully');
     }
 }
 
