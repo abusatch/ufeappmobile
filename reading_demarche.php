@@ -15,6 +15,9 @@ switch ($mode) {
     case 'demar3':
       $reading->demar3();
       break;
+    case 'searchdemar':
+      $reading->searchdemar();
+      break;
     default:
       echo "Mode Not Found";
       break;
@@ -62,7 +65,7 @@ class ReadingDemarche
       $where = "AND b.id_demar = '$id'";
     }
 
-    $sql = "SELECT b.id_demar, b.id_kategori, b.judul, b.judul2, b.short_desc, b.long_desc, b.gambar, b.bg, b.visibility,
+    $sql = "SELECT b.id_demar, b.id_kategori, b.judul, b.judul2, b.short_desc, b.long_desc, b.gambar, b.bg, b.visibility, b.searching
         a.nama_menu, a.gambar2 AS gambar_kategori 
       FROM tb_demar2 b
       JOIN tb_menu a ON(b.id_kategori = a.id_menu) 
@@ -114,6 +117,35 @@ class ReadingDemarche
         "short_desc" => $row->short_desc,
         "long_desc" => $row->long_desc,
         "gambar" =>  $row->gambar,
+      );
+      array_push($hasil, $a);
+    }
+      
+    AFhelper::kirimJson($hasil);
+  }
+
+  function searchdemar() {
+    $sql = "SELECT b.id_demar, b.id_kategori, b.judul, b.judul2, b.short_desc, b.long_desc, b.gambar, b.bg, b.visibility, b.searching
+        a.nama_menu, a.gambar2 AS gambar_kategori 
+      FROM tb_demar2 b
+      JOIN tb_menu a ON(b.id_kategori = a.id_menu) 
+      WHERE b.searching = '1'";
+
+    $data = AFhelper::dbSelectAll($sql);
+    $hasil = array();
+    
+    foreach ($data as $row) {
+      $gambar = $row->gambar ? "https://ufe-section-indonesie.org/ufeapp/images/menu/".$row->gambar : '';
+      $gambar_kategori = $row->gambar_kategori ? "https://ufe-section-indonesie.org/ufeapp/images/menu/".$row->gambar_kategori : '';
+      $a = array(
+        "id_demar" => $row->id_demar,
+        "judul" => $row->judul,
+        "short_desc" => $row->short_desc,
+        "long_desc" => $row->long_desc,
+        "gambar" => $gambar,
+        "id_kategori" => $row->id_kategori,
+        "judul_kategori" => $row->nama_menu,
+        "gambar_kategori" => $gambar_kategori,  
       );
       array_push($hasil, $a);
     }
