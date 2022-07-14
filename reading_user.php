@@ -81,7 +81,7 @@ class ReadingUser
         $data = AFhelper::dbSelectOne($sql);
         if ($data) {
             $sql = "UPDATE user SET 
-                password = md5('$password_baru'),
+                password = md5('$password_baru')
                 WHERE username = '$username'";
             AFhelper::dbSave($sql, null);
         } else {
