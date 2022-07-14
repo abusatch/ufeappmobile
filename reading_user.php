@@ -83,7 +83,15 @@ class ReadingUser
             $sql = "UPDATE user SET 
                 password = md5('$password_baru')
                 WHERE username = '$username'";
-            AFhelper::dbSave($sql, null, 'Password changed successfully');
+            $hasil = AFhelper::dbSaveCek($sql);
+            if($hasil[0]) {
+                $sql = "SELECT * FROM user WHERE username = '$username'";
+                $data2 = AFhelper::dbSelectOne($sql);
+                $data2->propic = $data2->propic ? "https://ufe-section-indonesie.org/ufeapp/images/propic/".$data2->propic : '';
+                AFhelper::kirimJson($data2, 'Password changed successfully');       
+            } else {
+                AFhelper::kirimJson($hasil[2], $hasil[1], 0); 
+            }
         } else {
             AFhelper::kirimJson(null, "Current password is not correct", 0);
         }
