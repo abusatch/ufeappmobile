@@ -65,7 +65,7 @@ class ReadingDemarche
       $where = "AND b.id_demar = '$id'";
     }
 
-    $sql = "SELECT b.id_demar, b.id_kategori, b.judul, b.judul2, b.short_desc, b.long_desc, b.gambar, b.bg, b.visibility, b.searching
+    $sql = "SELECT b.id_demar, b.id_kategori, b.judul, b.judul2, b.short_desc, b.long_desc, b.gambar, b.bg, b.visibility, b.searching,
         a.nama_menu, a.gambar2 AS gambar_kategori 
       FROM tb_demar2 b
       JOIN tb_menu a ON(b.id_kategori = a.id_menu) 
@@ -125,7 +125,7 @@ class ReadingDemarche
   }
 
   function searchdemar() {
-    $sql = "SELECT b.id_demar, b.id_kategori, b.judul, b.judul2, b.short_desc, b.long_desc, b.gambar, b.bg, b.visibility, b.searching
+    $sql = "SELECT b.id_demar, b.id_kategori, b.judul, b.judul2, b.short_desc, b.long_desc, b.gambar, b.bg, b.visibility, b.searching,
         a.nama_menu, a.gambar2 AS gambar_kategori 
       FROM tb_demar2 b
       JOIN tb_menu a ON(b.id_kategori = a.id_menu) 
