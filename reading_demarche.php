@@ -18,6 +18,9 @@ switch ($mode) {
     case 'searchdemar':
       $reading->searchdemar();
       break;
+    case 'searchagent':
+      $reading->searchagent();
+      break;
     default:
       echo "Mode Not Found";
       break;
