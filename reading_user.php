@@ -12,6 +12,9 @@ switch ($mode) {
     case 'edit':
         $reading->edit();
         break;
+    case 'changepwd':
+        $reading->changePassword();
+        break;
     default:
         echo "Mode tidak sesuai";
         break;
@@ -66,6 +69,24 @@ class ReadingUser
             }
         }
         AFhelper::dbSave($sql, null, 'Data changed successfully');
+    }
+
+    function changePassword() {
+        $username = $_POST['username'];
+        $password_lama = $_POST['password_lama'];
+        $password_baru = $_POST['password_baru'];
+
+        date_default_timezone_set('Asia/Jakarta');
+        $sql = "SELECT * FROM user WHERE username = '$username' AND password = md5('$password_lama')";
+        $data = AFhelper::dbSelectOne($sql);
+        if ($data) {
+            $sql = "UPDATE user SET 
+                password = md5('$password_baru'),
+                WHERE username = '$username'";
+            AFhelper::dbSave($sql, null);
+        } else {
+            AFhelper::kirimJson(null, "Current password is not correct", 0);
+        }
     }
 }
 
