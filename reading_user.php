@@ -83,7 +83,7 @@ class ReadingUser
             $sql = "UPDATE user SET 
                 password = md5('$password_baru')
                 WHERE username = '$username'";
-            AFhelper::dbSave($sql, null);
+            AFhelper::dbSave($sql, null, 'Password changed successfully');
         } else {
             AFhelper::kirimJson(null, "Current password is not correct", 0);
         }
