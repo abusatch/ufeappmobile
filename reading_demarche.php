@@ -213,86 +213,87 @@ class ReadingDemarche
 
   function searching() {
     $cari = strtolower($_POST['cari']);
+    if(empty($cari)) {
+      AFhelper::kirimJson(null, "word search cannot be empty", 0);
+    } else {
+      $sql = "SELECT b.id_demar, b.id_kategori, b.judul, b.judul2, b.short_desc, b.long_desc, b.gambar, b.bg, b.visibility, b.searching,
+          a.nama_menu, a.gambar2 AS gambar_kategori 
+        FROM tb_demar2 b
+        JOIN tb_menu a ON(b.id_kategori = a.id_menu) 
+        WHERE b.visibility = '1' AND ( LOWER(b.judul) LIKE '%$cari%' OR LOWER(b.long_desc) LIKE '%$cari%' )";
 
-    $sql = "SELECT b.id_demar, b.id_kategori, b.judul, b.judul2, b.short_desc, b.long_desc, b.gambar, b.bg, b.visibility, b.searching,
-        a.nama_menu, a.gambar2 AS gambar_kategori 
-      FROM tb_demar2 b
-      JOIN tb_menu a ON(b.id_kategori = a.id_menu) 
-      WHERE b.visibility = '1' AND ( LOWER(b.judul) LIKE '%$cari%' OR LOWER(b.long_desc) LIKE '%$cari%' )";
+      $data = AFhelper::dbSelectAll($sql);
+      $hasil = array();
+      
+      foreach ($data as $row) {
+        $gambar = $row->gambar ? "https://ufe-section-indonesie.org/ufeapp/images/menu/".$row->gambar : '';
+        $gambar_kategori = $row->gambar_kategori ? "https://ufe-section-indonesie.org/ufeapp/images/menu/".$row->gambar_kategori : '';
+        $a = array(
+          "id_demar" => $row->id_demar,
+          "judul" => $row->judul,
+          "short_desc" => $row->short_desc,
+          "long_desc" => $row->long_desc,
+          "gambar" => $gambar,
+          "id_kategori" => $row->id_kategori,
+          "judul_kategori" => $row->nama_menu,
+          "gambar_kategori" => $gambar_kategori,  
+        );
+        array_push($hasil, $a);
+      }
 
-    $data = AFhelper::dbSelectAll($sql);
-    $hasil = array();
-    
-    foreach ($data as $row) {
-      $gambar = $row->gambar ? "https://ufe-section-indonesie.org/ufeapp/images/menu/".$row->gambar : '';
-      $gambar_kategori = $row->gambar_kategori ? "https://ufe-section-indonesie.org/ufeapp/images/menu/".$row->gambar_kategori : '';
-      $a = array(
-        "id_demar" => $row->id_demar,
-        "judul" => $row->judul,
-        "short_desc" => $row->short_desc,
-        "long_desc" => $row->long_desc,
+      $sql2 = "SELECT a.id_agent, a.id_kategori, a.judul, a.judul2, a.short_desc, a.long_desc, a.gambar, a.gambar2, a.namaagent, a.gmaps, a.alamatagent, a.alamat2agent, 
+              a.kotaagent, a.kodeposagent, a.telpagent, a.mobileagent, a.emailagent, a.webagent, a.fbagent, a.twiteragent, a.igagent, a.playstoreagent,
+              a.rating1, a.rating2, a.rating3, a.visibility, b.judul AS judul_kategori, b.gambar AS gambar_kategori, c.id_menu, c.nama_menu AS judul_menu, c.gambar2 AS gambar_menu
+          FROM tb_agent a
+          JOIN tb_demar2 b ON(a.id_kategori = b.id_demar)
+          JOIN tb_menu c ON(b.id_kategori = c.id_menu)
+          WHERE a.visibility = '1' AND ( LOWER(a.long_desc) LIKE '%$cari%' OR LOWER(a.namaagent) LIKE '%$cari%' OR LOWER(a.alamatagent) LIKE '%$cari%' )";
+
+      $data2 = AFhelper::dbSelectAll($sql2);
+      $hasil2 = array();
+
+      foreach ($data2 as $row2) {
+        $logo = $row2->gambar ? "https://ufe-section-indonesie.org/ufeapp/images/agent/".$row2->gambar : '';
+        $gambar = $row2->gambar2 ? "https://ufe-section-indonesie.org/ufeapp/images/agent/".$row2->gambar2 : '';
+        $gambar_kategori = $row2->gambar_kategori ? "https://ufe-section-indonesie.org/ufeapp/images/menu/".$row2->gambar_kategori : '';
+        $gambar_menu = $row2->gambar_menu ? "https://ufe-section-indonesie.org/ufeapp/images/menu/".$row2->gambar_menu : '';
+        $kota = str_replace($row2->kodeposagent, "", $row2->kotaagent);
+        $b = array(
+        "id_agent" => $row2->id_agent,
+        "deskripsi" => AFhelper::formatText($row2->long_desc),
+        "nama" => $row2->namaagent,
+        "alamat" => AFhelper::formatText($row2->alamatagent),
+        "kota" => $kota,
+        "kode_pos" => $row2->kodeposagent,
+        "gmaps" => $row2->gmaps,
+        "phone" => $row2->telpagent,
+        "mobile" => $row2->mobileagent,
+        "email" => $row2->emailagent,
+        "web" => $row2->webagent,
+        "facebook" => $row2->fbagent,
+        "twitter" => $row2->twiteragent,
+        "instagram" => $row2->igagent,
+        "playstore" => $row2->playstoreagent,
+        "logo" => $logo,
         "gambar" => $gambar,
-        "id_kategori" => $row->id_kategori,
-        "judul_kategori" => $row->nama_menu,
-        "gambar_kategori" => $gambar_kategori,  
+        "rating1" => $row2->rating1,
+        "rating2" => $row2->rating2,
+        "rating3" => $row2->rating3,
+        "id_kategori" => $row2->id_kategori,
+        "judul_kategori" => $row2->judul_kategori,
+        "gambar_kategori" => $gambar_kategori,
+        "id_menu" => $row2->id_menu,
+        "judul_menu" => $row2->judul_menu,
+        "gambar_menu" => $gambar_menu,
+        );
+        array_push($hasil2, $b);
+      }
+      $hasil3 = array(
+        'demar' => $hasil, 
+        'agent' => $hasil2
       );
-      array_push($hasil, $a);
+      AFhelper::kirimJson($hasil3);
     }
-
-    $sql2 = "SELECT a.id_agent, a.id_kategori, a.judul, a.judul2, a.short_desc, a.long_desc, a.gambar, a.gambar2, a.namaagent, a.gmaps, a.alamatagent, a.alamat2agent, 
-            a.kotaagent, a.kodeposagent, a.telpagent, a.mobileagent, a.emailagent, a.webagent, a.fbagent, a.twiteragent, a.igagent, a.playstoreagent,
-            a.rating1, a.rating2, a.rating3, a.visibility, b.judul AS judul_kategori, b.gambar AS gambar_kategori, c.id_menu, c.nama_menu AS judul_menu, c.gambar2 AS gambar_menu
-        FROM tb_agent a
-        JOIN tb_demar2 b ON(a.id_kategori = b.id_demar)
-        JOIN tb_menu c ON(b.id_kategori = c.id_menu)
-        WHERE a.visibility = '1' AND ( LOWER(a.long_desc) LIKE '%$cari%' OR LOWER(a.namaagent) LIKE '%$cari%' OR LOWER(a.alamatagent) LIKE '%$cari%' )";
-
-    $data2 = AFhelper::dbSelectAll($sql2);
-    $hasil2 = array();
-
-    foreach ($data2 as $row2) {
-      $logo = $row2->gambar ? "https://ufe-section-indonesie.org/ufeapp/images/agent/".$row2->gambar : '';
-      $gambar = $row2->gambar2 ? "https://ufe-section-indonesie.org/ufeapp/images/agent/".$row2->gambar2 : '';
-      $gambar_kategori = $row2->gambar_kategori ? "https://ufe-section-indonesie.org/ufeapp/images/menu/".$row2->gambar_kategori : '';
-      $gambar_menu = $row2->gambar_menu ? "https://ufe-section-indonesie.org/ufeapp/images/menu/".$row2->gambar_menu : '';
-      $kota = str_replace($row2->kodeposagent, "", $row2->kotaagent);
-      $b = array(
-      "id_agent" => $row2->id_agent,
-      "deskripsi" => AFhelper::formatText($row2->long_desc),
-      "nama" => $row2->namaagent,
-      "alamat" => AFhelper::formatText($row2->alamatagent),
-      "kota" => $kota,
-      "kode_pos" => $row2->kodeposagent,
-      "gmaps" => $row2->gmaps,
-      "phone" => $row2->telpagent,
-      "mobile" => $row2->mobileagent,
-      "email" => $row2->emailagent,
-      "web" => $row2->webagent,
-      "facebook" => $row2->fbagent,
-      "twitter" => $row2->twiteragent,
-      "instagram" => $row2->igagent,
-      "playstore" => $row2->playstoreagent,
-      "logo" => $logo,
-      "gambar" => $gambar,
-      "rating1" => $row2->rating1,
-      "rating2" => $row2->rating2,
-      "rating3" => $row2->rating3,
-      "id_kategori" => $row2->id_kategori,
-      "judul_kategori" => $row2->judul_kategori,
-      "gambar_kategori" => $gambar_kategori,
-      "id_menu" => $row2->id_menu,
-      "judul_menu" => $row2->judul_menu,
-      "gambar_menu" => $gambar_menu,
-      );
-      array_push($hasil2, $b);
-    }
-
-    $hasil3 = array(
-      'demar' => $hasil, 
-      'agent' => $hasil2
-    );
-
-    AFhelper::kirimJson($hasil3, $sql.$sql2);
   }
   
 }
