@@ -292,7 +292,7 @@ class ReadingDemarche
       'agent' => $hasil2
     );
 
-    AFhelper::kirimJson($hasil3);
+    AFhelper::kirimJson($hasil3, $sql.$sql2);
   }
   
 }
