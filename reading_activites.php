@@ -53,7 +53,7 @@ class ReadingActivites
     function harga() {
         $id = $_POST['id_activites'];
         if($id) {
-            $sql = "SELECT id_harga, id_activites, harga, keterangan 
+            $sql = "SELECT id_harga, id_activites, harga, keterangan, mata_uang 
                 FROM tb_harga_program 
                 WHERE id_activites = $id";
             $data = AFhelper::dbSelectAll($sql);
