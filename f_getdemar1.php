@@ -40,8 +40,8 @@ $desk7 = str_replace(".","",$desk6);
         
            <?php $nooo++;} ?>
                     ],
-"deskripsi":"<?php echo $desk7; ?>"
-
+"deskripsi":"<?php echo $desk7; ?>",
+"warna":"<?php echo $ew2['warna'] ?>"
 }
 
 <?php
@@ -86,7 +86,8 @@ $desk7 = str_replace(".","",$desk6);
         
            <?php $nooo++;} ?>
                     ],
-"deskripsi":"<?php echo $desk7; ?>"
+"deskripsi":"<?php echo $desk7; ?>",
+"warna":"<?php echo $ew2['warna'] ?>"
 
 }
 <?php $no++;}
