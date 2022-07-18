@@ -18,6 +18,9 @@ switch ($mode) {
     case 'harga':
         $reading->harga();
         break;
+    case 'mylist':
+        $reading->mylist();
+        break;
     default:
         echo "Mode Not Found";
         break;
@@ -76,6 +79,23 @@ class ReadingActivites
             AFhelper::kirimJson(null, 'ID Aktifitas harus diisi', 0);
         }
         
+    }
+
+    function mylist() {
+        $email = $_GET['email'];
+
+        $sql = "SELECT * from user where username = '$email'";
+        $user = AFhelper::dbSelectOne($sql);
+        $idUser = $user->idUser;
+
+        $sql = "SELECT a.id_activites, a.id_user, a.status, a.registration_date, a.expired_date, b.judul, b.deskripsi, b.id_jenis, b.CONCAT('https://ufe-section-indonesie.org/ufeapp/images/activites/',gambar) AS gambar, b.gambar2, 
+            b.harga1, b.harga2, b.harga3, b.tanggal, b.tanggal2, b.keterangan, b.hargaa1, b.hargaa2, b.hargaa3, b.instruktur, b.ket_instruktur, b.jadwal1, b.jadwal2, b.jadwal3 
+            FROM tb_user_activites a
+            JOIN tb_activites b ON(a.id_activites = b.id_activites)
+            WHERE a.id_user = '$idUser'
+            ORDER BY a.registration_date DESC";
+        $data = AFhelper::dbSelectAll($sql);
+        AFhelper::kirimJson($data, 'Get My List Activites');
     }
     
 }
