@@ -58,7 +58,8 @@ class ReadingActivites
         if($id) {
             $sql = "SELECT id_harga, id_activites, harga, keterangan, mata_uang, periode 
                 FROM tb_harga_program 
-                WHERE id_activites = $id";
+                WHERE id_activites = $id
+                ORDER BY harga";
             $data = AFhelper::dbSelectAll($sql);
             AFhelper::kirimJson($data, 'Get List Price');
         } else {
