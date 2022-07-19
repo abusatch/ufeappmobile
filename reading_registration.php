@@ -58,11 +58,16 @@ class ReadingRegistration
     // $expired_date = date("Y-m-d H:i:s", strtotime("+".$harga->periode));
     
     $sql = "INSERT INTO tb_registration(id_user, id_activites, id_harga, harga, payment, registration_date, firstname, lastname, cc_number, cvv, exp_month, exp_year, email) 
-        VALUES ('$idUser', '$id_activites', '$id_harga', '$harga->harga','$payment', '$registration_date', '$firstname', '$lastname', '$cc_number', '$cvv', '$exp_month', '$exp_year', '$email')";
+      VALUES ('$idUser', '$id_activites', '$id_harga', '$harga->harga','$payment', '$registration_date', '$firstname', '$lastname', '$cc_number', '$cvv', '$exp_month', '$exp_year', '$email')";
     $hasil = AFhelper::dbSaveReturnID($sql);
     if ($hasil <> 0 && $hasil <> '') {
       $sql = "INSERT INTO tb_user_activites(id_user, id_activites, status, id_registration , registration_date, expired_date) 
-            VALUES ('$idUser', '$id_activites', 'Y', '$hasil', '$registration_date', '$expired_date')";
+        VALUES ('$idUser', '$id_activites', 'Y', '$hasil', '$registration_date', '$expired_date')
+        ON DUPLICATE KEY UPDATE
+        status = 'Y',
+        id_registration = '$hasil',
+        registration_date = '$registration_date',
+        expired_date = '$expired_date'";
       AFhelper::dbSave($sql, null, 'Data saved successfully');
     }  else {
       AFhelper::kirimJson(null, 'Registration failed', 0); 
