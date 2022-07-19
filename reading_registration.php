@@ -9,6 +9,9 @@ switch ($mode) {
     case 'tambah':
       $reading->tambah();
       break;
+    case 'detil':
+      $reading->detil();
+      break;
     default:
       echo "Mode Not Found";
       break;
@@ -16,6 +19,20 @@ switch ($mode) {
 
 class ReadingRegistration
 {
+  function detil() {
+    $id = $_POST['id'];
+    if($id) {
+        $sql = "SELECT id_registration, id_user, id_activites, id_harga, harga, payment, registration_date, firstname, lastname, 
+            cc_number, cvv, exp_month, exp_year, email 
+          FROM tb_registration 
+          WHERE id_registration = $id";
+        $data = AFhelper::dbSelectOne($sql);
+        AFhelper::kirimJson($data, 'Get Registration');
+    } else {
+        AFhelper::kirimJson(null, 'ID cannot be empty', 0);
+    }  
+  }
+
   function tambah() {
     $username = $_POST['username'];
     $id_activites = $_POST['id_activites'];
@@ -28,6 +45,8 @@ class ReadingRegistration
     $email = $_POST['email'];
     $exp_month = $_POST['exp_month'];
     $exp_year = $_POST['exp_year'];
+    $registration_date = $_POST['registration_date'];
+    $expired_date = $_POST['expired_date'];
 
     $sql = "SELECT * from user where username = '$username'";
     $user = AFhelper::dbSelectOne($sql);
@@ -36,19 +55,17 @@ class ReadingRegistration
     $sql = "SELECT * from tb_harga_program where id_harga = '$id_harga'";
     $harga = AFhelper::dbSelectOne($sql);
 
-    date_default_timezone_set('Asia/Jakarta');
-    $tanggal = date('Y-m-d H:i:s');
-    $expired_date = date("Y-m-d H:i:s", strtotime("+".$harga->periode));
+    // $expired_date = date("Y-m-d H:i:s", strtotime("+".$harga->periode));
     
     $sql = "INSERT INTO tb_registration(id_user, id_activites, id_harga, harga, payment, registration_date, firstname, lastname, cc_number, cvv, exp_month, exp_year, email) 
-        VALUES ('$idUser', '$id_activites', '$id_harga', '$harga->harga','$payment', '$tanggal', '$firstname', '$lastname', '$cc_number', '$cvv', '$exp_month', '$exp_year', '$email')";
-    $hasil = AFhelper::dbSaveCek($sql);
-    if($hasil[0]) {
-        $sql = "INSERT INTO tb_user_activites(id_user, id_activites, status, registration_date, expired_date) 
-            VALUES ('$idUser', '$id_activites', 'Y', '$tanggal', '$expired_date')";
-        AFhelper::dbSave($sql, null, 'Data saved successfully');
-    } else {
-        AFhelper::kirimJson(null, 'Registration failed '.$hasil[1], 0); 
+        VALUES ('$idUser', '$id_activites', '$id_harga', '$harga->harga','$payment', '$registration_date', '$firstname', '$lastname', '$cc_number', '$cvv', '$exp_month', '$exp_year', '$email')";
+    $hasil = AFhelper::dbSaveReturnID($sql);
+    if ($hasil <> 0 && $hasil <> '') {
+      $sql = "INSERT INTO tb_user_activites(id_user, id_activites, status, id_registration , registration_date, expired_date) 
+            VALUES ('$idUser', '$id_activites', 'Y', '$hasil', '$registration_date', '$expired_date')";
+      AFhelper::dbSave($sql, null, 'Data saved successfully');
+    }  else {
+      AFhelper::kirimJson(null, 'Registration failed', 0); 
     }
   }
   

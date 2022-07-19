@@ -56,7 +56,7 @@ class ReadingActivites
     function harga() {
         $id = $_POST['id_activites'];
         if($id) {
-            $sql = "SELECT id_harga, id_activites, harga, keterangan, mata_uang 
+            $sql = "SELECT id_harga, id_activites, harga, keterangan, mata_uang, periode 
                 FROM tb_harga_program 
                 WHERE id_activites = $id";
             $data = AFhelper::dbSelectAll($sql);
@@ -88,7 +88,7 @@ class ReadingActivites
         $user = AFhelper::dbSelectOne($sql);
         $idUser = $user->idUser;
 
-        $sql = "SELECT a.id_activites, a.id_user, a.status, a.registration_date, a.expired_date, b.judul, b.deskripsi, b.id_jenis, CONCAT('https://ufe-section-indonesie.org/ufeapp/images/activites/',b.gambar) AS gambar, b.gambar2, 
+        $sql = "SELECT a.id_activites, a.id_user, a.status, a.id_registration , a.registration_date, a.expired_date, b.judul, b.deskripsi, b.id_jenis, CONCAT('https://ufe-section-indonesie.org/ufeapp/images/activites/',b.gambar) AS gambar, b.gambar2, 
             b.harga1, b.harga2, b.harga3, b.tanggal, b.tanggal2, b.keterangan, b.hargaa1, b.hargaa2, b.hargaa3, b.instruktur, b.ket_instruktur, b.jadwal1, b.jadwal2, b.jadwal3 
             FROM tb_user_activites a
             JOIN tb_activites b ON(a.id_activites = b.id_activites)
