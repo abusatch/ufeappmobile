@@ -38,7 +38,7 @@ class ReadingRegistration
 
     date_default_timezone_set('Asia/Jakarta');
     $tanggal = date('Y-m-d H:i:s');
-    $expired_date = date("Y-m-d H:i:s", strtotime("+1 ".$harga->periode));
+    $expired_date = date("Y-m-d H:i:s", strtotime("+".$harga->periode));
     
     $sql = "INSERT INTO tb_registration(id_user, id_activites, id_harga, harga, payment, registration_date, firstname, lastname, cc_number, cvv, exp_month, exp_year, email) 
         VALUES ('$idUser', '$id_activites', '$id_harga', '$harga->harga','$payment', '$tanggal', '$firstname', '$lastname', '$cc_number', '$cvv', '$exp_month', '$exp_year', '$email')";
