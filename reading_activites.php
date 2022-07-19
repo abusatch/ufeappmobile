@@ -95,7 +95,17 @@ class ReadingActivites
             WHERE a.id_user = '$idUser'
             ORDER BY a.registration_date DESC";
         $data = AFhelper::dbSelectAll($sql);
-        AFhelper::kirimJson($data, 'Get My List Activites');
+        $hasil = array();
+        foreach ($data as $row) {
+            $tgl = explode("-", substr($row->registration_date,0,10));
+            $row->registration_date = $tgl[2]."/".$tgl[1]."/".$tgl[0];
+
+            $tgl_exp = explode("-", substr($row->expired_date,0,10));
+            $row->expired_date = $tgl_exp[2]."/".$tgl_exp[1]."/".$tgl_exp[0];
+
+            array_push($hasil, $row);
+        }
+        AFhelper::kirimJson($hasil, 'Get My List Activites');
     }
     
 }
