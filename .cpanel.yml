@@ -30,3 +30,4 @@ deployment:
     - /bin/cp -R write_firebase.php $DEPLOYPATH
     - /bin/cp -R reading_user.php $DEPLOYPATH
     - /bin/cp -R reading_registration.php $DEPLOYPATH
+    - /bin/cp -R reading_notif.php $DEPLOYPATH
