@@ -40,14 +40,14 @@ class ReadingNotif
     $offset = " offset $halaman";
     $dibaca = "-".$idUser."-";
 
-    $sql = "SELECT SELECT a.id_notif, a.kategori, a.judul, a.isi, a.keterangan, a.tanggal, a.gambar, a.data, a.kepada, a.dibaca, a.dihapus 
+    $sql = "SELECT a.id_notif, a.kategori, a.judul, a.isi, a.keterangan, a.tanggal, a.gambar, a.data, a.kepada, a.dibaca, a.dihapus 
         FROM tb_notification a
         WHERE 1=1 AND a.dihapus NOT LIKE '%$dibaca%' AND (a.kepada = 'all' OR a.kepada = '$idUser') $where 
         ORDER BY a.id_notif DESC limit 15 $offset";
 
     $data = AFhelper::dbSelectAll($sql, 'Get Notification');
     
-    AFhelper::kirimJson($data, $sql);  
+    AFhelper::kirimJson($data);  
   }
   
 }
