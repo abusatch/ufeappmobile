@@ -39,7 +39,7 @@ class ReadingDemarche
     }
 
     $sql = "SELECT a.id_menu, a.id_kategori, a.jenis, a.nama_menu, a.short_desc, a.long_desc, a.gambar, a.gambar2, a.gambar3, a.bg, a.bg2, a.ket, 
-      a.tanggal, a.tanggal2, a.linkweb, a.id_kate, a.menu_bg, a.menu_drop1, a.menu_drop2, a.sort 
+      a.tanggal, a.tanggal2, a.linkweb, a.id_kate, a.menu_bg, a.menu_drop1, a.menu_drop2, a.sort, a.warna 
     FROM tb_menu a
     WHERE a.jenis = 'DEMARCHES' $where 
     ORDER BY a.sort";
@@ -55,6 +55,7 @@ class ReadingDemarche
         "menu_drop" => $row->menu_drop1,
         "gambar" => $gambar,
         "judul" => $row->nama_menu,
+        "warna" => $row->warna,
       );
       array_push($hasil, $a);
     }
@@ -72,7 +73,7 @@ class ReadingDemarche
     }
 
     $sql = "SELECT b.id_demar, b.id_kategori, b.judul, b.judul2, b.short_desc, b.long_desc, b.gambar, b.bg, b.visibility, b.searching,
-        a.nama_menu, a.gambar2 AS gambar_kategori 
+        a.nama_menu, a.gambar2 AS gambar_kategori, a.warna
       FROM tb_demar2 b
       JOIN tb_menu a ON(b.id_kategori = a.id_menu) 
       WHERE b.visibility = '1' $where
@@ -92,7 +93,8 @@ class ReadingDemarche
         "gambar" => $gambar,
         "id_kategori" => $row->id_kategori,
         "judul_kategori" => $row->nama_menu,
-        "gambar_kategori" => $gambar_kategori,  
+        "gambar_kategori" => $gambar_kategori,
+        "warna" => $row->warna,  
       );
       array_push($hasil, $a);
     }
@@ -132,7 +134,7 @@ class ReadingDemarche
 
   function searchdemar() {
     $sql = "SELECT b.id_demar, b.id_kategori, b.judul, b.judul2, b.short_desc, b.long_desc, b.gambar, b.bg, b.visibility, b.searching,
-        a.nama_menu, a.gambar2 AS gambar_kategori 
+        a.nama_menu, a.gambar2 AS gambar_kategori, a.warna 
       FROM tb_demar2 b
       JOIN tb_menu a ON(b.id_kategori = a.id_menu) 
       WHERE b.visibility = '1' AND b.searching = '1'";
@@ -151,7 +153,8 @@ class ReadingDemarche
         "gambar" => $gambar,
         "id_kategori" => $row->id_kategori,
         "judul_kategori" => $row->nama_menu,
-        "gambar_kategori" => $gambar_kategori,  
+        "gambar_kategori" => $gambar_kategori,
+        "warna" => $row->warna,  
       );
       array_push($hasil, $a);
     }
@@ -162,7 +165,7 @@ class ReadingDemarche
   function searchagent() {
     $sql = "SELECT a.id_agent, a.id_kategori, a.judul, a.judul2, a.short_desc, a.long_desc, a.gambar, a.gambar2, a.namaagent, a.gmaps, a.alamatagent, a.alamat2agent, 
             a.kotaagent, a.kodeposagent, a.telpagent, a.mobileagent, a.emailagent, a.webagent, a.fbagent, a.twiteragent, a.igagent, a.playstoreagent,
-            a.rating1, a.rating2, a.rating3, a.visibility, b.judul AS judul_kategori, b.gambar AS gambar_kategori, c.id_menu, c.nama_menu AS judul_menu, c.gambar2 AS gambar_menu
+            a.rating1, a.rating2, a.rating3, a.visibility, b.judul AS judul_kategori, b.gambar AS gambar_kategori, c.id_menu, c.nama_menu AS judul_menu, c.gambar2 AS gambar_menu, c.warna
         FROM tb_agent a
         JOIN tb_demar2 b ON(a.id_kategori = b.id_demar)
         JOIN tb_menu c ON(b.id_kategori = c.id_menu)
@@ -204,6 +207,7 @@ class ReadingDemarche
         "id_menu" => $row->id_menu,
         "judul_menu" => $row->judul_menu,
         "gambar_menu" => $gambar_menu,
+        "warna" => $row->warna,
         );
         array_push($hasil, $a);
     }
@@ -217,7 +221,7 @@ class ReadingDemarche
       AFhelper::kirimJson(null, "word search cannot be empty", 0);
     } else {
       $sql = "SELECT b.id_demar, b.id_kategori, b.judul, b.judul2, b.short_desc, b.long_desc, b.gambar, b.bg, b.visibility, b.searching,
-          a.nama_menu, a.gambar2 AS gambar_kategori 
+          a.nama_menu, a.gambar2 AS gambar_kategori, a.warna 
         FROM tb_demar2 b
         JOIN tb_menu a ON(b.id_kategori = a.id_menu) 
         WHERE b.visibility = '1' AND ( LOWER(b.judul) LIKE '%$cari%' OR LOWER(b.long_desc) LIKE '%$cari%' )";
@@ -236,14 +240,15 @@ class ReadingDemarche
           "gambar" => $gambar,
           "id_kategori" => $row->id_kategori,
           "judul_kategori" => $row->nama_menu,
-          "gambar_kategori" => $gambar_kategori,  
+          "gambar_kategori" => $gambar_kategori,
+          "warna" => $row->warna,  
         );
         array_push($hasil, $a);
       }
 
       $sql2 = "SELECT a.id_agent, a.id_kategori, a.judul, a.judul2, a.short_desc, a.long_desc, a.gambar, a.gambar2, a.namaagent, a.gmaps, a.alamatagent, a.alamat2agent, 
               a.kotaagent, a.kodeposagent, a.telpagent, a.mobileagent, a.emailagent, a.webagent, a.fbagent, a.twiteragent, a.igagent, a.playstoreagent,
-              a.rating1, a.rating2, a.rating3, a.visibility, b.judul AS judul_kategori, b.gambar AS gambar_kategori, c.id_menu, c.nama_menu AS judul_menu, c.gambar2 AS gambar_menu
+              a.rating1, a.rating2, a.rating3, a.visibility, b.judul AS judul_kategori, b.gambar AS gambar_kategori, c.id_menu, c.nama_menu AS judul_menu, c.gambar2 AS gambar_menu, c.warna
           FROM tb_agent a
           JOIN tb_demar2 b ON(a.id_kategori = b.id_demar)
           JOIN tb_menu c ON(b.id_kategori = c.id_menu)
@@ -285,6 +290,7 @@ class ReadingDemarche
         "id_menu" => $row2->id_menu,
         "judul_menu" => $row2->judul_menu,
         "gambar_menu" => $gambar_menu,
+        "warna" => $row->warna,
         );
         array_push($hasil2, $b);
       }
