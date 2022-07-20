@@ -47,7 +47,7 @@ class ReadingNotif
 
     $data = AFhelper::dbSelectAll($sql, 'Get Notification');
     
-    AFhelper::kirimJson($data);  
+    AFhelper::kirimJson($data, $sql);  
   }
   
 }
