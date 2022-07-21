@@ -7,11 +7,17 @@ $mode = $_GET['mode'];
 $reading = new ReadingNotif();
 switch ($mode) {
     case 'lihat':
-      $reading->lihat();
-      break;
+        $reading->lihat();
+        break;
+    case 'baca':
+        $reading->baca();
+        break;
+    case 'hapus':
+        $reading->hapus();
+        break;
     default:
-      echo "Mode Not Found";
-      break;
+        echo "Mode Not Found";
+        break;
 }
 
 class ReadingNotif
@@ -48,6 +54,54 @@ class ReadingNotif
     $data = AFhelper::dbSelectAll($sql, 'Get Notification');
     
     AFhelper::kirimJson($data);  
+  }
+
+  function baca() {
+    $email = $_GET['email'];
+    $id_notif = $_GET['id_notif'];
+
+    if(!empty($email)) {
+        $sql = "SELECT * from user where username = '$email'";
+        $user = AFhelper::dbSelectOne($sql);
+        $idUser = $user->idUser;
+    }
+    $dibaca = "-".$idUser."-";
+
+    $sql = "SELECT * 
+        FROM tb_notification
+        WHERE id_notif = '$id_notif' AND dibaca LIKE '%$dibaca%'";
+    $data = AFhelper::dbSelectOne($sql);
+    if($data) {
+        AFhelper::kirimJson($data);
+    } else {
+        $nilai = $idUser."-";
+        $sql = "UPDATE tb_notification SET dibaca = CONCAT(dibaca,'$nilai') WHERE id_notif = '$id_notif'";
+        AFhelper::dbSave($sql, null, "Données enregistrées avec succès");
+    }  
+  }
+
+  function hapus() {
+    $email = $_GET['email'];
+    $id_notif = $_GET['id_notif'];
+
+    if(!empty($email)) {
+        $sql = "SELECT * from user where username = '$email'";
+        $user = AFhelper::dbSelectOne($sql);
+        $idUser = $user->idUser;
+    }
+
+    $sql = "SELECT * 
+        FROM tb_notification
+        WHERE id_notif = '$id_notif' AND kepada = '$idUser'";
+    $data = AFhelper::dbSelectOne($sql);
+    if($data) {
+        $sql = "DELETE FROM tb_notification WHERE id_notif = '$id_notif'";
+        AFhelper::dbSave($sql, null, "Données enregistrées avec succès");
+    } else {
+        $nilai = $idUser."-";
+        $sql = "UPDATE tb_notification SET dihapus = CONCAT(dihapus,'$nilai') WHERE id_notif = '$id_notif'";
+        AFhelper::dbSave($sql, null, "Données enregistrées avec succès");
+    }  
   }
   
 }
