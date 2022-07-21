@@ -15,6 +15,9 @@ switch ($mode) {
     case 'hapus':
         $reading->hapus();
         break;
+    case 'belumdibaca':
+        $reading->belumdibaca();
+        break;
     default:
         echo "Mode Not Found";
         break;
@@ -102,6 +105,23 @@ class ReadingNotif
         $sql = "UPDATE tb_notification SET dihapus = CONCAT(dihapus,'$nilai') WHERE id_notif = '$id_notif'";
         AFhelper::dbSave($sql, null, "Données enregistrées avec succès");
     }  
+  }
+
+  function belumdibaca() {
+    $email = $_GET['email'];
+
+    if(!empty($email)) {
+        $sql = "SELECT * from user where username = '$email'";
+        $user = AFhelper::dbSelectOne($sql);
+        $idUser = $user->idUser;
+    }
+    $useridstrip = "-".$idUser."-";
+
+    $sql = "SELECT count(*) AS jumlah
+        FROM tb_notification
+        WHERE dihapus NOT LIKE '%$useridstrip%' AND dibaca NOT LIKE '%$useridstrip%' AND (kepada = 'all' OR kepada = '$idUser')";
+    $data = AFhelper::dbSelectOne($sql);
+    AFhelper::kirimJson($data);  
   }
   
 }
