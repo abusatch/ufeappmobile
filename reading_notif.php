@@ -18,6 +18,12 @@ switch ($mode) {
     case 'belumdibaca':
         $reading->belumdibaca();
         break;
+    case 'reginfo':
+        $reading->reginfo();
+        break;
+    case 'moninfo':
+        $reading->moninfo();
+        break;
     default:
         echo "Mode Not Found";
         break;
@@ -120,6 +126,20 @@ class ReadingNotif
     $sql = "SELECT count(*) AS jumlah
         FROM tb_notification
         WHERE dihapus NOT LIKE '%$useridstrip%' AND dibaca NOT LIKE '%$useridstrip%' AND (kepada = 'all' OR kepada = '$idUser')";
+    $data = AFhelper::dbSelectOne($sql);
+    AFhelper::kirimJson($data);  
+  }
+
+  function reginfo() {
+    $sql = "SELECT id_info, jenis, tanggal, judul, isi, isaktif FROM tb_informasi
+        WHERE jenis = '2' AND isaktif = '1' ORDER BY id_info DESC LIMIT 1";
+    $data = AFhelper::dbSelectOne($sql);
+    AFhelper::kirimJson($data);  
+  }
+
+  function moninfo() {
+    $sql = "SELECT id_info, jenis, tanggal, judul, isi, isaktif FROM tb_informasi
+        WHERE jenis = '1' AND isaktif = '1' ORDER BY id_info DESC LIMIT 1";
     $data = AFhelper::dbSelectOne($sql);
     AFhelper::kirimJson($data);  
   }
