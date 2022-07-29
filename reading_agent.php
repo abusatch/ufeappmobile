@@ -18,7 +18,7 @@ if(empty($halaman)) {
 $offset = " offset $halaman";
 
 $sql = "SELECT a.id_agent, a.id_kategori, a.judul, a.judul2, a.short_desc, a.long_desc, a.gambar, a.gambar2, a.namaagent, a.gmaps, a.alamatagent, a.alamat2agent, 
-        a.kotaagent, a.kodeposagent, a.telpagent, a.mobileagent, a.emailagent, a.webagent, a.fbagent, a.twiteragent, a.igagent, a.playstoreagent,
+        a.kotaagent, a.kodeposagent, a.telpagent, a.mobileagent, a.emailagent, a.webagent, a.fbagent, a.twiteragent, a.igagent, a.waagent, a.telegramagent, a.linkedagent, a.youtubeagent, a.appstoreagent, a.playstoreagent,
         a.rating1, a.rating2, a.rating3, a.visibility, b.judul AS judul_kategori, b.gambar AS gambar_kategori, c.id_menu, c.nama_menu AS judul_menu, c.gambar2 AS gambar_menu
     FROM tb_agent a
     JOIN tb_demar2 b ON(a.id_kategori = b.id_demar)
@@ -50,6 +50,11 @@ foreach ($data as $row) {
     "facebook" => $row->fbagent,
     "twitter" => $row->twiteragent,
     "instagram" => $row->igagent,
+    "whatsapp" => $row->waagent, 
+    "telegram" => $row->telegramagent, 
+    "linkedin" => $row->linkedagent, 
+    "youtube" => $row->youtubeagent, 
+    "appstore" => $row->appstoreagent,
     "playstore" => $row->playstoreagent,
     "logo" => $logo,
     "gambar" => $gambar,
