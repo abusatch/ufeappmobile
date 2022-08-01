@@ -34,6 +34,7 @@ foreach ($data as $row) {
     $gambar = $row->gambar2 ? "https://ufe-section-indonesie.org/ufeapp/images/agent/".$row->gambar2 : '';
     $gambar_kategori = $row->gambar_kategori ? "https://ufe-section-indonesie.org/ufeapp/images/menu/".$row->gambar_kategori : '';
     $gambar_menu = $row->gambar_menu ? "https://ufe-section-indonesie.org/ufeapp/images/menu/".$row->gambar_menu : '';
+    $whatsapp = $row->waagent ? "https://wa.me/".$row->waagent : '';
     $kota = str_replace($row->kodeposagent, "", $row->kotaagent);
     $a = array(
     "id_agent" => $row->id_agent,
@@ -50,7 +51,7 @@ foreach ($data as $row) {
     "facebook" => $row->fbagent,
     "twitter" => $row->twiteragent,
     "instagram" => $row->igagent,
-    "whatsapp" => $row->waagent, 
+    "whatsapp" => $whatsapp, 
     "telegram" => $row->telegramagent, 
     "linkedin" => $row->linkedagent, 
     "youtube" => $row->youtubeagent, 
