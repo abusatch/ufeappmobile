@@ -7,8 +7,7 @@ $judul = $_POST['judul'];
 $deskripsi = $_POST['name'];
 $linkweb = $_POST['linkweb'];
 $email = $_POST['email'];
-$id_advert = $_POST['id_advert'];
-$kategori = $_POST['kategori'];
+$id_template = $_POST['id_template'];
 
 date_default_timezone_set('Asia/Jakarta');
 $tanggal = date('Y-m-d');
@@ -22,21 +21,21 @@ if (empty($deskripsi)) {
     $idUser = $user->idUser;
     
     $path = $email.substr(date('YmdHis'),0,-1).".png";
-    $path2 = "images/advert/".$path;
+    $path2 = "images/actualite/".$path;
     
-    if($id_advert == "") {
+    if($id_template == "") {
         if (!$_FILES['image']['tmp_name']) {
             AFhelper::kirimJson(null, "photo ne peut pas être vide", 0);
         } else {
             $tmp_name = $_FILES['image']['tmp_name'];
             $inputimage = move_uploaded_file($tmp_name,$path2);
             if($inputimage) {
-                $sql = "INSERT INTO tb_advert (
-                    id_category, judul, deskripsi, id_member,
+                $sql = "INSERT INTO tb_template (
+                    judul, deskripsi, id_member_vip,
                     gambar, linkweb, tanggal,
                     tanggal2, tanggal_edit2, user_edit,
                     keterangan, visibility, long_textt) VALUES (
-                    '$kategori', '$judul', '$deskripsi', '$idUser',
+                    '$judul', '$deskripsi', '$idUser',
                     '$path', '$linkweb', '$tanggal',
                     '$tanggal2', '', '$idUser',
                     'pending', '1', '$image')";
@@ -52,16 +51,16 @@ if (empty($deskripsi)) {
         }	
     } else {
         if (!$_FILES['image']['tmp_name']) {
-            $sql = "UPDATE tb_advert set id_category = '$kategori', judul = '$judul', deskripsi = '$deskripsi', linkweb = '$linkweb', 
+            $sql = "UPDATE tb_template set judul = '$judul', deskripsi = '$deskripsi', linkweb = '$linkweb', 
                 tanggal_edit = '$tanggal', tanggal_edit2 = '$tanggal2', user_edit = '$idUser', 
-                keterangan = 'pending' where id_advert = '$id_advert'";
+                keterangan = 'pending' where id_template = '$id_template'";
             AFhelper::dbSave($sql, null, "Données enregistrées avec succès");
         } else {
             $tmp_name = $_FILES['image']['tmp_name'];
             $inputimage = move_uploaded_file($tmp_name,$path2);
-            $sql = "UPDATE tb_advert set id_category = '$kategori', judul = '$judul', deskripsi = '$deskripsi', linkweb = '$linkweb', 
+            $sql = "UPDATE tb_template set judul = '$judul', deskripsi = '$deskripsi', linkweb = '$linkweb', 
                 tanggal_edit = '$tanggal', tanggal_edit2 = '$tanggal2', user_edit = '$idUser', 
-                keterangan = 'pending', gambar = '$path'  where id_advert = '$id_advert'"; 
+                keterangan = 'pending', gambar = '$path'  where id_template = '$id_template'"; 
             AFhelper::dbSave($sql, null, "Données enregistrées avec succès");
         }
     }

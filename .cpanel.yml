@@ -31,3 +31,6 @@ deployment:
     - /bin/cp -R reading_user.php $DEPLOYPATH
     - /bin/cp -R reading_registration.php $DEPLOYPATH
     - /bin/cp -R reading_notif.php $DEPLOYPATH
+    - /bin/cp -R reading_article.php $DEPLOYPATH
+    - /bin/cp -R tambah_article.php $DEPLOYPATH
+    - /bin/cp -R delete_article.php $DEPLOYPATH
