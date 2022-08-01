@@ -34,3 +34,4 @@ deployment:
     - /bin/cp -R reading_article.php $DEPLOYPATH
     - /bin/cp -R tambah_article.php $DEPLOYPATH
     - /bin/cp -R delete_article.php $DEPLOYPATH
+    - /bin/cp -R f_getarticle.php $DEPLOYPATH
