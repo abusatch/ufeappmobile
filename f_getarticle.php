@@ -2,13 +2,26 @@
 
 require_once "helper.php";
 
+$hasil = array();
+
+$sql = "SELECT * from user where idUser = '56'";
+$user = AFhelper::dbSelectOne($sql);
+$a = array(
+"id_template" => $user->idUser,
+"id_member" => $user->idUser,
+"judul" => $user->first_name." ".$user->second_name,
+"deskripsi" => $user->deskripsi,
+"gambar" => "https://ufe-section-indonesie.org/ufeapp/images/propic/".$user->propic,
+"tanggal" => $user->deskripsi,
+);
+array_push($hasil, $a);
+
 $sql_get_data = "SELECT a.*, b.username, b.first_name, b.second_name, b.propic
   FROM tb_template a
   JOIN user b ON(a.id_member_vip = b.idUser)
   WHERE a.visibility = '1' AND a.keterangan = 'release' AND a.id_member_vip = '56' ORDER BY a.id_template DESC limit 3";
 
 $data = AFhelper::dbSelectAll($sql_get_data);
-$hasil = array();
 
 foreach ($data as $row) {
   $tgl = explode("-", $row->tanggal);
