@@ -84,15 +84,11 @@ $deskk6 = str_replace("<br>","",$deskk5);
 $deskk7 = str_replace(".","",$deskk6);
 $deskk8 = str_replace("&petiksatu&","'",$deskk7);
 
-$text = str_replace('\n',"-enter-",$ew2['deskripsi']);
-$text = str_replace("'","`",$text);
+$text = $ew2['deskripsi'];
 $text = str_replace(str_split('\\/:*?"<>|'), ' ', $text);
-$text = trim(preg_replace('/\s\s+/', ' ', $text));
 $text = str_replace("<br>","-enter-",$text);
-$text = nl2br($text);
 $text = preg_replace("/\r\n|\r|\n/", '-enter-', $text);
 $text = str_replace(array("\r\n","\r","\n","\\r","\\n","\\r\\n"),"-enter-",$text);
-
 
 if($no <= 3){}else{
 

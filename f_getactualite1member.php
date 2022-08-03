@@ -87,16 +87,11 @@ $deskk5 = trim(preg_replace('/\s\s+/', ' ', $deskk4));
 $deskk6 = str_replace("<br>","",$deskk5);
 $deskk7 = str_replace(".","",$deskk6);
 
-$text = str_replace('\n',"-enter-",$ew2['deskripsi']);
-$text = str_replace("'","`",$text);
+$text = $ew2['deskripsi'];
 $text = str_replace(str_split('\\/:*?"<>|'), ' ', $text);
-$text = trim(preg_replace('/\s\s+/', ' ', $text));
 $text = str_replace("<br>","-enter-",$text);
-$text = nl2br($text);
 $text = preg_replace("/\r\n|\r|\n/", '-enter-', $text);
 $text = str_replace(array("\r\n","\r","\n","\\r","\\n","\\r\\n"),"-enter-",$text);
-
-
 
 $nf = mysqli_query($koneksi,"select * from user where idUser = '$ew2[id_member]'");
 $nf2 = mysqli_fetch_assoc($nf);

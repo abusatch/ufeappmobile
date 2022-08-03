@@ -79,7 +79,6 @@ class AFhelper
         $text = str_replace("'","`",$text);
         $text = str_replace('"',"-petikdua-",$text);
         $text = str_replace(str_split('\\/:*?"<>|'), ' ', $text);
-        $text = trim(preg_replace('/\s\s+/', ' ', $text));
         $text = str_replace("<br>","-enter-",$text);
         $text = str_replace(".","-titik-",$text);
         $text = str_replace("-","-",$text);
@@ -88,7 +87,6 @@ class AFhelper
         $text = str_replace("é","-ekanan-",$text);
         $text = str_replace("à","-akiri-",$text);
         $text = str_replace("è","-ekiri-",$text);
-        $text = nl2br($text);
         $text = preg_replace("/\r\n|\r|\n/", '-enter-', $text);
         $text = str_replace(array("\r\n","\r","\n","\\r","\\n","\\r\\n"),"-enter-",$text);
 
