@@ -84,6 +84,15 @@ $deskk6 = str_replace("<br>","",$deskk5);
 $deskk7 = str_replace(".","",$deskk6);
 $deskk8 = str_replace("&petiksatu&","'",$deskk7);
 
+$text = str_replace('\n',"-enter-",$ew2['deskripsi']);
+$text = str_replace("'","`",$text);
+$text = str_replace(str_split('\\/:*?"<>|'), ' ', $text);
+$text = trim(preg_replace('/\s\s+/', ' ', $text));
+$text = str_replace("<br>","-enter-",$text);
+$text = nl2br($text);
+$text = preg_replace("/\r\n|\r|\n/", '-enter-', $text);
+$text = str_replace(array("\r\n","\r","\n","\\r","\\n","\\r\\n"),"-enter-",$text);
+
 
 if($no <= 3){}else{
 
@@ -103,7 +112,7 @@ $nf2 = mysqli_fetch_assoc($nf);
 "kategori":"https://ufe-section-indonesie.org/ufeapp/images/propic/<?php echo $nf2['propic'] ?>",
 "kategorii":"<?php echo $mc2['nama_kategori'] ?>",
 "kategori2":"<?php echo $mcc2['nama_kategori2'] ?>",
-"deskripsi":"<?php echo $ew2['deskripsi'] ?>"
+"deskripsi":"<?php echo $text ?>"
 
 }
 <?php 
