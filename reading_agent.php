@@ -34,7 +34,7 @@ foreach ($data as $row) {
     $gambar = $row->gambar2 ? "https://ufe-section-indonesie.org/ufeapp/images/agent/".$row->gambar2 : '';
     $gambar_kategori = $row->gambar_kategori ? "https://ufe-section-indonesie.org/ufeapp/images/menu/".$row->gambar_kategori : '';
     $gambar_menu = $row->gambar_menu ? "https://ufe-section-indonesie.org/ufeapp/images/menu/".$row->gambar_menu : '';
-    $whatsapp = $row->waagent ? "https://wa.me/".$row->waagent : '';
+    $whatsapp = $row->waagent ? "https://api.whatsapp.com/send?phone=".preg_replace("/[^0-9]/", "", $row->waagent) : '';
     $kota = str_replace($row->kodeposagent, "", $row->kotaagent);
     $a = array(
     "id_agent" => $row->id_agent,
