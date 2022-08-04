@@ -24,8 +24,11 @@ switch ($mode) {
     case 'sendmessage':
         $chat->sendMessage();
         break;
-    case 'delmessage':
-        $chat->delMessage();
+    case 'deliveredmessage':
+        $chat->haveDeliveredMessage();
+        break;
+    case 'removemessage':
+        $chat->removeMessage();
         break;
     default:
         echo "Mode tidak sesuai";
@@ -94,7 +97,7 @@ class Chat
     {
         $sql = "SELECT id, sender, receiver, contents, created_at
             FROM messages 
-            WHERE receiver = '$_POST[receiver]'
+            WHERE delivered <> 'Y' receiver = '$_POST[receiver]'
             ORDER BY id";
         $data = AFhelper::dbSelectAll($sql);
         AFhelper::kirimJson($data, 'Get Messages');
@@ -161,7 +164,13 @@ class Chat
         }
     }
 
-    function delMessage()
+    function haveDeliveredMessage()
+    {
+        $sql = "UPDATE messages SET delivered = 'Y' WHERE id = $_POST[id]";
+        AFhelper::dbSave($sql, null);
+    }
+
+    function removeMessage()
     {
         $sql = "DELETE FROM messages WHERE id = $_POST[id]";
         AFhelper::dbSave($sql, null);
