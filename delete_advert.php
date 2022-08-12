@@ -11,12 +11,12 @@ if(!empty($username2)){
     $idUser = $user->idUser;
     if($idUser) {
         $sqlUpdate = "UPDATE tb_advert set visibility = '0' where id_advert = '$id_advert'";
-        AFhelper::dbSave($sqlUpdate, null, 'Data berhasil di hapus');
+        AFhelper::dbSave($sqlUpdate, null, 'Données supprimées avec succès');
     } else {
-        AFhelper::kirimJson(null, 'autentifikasi username tidak cocok', 0);
+        AFhelper::kirimJson(null, "l'authentification ne correspond pas", 0);
     }
 } else {
-    AFhelper::kirimJson(null, 'username tidak boleh kosong', 0);
+    AFhelper::kirimJson(null, "le nom d'utilisateur ne peut pas être vide", 0);
 }
 	
 ?>

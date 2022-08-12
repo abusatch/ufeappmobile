@@ -2,6 +2,8 @@
 
 require_once("db.php");
 
+$koneksi->set_charset("utf8mb4");
+
 class AFhelper
 {
     public static function kirimJson($data, string $msg = '', $status = 1)
