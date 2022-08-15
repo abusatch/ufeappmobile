@@ -36,3 +36,4 @@ deployment:
     - /bin/cp -R delete_article.php $DEPLOYPATH
     - /bin/cp -R f_getarticle.php $DEPLOYPATH
     - /bin/cp -R reading_chat.php $DEPLOYPATH
+    - /bin/cp -R reading_concierge.php $DEPLOYPATH
