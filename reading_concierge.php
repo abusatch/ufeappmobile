@@ -21,6 +21,9 @@ switch ($mode) {
     case 'getconcierge':
         $chat->getConcierge();
         break;
+    case 'getadminconcierge':
+        $chat->getAdminConcierge();
+        break;
     case 'statusdelivered':
         $chat->statusDelivered();
         break;
@@ -30,8 +33,14 @@ switch ($mode) {
     case 'addconcierge':
         $chat->addConcierge();
         break;
+    case 'addadminconcierge':
+        $chat->addAdminConcierge();
+        break;
     case 'updatestatusconcierge':
         $chat->updateStatusConcierge();
+        break;
+    case 'updatestatusadminconcierge':
+        $chat->updateStatusAdminConcierge();
         break;
     case 'removeconcierge':
         $chat->removeConcierge();
@@ -106,7 +115,7 @@ class Concierge
 
     function getConcierge()
     {
-        $sql = "SELECT id, sender, receiver, contents, created_at, status
+        $sql = "SELECT id, sender, receiver, contents, created_at, status, created_by, received_by
             FROM concierges 
             WHERE status = 'S' AND receiver = '$_POST[receiver]'
             ORDER BY id";
@@ -114,9 +123,19 @@ class Concierge
         AFhelper::kirimJson($data, 'Get Concierges');
     }
 
+    function getAdminConcierge()
+    {
+        $sql = "SELECT id, sender, receiver, contents, created_at, status, created_by, received_by
+            FROM concierges 
+            WHERE (receiver = 'admin-ufe' OR sender = 'admin-ufe') AND received_by NOT LIKE '%-$_POST[email]-%'
+            ORDER BY id";
+        $data = AFhelper::dbSelectAll($sql);
+        AFhelper::kirimJson($data, 'Get Concierges');
+    }
+
     function statusDelivered()
     {
-        $sql = "SELECT id, sender, receiver, contents, created_at, status
+        $sql = "SELECT id, sender, receiver, contents, created_at, status, created_by, received_by
             FROM concierges 
             WHERE status = 'D' AND sender = '$_POST[sender]'
             ORDER BY id";
@@ -126,7 +145,7 @@ class Concierge
 
     function statusRead()
     {
-        $sql = "SELECT id, sender, receiver, contents, created_at, status
+        $sql = "SELECT id, sender, receiver, contents, created_at, status, created_by, received_by
             FROM concierges 
             WHERE status = 'R' AND sender = '$_POST[sender]'
             ORDER BY id";
@@ -136,8 +155,8 @@ class Concierge
 
     function addConcierge()
     {
-        $sql = "INSERT INTO concierges(sender, receiver, contents, created_at, status) 
-            VALUES ('$_POST[sender]', '$_POST[receiver]', '$_POST[contents]', '$_POST[created_at]', 'S')";
+        $sql = "INSERT INTO concierges(sender, receiver, contents, created_at, status, received_by) 
+            VALUES ('$_POST[sender]', 'admin-ufe', '$_POST[contents]', '$_POST[created_at]', 'S', '-')";
         $hasil = AFhelper::dbSaveReturnID($sql);
         if ($hasil <> 0 && $hasil <> '') {
             $sql_sender = "SELECT idUser, username, CONCAT(first_name, ' ', second_name) fullname, token_push, propic, last_online2 AS last_seen, isonline 
@@ -148,7 +167,7 @@ class Concierge
 
             $sql_receiver = "SELECT idUser, username, CONCAT(first_name, ' ', second_name) fullname, token_push, propic, last_online2 AS last_seen, isonline 
                 FROM user
-                WHERE username = '$_POST[receiver]'";
+                WHERE level = 'admin-ufe' AND token_push != ''";
             $user_receiver = AFhelper::dbSelectOne($sql_receiver);
             $qw[] = $user_receiver->token_push;
 
@@ -164,7 +183,7 @@ class Concierge
                 'sound' => 'default',
             );
             $fcmData = array(
-                'halaman' => 'roomchat',
+                'halaman' => 'conciergeadmin',
                 'nomor' => $_POST['sender'],
             );
             $fcmFields = array(
@@ -182,7 +201,59 @@ class Concierge
             curl_setopt($crl, CURLOPT_POSTFIELDS, json_encode( $fcmFields ) );
             $rest = curl_exec($crl);
 
-            $sql = "SELECT id, sender, receiver, contents, created_at, status
+            $sql = "SELECT id, sender, receiver, contents, created_at, status, created_by, received_by
+                FROM concierges
+                WHERE id = $hasil LIMIT 1";
+            $data = AFhelper::dbSelectOne($sql);
+            AFhelper::kirimJson($data, $rest);
+        } else {
+            AFhelper::kirimJson($sql, 'Gagal insert concierges ', 0);
+        }
+    }
+
+    function addAdminConcierge()
+    {
+        $sql = "INSERT INTO concierges(sender, receiver, contents, created_at, status, created_by, received_by) 
+            VALUES ('admin-ufe', '$_POST[receiver]', '$_POST[contents]', '$_POST[created_at]', 'S', '$_POST[sender]', '-$_POST[sender]-')";
+        $hasil = AFhelper::dbSaveReturnID($sql);
+        if ($hasil <> 0 && $hasil <> '') {
+            $sql_receiver = "SELECT idUser, username, CONCAT(first_name, ' ', second_name) fullname, token_push, propic, last_online2 AS last_seen, isonline 
+                FROM user
+                WHERE username = '$_POST[receiver]'";
+            $user_receiver = AFhelper::dbSelectOne($sql_receiver);
+            $qw[] = $user_receiver->token_push;
+
+            $accesstoken = 'AAAARVfjooY:APA91bEAKbWGNffjb80WnOsnE4U_iNWJOUhW1UqiMsnLiJXah2oFmEcn2Y5EcBvUeCWHWgAfBwmFZHhnCdKvyvrUf4m7okrNCICisXtzNyxfKu4F8FxfhXcnxPICACaUrLQJekNqYZPy';
+            $header = array(
+                'Content-type: application/json',
+                'Authorization: key=' . $accesstoken
+            );
+            $fcmMsg = array(
+                'title' => "Conciergerie UFE",
+                'body' => $_POST['contents'],
+                'icon' => 'image/look24-logo-s.png',
+                'sound' => 'default',
+            );
+            $fcmData = array(
+                'halaman' => 'conciergeuser',
+                'nomor' => $_POST['sender'],
+            );
+            $fcmFields = array(
+                'registration_ids' => $qw,
+                'priority' => 'high',
+                'notification' => $fcmMsg,
+                'data' => $fcmData
+            );
+            $crl = curl_init();
+            curl_setopt($crl, CURLOPT_URL, 'https://fcm.googleapis.com/fcm/send');
+            curl_setopt($crl, CURLOPT_POST, true );
+            curl_setopt($crl, CURLOPT_HTTPHEADER, $header);
+            curl_setopt($crl, CURLOPT_RETURNTRANSFER, true);
+            curl_setopt($crl, CURLOPT_SSL_VERIFYPEER, false);
+            curl_setopt($crl, CURLOPT_POSTFIELDS, json_encode( $fcmFields ) );
+            $rest = curl_exec($crl);
+
+            $sql = "SELECT id, sender, receiver, contents, created_at, status, created_by, received_by
                 FROM concierges
                 WHERE id = $hasil LIMIT 1";
             $data = AFhelper::dbSelectOne($sql);
@@ -195,6 +266,17 @@ class Concierge
     function updateStatusConcierge()
     {
         $sql = "UPDATE concierges SET status = '$_POST[status]' WHERE id = $_POST[id]";
+        AFhelper::dbSave($sql, null);
+    }
+
+    function updateStatusAdminConcierge()
+    {
+        if($_POST['status'] == "D") {
+            $nilai = $_POST['email']."-";
+            $sql = "UPDATE concierges SET status = '$_POST[status]', received_by = CONCAT(received_by,'$nilai') WHERE id = $_POST[id]";
+        } else {
+            $sql = "UPDATE concierges SET status = '$_POST[status]' WHERE id = $_POST[id]";
+        }
         AFhelper::dbSave($sql, null);
     }
 

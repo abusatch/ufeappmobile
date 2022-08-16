@@ -94,4 +94,22 @@ class AFhelper
 
         return $text;
     }
+
+    public static function formatTextHTML(string $text)
+    {
+        $text = str_replace('\n',"-enter-",$text);
+        $text = str_replace("'","`",$text);
+        $text = str_replace('"',"-petikdua-",$text);
+        $text = str_replace(".","-titik-",$text);
+        $text = str_replace("-","-",$text);
+        $text = str_replace("!","-tandaseru-",$text);
+        $text = str_replace("’"," ",$text);
+        $text = str_replace("é","-ekanan-",$text);
+        $text = str_replace("à","-akiri-",$text);
+        $text = str_replace("è","-ekiri-",$text);
+        $text = preg_replace("/\r\n|\r|\n/", '-enter-', $text);
+        $text = str_replace(array("\r\n","\r","\n","\\r","\\n","\\r\\n"),"-enter-",$text);
+
+        return $text;
+    }
 }

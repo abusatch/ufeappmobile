@@ -38,7 +38,7 @@ foreach ($data as $row) {
     $kota = str_replace($row->kodeposagent, "", $row->kotaagent);
     $a = array(
     "id_agent" => $row->id_agent,
-    "deskripsi" => AFhelper::formatText($row->long_desc),
+    "deskripsi" => AFhelper::formatTextHTML($row->long_desc),
     "nama" => $row->namaagent,
     "alamat" => AFhelper::formatText($row->alamatagent),
     "kota" => $kota,
