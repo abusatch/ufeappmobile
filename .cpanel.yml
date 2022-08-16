@@ -37,3 +37,4 @@ deployment:
     - /bin/cp -R f_getarticle.php $DEPLOYPATH
     - /bin/cp -R reading_chat.php $DEPLOYPATH
     - /bin/cp -R reading_concierge.php $DEPLOYPATH
+    - /bin/cp -R reading_home.php $DEPLOYPATH
