@@ -55,6 +55,7 @@ class ReadingDemarche
         "menu_drop" => $row->menu_drop1,
         "gambar" => $gambar,
         "judul" => $row->nama_menu,
+        "short_desc" => $row->short_desc,
         "warna" => $row->warna,
       );
       array_push($hasil, $a);

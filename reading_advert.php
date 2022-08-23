@@ -7,6 +7,7 @@ $halaman = $_GET['halaman'];
 $jenis = $_GET['jenis'];
 $kategori = $_GET['kategori'];
 $id_advert = $_GET['id_advert'];
+$limit = $_GET['limit'];
 
 $where = "";
 
@@ -40,13 +41,17 @@ if(empty($halaman)) {
 $urutan = $halaman + 1;
 $offset = " offset $halaman";
 
+if(empty($limit)) {
+  $limit = 10;  
+}
+
 $sql_get_data = "SELECT a.*, b.username, b.first_name, b.second_name, b.propic, COALESCE(c.jumlah_view,0) AS jumlah_view
   FROM tb_advert a
   JOIN user b ON(a.id_member = b.idUser)
   LEFT JOIN (
     SELECT id_advert, COUNT(*) AS jumlah_view FROM tb_advert_view GROUP BY id_advert
   ) c ON(a.id_advert = c.id_advert)
-  WHERE a.visibility = '1' $where ORDER BY a.id_advert DESC limit 10 $offset";
+  WHERE a.visibility = '1' $where ORDER BY a.id_advert DESC limit $limit $offset";
 
 $data = AFhelper::dbSelectAll($sql_get_data);
 $hasil = array();
