@@ -109,24 +109,18 @@ class ReadingRegistration
         if($jsresp->transaction_status = "settlement" || $jsresp->transaction_status = "capture") {
           $status_activites = 'Y';
         }
-        $payment_key = "";
         if($payment_type == "bank_transfer") {
           if($payment_agent == "permata") {
-            $payment_key = $jsresp->permata_va_number; 
+            $datanya = array("key" => $jsresp->permata_va_number);
           } else {
-            $payment_key = $jsresp->va_numbers[0]->va_number;
+            $datanya = array("key" => $jsresp->va_numbers[0]->va_number);
           }
-          $datanya = array("key" => $payment_key);
         } else if($payment_type == "echannel") {
-          $payment_key = $jsresp->bill_key."@@".$jsresp->biller_code;
           $datanya = array("key" => $jsresp->bill_key, "biller_code" => $jsresp->biller_code);
         } else if($payment_type == "cstore") {
-          $payment_key = $jsresp->payment_code;
-          $datanya = array("key" => $payment_key);
+          $datanya = array("key" => $jsresp->payment_code);
         } else if($payment_type == "gopay" || $payment_type == "shopeepay") {
-          $payment_key = '{';
           for ($i=0; $i < count($jsresp->actions); $i++) { 
-            $payment_key .= '"'.$jsresp->actions[$i]->name.'" : "'.$jsresp->actions[$i]->url.'", ';
             if($jsresp->actions[$i]->name == "generate-qr-code") {
               $datanya["key"] = $jsresp->actions[$i]->url;
             }
@@ -134,7 +128,6 @@ class ReadingRegistration
               $datanya["link"] = $jsresp->actions[$i]->url;
             }
           }
-          $payment_key .= "}";
         }
         if($payment_type == "bank_transfer") {
           if($payment_agent == "permata") {
@@ -161,7 +154,7 @@ class ReadingRegistration
         }
         $sql = "UPDATE tb_registration SET 
           payment_status = '{$jsresp->transaction_status}',
-          payment_key = '$payment_key'
+          payment_key = '$respon'
           WHERE id_registration = '$hasil'";
         $cek = AFhelper::dbSaveCek($sql);
         if($cek[0]) {

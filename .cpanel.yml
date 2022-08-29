@@ -38,3 +38,4 @@ deployment:
     - /bin/cp -R reading_chat.php $DEPLOYPATH
     - /bin/cp -R reading_concierge.php $DEPLOYPATH
     - /bin/cp -R reading_home.php $DEPLOYPATH
+    - /bin/cp -R notif-from-midtrans.php $DEPLOYPATH
