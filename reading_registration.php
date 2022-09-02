@@ -12,6 +12,9 @@ switch ($mode) {
     case 'detil':
       $reading->detil();
       break;
+    case 'getstatus':
+      $reading->getStatus();
+      break;
     default:
       echo "Mode Not Found";
       break;
@@ -19,6 +22,7 @@ switch ($mode) {
 
 class ReadingRegistration
 {
+  
   function detil() {
     $id = $_POST['id'];
     if($id) {
@@ -31,6 +35,22 @@ class ReadingRegistration
     } else {
         AFhelper::kirimJson(null, 'ID cannot be empty', 0);
     }  
+  }
+
+  function getStatus() {
+    $order_id = "ACT".$_GET['id'];
+    $header = array(
+      'Content-Type: application/json',
+      'Accept: application/json',
+      'Authorization: Basic ' . base64_encode('SB-Mid-server-mMfDlH9AGc8QGwK6DtK0ggVK:')
+    );
+    $crl = curl_init();
+      curl_setopt($crl, CURLOPT_URL, 'https://api.sandbox.midtrans.com/v2/'.$order_id.'/status');
+      curl_setopt($crl, CURLOPT_HTTPHEADER, $header);
+      curl_setopt($crl, CURLOPT_RETURNTRANSFER, true);
+      $respon = curl_exec($crl);
+      $jsresp = json_decode($respon);
+      AFhelper::kirimJson($jsresp, 'Get status from Midtrans -- '.$_GET['id']);
   }
 
   function tambah() {

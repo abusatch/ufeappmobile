@@ -112,4 +112,12 @@ class AFhelper
 
         return $text;
     }
+
+    public static function YMDtoDMY(string $text)
+    {
+        $tanggal = explode(" ", $text);
+        $tgl = explode("-", $tanggal[0]);
+        $new_tgl = $tgl[2]."/".$tgl[1]."/".$tgl[0]; 
+        return $new_tgl;
+    }
 }
