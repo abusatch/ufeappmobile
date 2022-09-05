@@ -4,7 +4,7 @@ require_once "helper.php";
 
 $mode = $_GET['mode'];
 
-$reading = new ReadingRegistration();
+$reading = new ReadingDonation();
 switch ($mode) {
     case 'tambah':
       $reading->tambah();
@@ -20,24 +20,24 @@ switch ($mode) {
       break;
 }
 
-class ReadingRegistration
+class ReadingDonation
 {
   
   function detil() {
     $id = $_POST['id'];
     if($id) {
-        $sql = "SELECT id_registration, id_user, id_activites, id_harga, harga, payment_status, payment_type, payment_agent, registration_date, email 
-          FROM tb_registration 
-          WHERE id_registration = $id";
+        $sql = "SELECT id_donation, id_user, harga, payment_status, payment_type, payment_agent, donation_date, email 
+          FROM tb_donation 
+          WHERE id_donation = $id";
         $data = AFhelper::dbSelectOne($sql);
-        AFhelper::kirimJson($data, 'Get Registration');
+        AFhelper::kirimJson($data, 'Get Donation');
     } else {
         AFhelper::kirimJson(null, 'ID cannot be empty', 0);
     }  
   }
 
   function getStatus() {
-    $order_id = "ACT".$_GET['id'];
+    $order_id = "DON".$_GET['id'];
     $header = array(
       'Content-Type: application/json',
       'Accept: application/json',
@@ -54,28 +54,20 @@ class ReadingRegistration
 
   function tambah() {
     $username = $_POST['username'];
-    $id_activites = $_POST['id_activites'];
-    $id_harga = $_POST['id_harga'];
     $email = $_POST['email'];
     $payment_type = $_POST['payment_type'];
     $payment_agent = $_POST['payment_agent'];
-    $registration_date = $_POST['registration_date'];
-    $expired_date = $_POST['expired_date'];
+    $donation_date = $_POST['donation_date'];
+    $harga = $_POST['harga'];
 
     $sql = "SELECT * from user where username = '$username'";
     $user = AFhelper::dbSelectOne($sql);
     $idUser = $user->idUser;
 
-    $sql = "SELECT * from tb_harga_program where id_harga = '$id_harga'";
-    $harga = AFhelper::dbSelectOne($sql);
-
-    $sql = "SELECT * from tb_activites where id_activites = '$id_activites'";
-    $aktifitas = AFhelper::dbSelectOne($sql);
-
     // $expired_date = date("Y-m-d H:i:s", strtotime("+".$harga->periode));
     
-    $sql = "INSERT INTO tb_registration(id_user, id_activites, id_harga, harga, payment_type, payment_agent, registration_date, email) 
-      VALUES ('$idUser', '$id_activites', '$id_harga', '$harga->harga', '$payment_type', '$payment_agent', '$registration_date', '$email')";
+    $sql = "INSERT INTO tb_donation(id_user, harga, payment_type, payment_agent, donation_date, email) 
+      VALUES ('$idUser', '$harga', '$payment_type', '$payment_agent', '$donation_date', '$email')";
     $hasil = AFhelper::dbSaveReturnID($sql);
     if ($hasil <> 0 && $hasil <> '') {
       $header = array(
@@ -86,15 +78,15 @@ class ReadingRegistration
       $post_data = array(
         "payment_type" => $payment_type,
         "transaction_details" => array(
-          "order_id" => "ACT".$hasil,
-          "gross_amount" => $harga->harga
+          "order_id" => "DON".$hasil,
+          "gross_amount" => $harga
         ),
         "item_details" => array(
           array(
-            "id" => $id_activites,
-            "price" => $harga->harga,
+            "id" => "DONATION",
+            "price" => $harga,
             "quantity" => 1,
-            "name" => $aktifitas->judul
+            "name" => "Donation"
           )
         ),
         "customer_details" => array(
@@ -107,7 +99,7 @@ class ReadingRegistration
       if($payment_type == "bank_transfer") {
         $post_data["bank_transfer"] = array("bank" => $payment_agent);
       } else if($payment_type == "echannel") {
-        $post_data["echannel"] = array("bill_info1" => "Payment", "bill_info2" => $aktifitas->judul);
+        $post_data["echannel"] = array("bill_info1" => "Payment", "bill_info2" => "Donation");
       } else if($payment_type == "cstore") {
         $post_data["cstore"] = array("store" => $payment_agent);
       } else if($payment_type == "gopay") {
@@ -124,10 +116,6 @@ class ReadingRegistration
       $respon = curl_exec($crl);
       $jsresp = json_decode($respon);
       if($jsresp->status_code == "200" || $jsresp->status_code == "201" || $jsresp->status_code == "202") {
-        $status_activites = 'N';
-        if($jsresp->transaction_status = "settlement" || $jsresp->transaction_status = "capture") {
-          $status_activites = 'Y';
-        }
         if($payment_type == "bank_transfer") {
           if($payment_agent == "permata") {
             $datanya = array("key" => $jsresp->permata_va_number);
@@ -171,28 +159,16 @@ class ReadingRegistration
           }
           $datanya["label_key"] = "Code de paiement";
         }
-        $sql = "UPDATE tb_registration SET 
+        $sql = "UPDATE tb_donation SET 
           payment_status = '{$jsresp->transaction_status}',
           payment_key = '$respon'
-          WHERE id_registration = '$hasil'";
-        $cek = AFhelper::dbSaveCek($sql);
-        if($cek[0]) {
-          $sql = "INSERT INTO tb_user_activites(id_user, id_activites, status, id_registration , registration_date, expired_date) 
-            VALUES ('$idUser', '$id_activites', '$status_activites', '$hasil', '$registration_date', '$expired_date')
-            ON DUPLICATE KEY UPDATE
-            status = '$status_activites',
-            id_registration = '$hasil',
-            registration_date = '$registration_date',
-            expired_date = '$expired_date'";
-          AFhelper::dbSave($sql, $datanya, 'Registration Success');
-        } else {
-          AFhelper::kirimJson($sql, 'Registration failed update status', 0); 
-        }
+          WHERE id_donation = '$hasil'";
+        AFhelper::dbSave($sql, $datanya, 'Donation Success');
       } else {
         AFhelper::kirimJson($jsresp, $jsresp->status_message, 0);
       }
     }  else {
-      AFhelper::kirimJson($sql, 'Registration failed', 0); 
+      AFhelper::kirimJson($sql, 'Donation failed', 0); 
     }
   }
   

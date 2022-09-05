@@ -9,6 +9,9 @@ switch ($mode) {
     case 'lihat':
         $reading->lihat();
         break;
+    case 'jumlahagent':
+        $reading->jumlahAgent();
+        break;
     default:
       $reading->lihat();
       break;
@@ -19,11 +22,21 @@ class ReadingCharity
 
   function lihat() {
     $id_agent = $_GET['id_agent'];
+    $is_ufe = $_GET['is_ufe'];
     $halaman = $_GET['halaman'];
     $limit = $_GET['limit'];
-
+    
     $where = "";
-
+    
+    if(!empty($is_ufe)) {
+        if($is_ufe == 'Y') {
+            $where .= "AND a.short_desc = 'ufe'";    
+        } else {
+            $where .= "AND a.short_desc <> 'ufe'";
+        }
+        
+    }
+    
     if(!empty($id_agent)) {
         $where = "AND a.id_agent = '$id_agent'";
     }
@@ -42,7 +55,7 @@ class ReadingCharity
             a.kotaagent, a.kodeposagent, a.telpagent, a.mobileagent, a.emailagent, a.webagent, a.fbagent, a.twiteragent, a.igagent, a.waagent, a.telegramagent, a.linkedagent, a.youtubeagent, a.appstoreagent, a.playstoreagent,
             a.rating1, a.rating2, a.rating3, a.visibility
         FROM tb_agent a
-        WHERE a.visibility = '1' AND a.id_kategori` = 'charity' $where
+        WHERE a.visibility = '1' AND a.id_kategori = 'charity' $where
         ORDER BY sorting, a.rating2 DESC, a.rating3 DESC, a.namaagent, a.id_agent LIMIT $limit $offset";
 
     $data = AFhelper::dbSelectAll($sql);
@@ -89,6 +102,14 @@ class ReadingCharity
     }
         
     AFhelper::kirimJson($hasil);
+  }
+
+  function jumlahAgent() {
+    $sql = "SELECT COUNT(a.id_agent) as jumlah
+        FROM tb_agent a
+        WHERE a.visibility = '1' AND a.id_kategori = 'charity'";
+    $data = AFhelper::dbSelectOne($sql);
+    AFhelper::kirimJson($data);
   }
 
 }

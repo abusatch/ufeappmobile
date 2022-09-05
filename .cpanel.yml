@@ -40,3 +40,4 @@ deployment:
     - /bin/cp -R reading_home.php $DEPLOYPATH
     - /bin/cp -R notif-from-midtrans.php $DEPLOYPATH
     - /bin/cp -R reading_charity.php $DEPLOYPATH
+    - /bin/cp -R reading_donation.php $DEPLOYPATH
