@@ -28,6 +28,8 @@ if($jenis == "all") {
 
 if(!empty($kategori) && $kategori != "all") {
   $where .= " AND a.id_category = '$kategori'";
+} else if($kategori == "0") {
+  $where .= " AND a.id_category = '0'";
 }
 
 if(!empty($id_advert)) {
