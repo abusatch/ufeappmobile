@@ -71,8 +71,6 @@ class ReadingRegistration
 
     $sql = "SELECT * from tb_activites where id_activites = '$id_activites'";
     $aktifitas = AFhelper::dbSelectOne($sql);
-
-    // $expired_date = date("Y-m-d H:i:s", strtotime("+".$harga->periode));
     
     $sql = "INSERT INTO tb_registration(id_user, id_activites, id_harga, harga, payment_type, payment_agent, registration_date, email) 
       VALUES ('$idUser', '$id_activites', '$id_harga', '$harga->harga', '$payment_type', '$payment_agent', '$registration_date', '$email')";
@@ -104,7 +102,9 @@ class ReadingRegistration
           "phone" => $user->phone
         )
       );
-      if($payment_type == "bank_transfer") {
+      if($payment_type == "credit_card") {
+        $post_data["credit_card"] = array("token_id" => $payment_agent, "authentication" => true);
+      } else if($payment_type == "bank_transfer") {
         $post_data["bank_transfer"] = array("bank" => $payment_agent);
       } else if($payment_type == "echannel") {
         $post_data["echannel"] = array("bill_info1" => "Payment", "bill_info2" => $aktifitas->judul);
@@ -170,6 +170,8 @@ class ReadingRegistration
             $datanya["title"] = "Veuillez vous rendre au magasin Alfa Group le plus proche et montrer le code-barres/code de paiement au caissier.";
           }
           $datanya["label_key"] = "Code de paiement";
+        } else if($payment_type == "credit_card") {
+          $datanya = $jsresp;
         }
         $sql = "UPDATE tb_registration SET 
           payment_status = '{$jsresp->transaction_status}',
