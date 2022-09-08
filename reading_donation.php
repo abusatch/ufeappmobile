@@ -109,7 +109,9 @@ class ReadingDonation
                 "phone" => $user->phone
                 )
             );
-            if($payment_type == "bank_transfer") {
+            if($payment_type == "credit_card") {
+                $post_data["credit_card"] = array("token_id" => $payment_agent, "authentication" => true);
+            } else if($payment_type == "bank_transfer") {
                 $post_data["bank_transfer"] = array("bank" => $payment_agent);
             } else if($payment_type == "echannel") {
                 $post_data["echannel"] = array("bill_info1" => "Payment", "bill_info2" => "Donation");
@@ -152,25 +154,82 @@ class ReadingDonation
                 if($payment_type == "bank_transfer") {
                     if($payment_agent == "permata") {
                         $datanya["title"] = "Effectuez le paiement de la banque Permata au numéro de compte virtuel ci-dessous.";
+                        $datanya["howtopay"] = array(
+                            array("nama" => "ATM Permata/ALTO", "deskripsi" => "<ol><li>Sélectionnez d'autres transactions dans le menu principal.</li><li>Sélectionnez le paiement.</li><li>Sélectionnez d'autres paiements.</li><li>Sélectionnez un compte virtuel.</li><li>Insérez le numéro de compte virtuel, puis validez.</li><li>Paiement terminé.</li></ol>")               
+                        );
                     } else if($payment_agent == "bca") {
                         $datanya["title"] = "Effectuez le paiement de la banque BCA au numéro de compte virtuel ci-dessous.";
+                        $datanya["howtopay"] = array(
+                            array("nama" => "ATM BCA", "deskripsi" => "<ol><li>Sélectionnez d'autres transactions dans le menu principal.</li><li>Sélectionnez transfert.</li><li>Sélectionnez vers le compte virtuel BCA.</li><li>Insérez le numéro de compte virtuel BCA.</li><li>Insérez le montant à payer, puis validez.</li><li>Paiement terminé.</li></ol>"),
+                            array("nama" => "Klik BCA", "deskripsi" => "<ol><li>Sélectionnez transfert de fonds.</li><li>Sélectionnez le transfert vers le compte virtuel BCA.</li><li>Insérez le numéro de compte virtuel BCA.</li><li>Insérez le montant à payer, puis validez.</li><li>Paiement terminé.</li></ol>"),               
+                            array("nama" => "m-BCA", "deskripsi" => "<ol><li>Sélectionnez m-transfert.</li><li>Sélectionnez le compte virtuel BCA.</li><li>Insérez le numéro de compte virtuel BCA.</li><li>Insérez le montant à payer, puis validez.</li><li>Paiement terminé.</li></ol>")
+                        );
                     } else if($payment_agent == "bni") {
                         $datanya["title"] = "Effectuez le paiement de la banque BNI au numéro de compte virtuel ci-dessous.";
+                        $datanya["howtopay"] = array(
+                            array("nama" => "ATM BNI", "deskripsi" => "<ol><li>Sélectionnez les autres dans le menu principal.</li><li>Sélectionnez transfert.</li><li>Sélectionnez vers le compte BNI.</li><li>Insérez le numéro de compte de paiement.</li><li>Insérez le montant à payer, puis validez.</li><li>Paiement terminé.</li></ol>"),               
+                            array("nama" => "Internet Banking", "deskripsi" => "<ol><li>Sélectionnez la transaction, puis transférez les informations d'administration.</li><li>Sélectionnez définir le compte de destination.</li><li>Insérez les informations de compte, puis confirmez.</li><li>Sélectionnez le transfert, puis le transfert vers le compte BNI.</li><li>Insérez les détails du paiement, puis confirmez.</li><li>Paiement terminé.</li></ol>"),
+                            array("nama" => "Mobile Banking", "deskripsi" => "<ol><li>Sélectionnez transfert.</li><li>Sélectionnez la facturation du compte virtuel.</li><li>Sélectionnez le compte de débit que vous souhaitez utiliser.</li><li>Insérez le numéro de compte virtuel, puis validez.</li><li>Paiement terminé.</li></ol>")
+                        );
                     } else if($payment_agent == "bri") {
                         $datanya["title"] = "Effectuez le paiement de la banque BRI au numéro de compte virtuel ci-dessous.";
+                        $datanya["howtopay"] = array(
+                            array("nama" => "ATM BRI", "deskripsi" => "<ol><li>Sélectionnez d'autres transactions dans le menu principal.</li><li>Sélectionnez le paiement.</li><li>Sélectionnez autre.</li><li>Sélectionnez BRIVA.</li><li>Insérez le numéro BRIVA, puis validez.</li><li>Paiement terminé.</li></ol>"),
+                            array("nama" => "IB BRI", "deskripsi" => "<ol><li>Sélectionnez paiement et achat.</li><li>Sélectionnez BRIVA.</li><li>Insérez le numéro BRIVA, puis validez.</li><li>Paiement terminé.</li></ol>"),
+                            array("nama" => "BRImo", "deskripsi" => "<ol><li>Sélectionnez le paiement.</li><li>Sélectionnez BRIVA.</li><li>Insérez le numéro BRIVA, puis validez.</li><li>Paiement terminé.</li></ol>")               
+                        );
                     }
                     $datanya["label_key"] = "Numéro de compte virtuel";
+                    $datanya["label_howtopay"] = "comment payer";
                 } else if($payment_type == "echannel") {
                     $datanya["title"] = "Effectuez le paiement de la banque Mandiri au numéro de compte virtuel ci-dessous.";
                     $datanya["label_key"] = "Numéro de compte virtuel";
                     $datanya["label_biller_code"] = "Code de l'entreprise";
+                    $datanya["label_howtopay"] = "comment payer";
+                    $datanya["howtopay"] = array(
+                        array("nama" => "ATM Mandiri", "deskripsi" => "<ol><li>Sélectionnez Payer/Acheter dans le menu principal.</li><li>Sélectionnez Autres.</li><li>Sélectionnez Paiement multiple.</li><li>Insérez le code d'entreprise 70012.</li><li>Insérez le numéro de compte virtuel, puis validez.</li><li>Paiement terminé.</li></ol>"),
+                        array("nama" => "Internet Banking", "deskripsi" => "<ol><li>Sélectionnez Paiement dans le menu principal.</li><li>Sélectionnez Paiement multiple.</li><li>Sélectionnez Du compte.</li><li>Sélectionnez Midtrans dans le champ Fournisseur de services.</li><li>Insérez le numéro de compte virtuel, puis validez.</li><li>Paiement terminé.</li></ol>")
+                    );
                 } else if($payment_type == "cstore") {
                     if($payment_agent == "indomaret") {
                         $datanya["title"] = "Veuillez vous rendre au magasin Indomaret le plus proche et montrer le code-barres/code de paiement au caissier.";
+                        $datanya["howtopay"] = array(
+                            array("nama" => "Indomaret", "deskripsi" => "Appuyez sur Télécharger les informations de paiement pour obtenir une copie de vos informations de paiement uniques.
+                                <br/>Si vous allez payer au comptoir, rendez-vous dans le magasin Indomaret le plus proche et montrez votre code de paiement/code-barres au caissier.
+                                <br/>Le caissier confirmera les détails de votre transaction. Une fois votre transaction réussie, vous recevrez l'e-mail de confirmation de paiement.
+                                <br/>Si vous allez payer via i.saku, ouvrez l'application et appuyez sur Bayar.
+                                <br/>Choisissez le marchand auquel vous souhaitez payer et entrez votre code de paiement.
+                                <br/>Appuyez sur Selanjutnya et vérifiez les détails de votre transaction.
+                                <br/>Appuyez sur Bayar sekarang pour confirmer votre paiement.
+                                <br/>Veuillez conserver votre reçu de paiement Indomaret au cas où vous auriez besoin d'aide supplémentaire via le support."
+                            )               
+                        );
                     } else if($payment_agent == "alfamart") {
                         $datanya["title"] = "Veuillez vous rendre au magasin Alfa Group le plus proche et montrer le code-barres/code de paiement au caissier.";
+                        $datanya["howtopay"] = array(
+                            array("nama" => "Alfa Group", "deskripsi" => "Appuyez sur Télécharger les informations de paiement pour obtenir une copie de vos informations de paiement uniques.
+                                <br/>Rendez-vous dans le magasin Alfamart/Alfamidi/Dan+Dan le plus proche de chez vous et montrez votre code-barres/code de paiement à la caisse.
+                                <br/>Le caissier confirmera les détails de votre transaction.
+                                <br/>Confirmez votre paiement avec le caissier.
+                                <br/>Une fois votre transaction réussie, vous recevrez l'e-mail de confirmation de paiement.
+                                <br/>Veuillez conserver votre reçu de paiement Alfamart au cas où vous auriez besoin d'aide supplémentaire via le support."
+                            )               
+                        );
                     }
                     $datanya["label_key"] = "Code de paiement";
+                    $datanya["label_howtopay"] = "comment payer";
+                } else if($payment_type == "gopay") {
+                    $datanya["label_howtopay"] = "comment payer";
+                    $datanya["howtopay"] = array(
+                        array("nama" => "Gojek", "deskripsi" => "<ol><li>Ouvrez votre Gojek ou une autre application de portefeuille électronique.</li><li>Scannez le code QR sur votre moniteur.</li><li>Confirmez le paiement dans l'application.</li><li>Paiement terminé.</li></ol>"),               
+                    );
+                } else if($payment_type == "shopeepay") {
+                    $datanya["label_howtopay"] = "comment payer";
+                    $datanya["howtopay"] = array(
+                        array("nama" => "Shopee", "deskripsi" => "<ol><li>Ouvrez votre Shopee ou une autre application de portefeuille électronique.</li><li>Scannez le code QR sur votre moniteur.</li><li>Confirmez le paiement dans l'application.</li><li>Paiement terminé.</li></ol>"),               
+                    );
+                } else if($payment_type == "credit_card") {
+                    $datanya = $jsresp;
                 }
                 $sql = "UPDATE tb_donation SET 
                     payment_status = '{$jsresp->transaction_status}',
