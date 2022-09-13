@@ -120,4 +120,72 @@ class AFhelper
         $new_tgl = $tgl[2]."/".$tgl[1]."/".$tgl[0]; 
         return $new_tgl;
     }
+
+    public static function sendNotification(string $judul, string $isi, string $gambar = "", string $halaman = "", string $nomor = "", $penerima = null) {
+        $accesstoken = 'AAAARVfjooY:APA91bEAKbWGNffjb80WnOsnE4U_iNWJOUhW1UqiMsnLiJXah2oFmEcn2Y5EcBvUeCWHWgAfBwmFZHhnCdKvyvrUf4m7okrNCICisXtzNyxfKu4F8FxfhXcnxPICACaUrLQJekNqYZPy';
+        $header = array(
+            'Content-type: application/json',
+            'Authorization: key=' . $accesstoken
+        );
+
+        $qw = array();
+
+        if($penerima == null) {
+            $sql = "SELECT idUser, username, CONCAT(first_name, ' ', second_name) fullname, token_push, propic, last_online2 AS last_seen, isonline 
+                FROM user
+                WHERE token_push != '' ";
+            $user = AFhelper::dbSelectAll($sql);
+            foreach ($user as $r) {
+                $qw[] = $r->token_push;
+            }
+        } else {
+            $qw = $penerima;
+        }
+
+        $fcmMsg = array(
+            'title' => $judul,
+            'body' => $isi,
+            'icon' => 'image/look24-logo-s.png',
+            'sound' => 'default',
+        );
+        if($gambar != "") {
+            $fcmMsg['image'] = $gambar;
+        }
+
+        $fcmFields = array(
+            'registration_ids' => $qw,
+            'priority' => 'high',
+            'notification' => $fcmMsg
+        );
+        if($halaman != "") {
+            $fcmFields['data'] = array(
+                'halaman' => $halaman,
+                'nomor' => $nomor,
+            ); 
+        }
+
+        $curl = curl_init();
+        curl_setopt($curl, CURLOPT_URL, 'https://fcm.googleapis.com/fcm/send');
+        curl_setopt($curl, CURLOPT_POST, true );
+        curl_setopt($curl, CURLOPT_HTTPHEADER, $header);
+        curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
+        curl_setopt($curl, CURLOPT_POSTFIELDS, json_encode( $fcmFields ) );
+        $response = curl_exec($curl);
+        curl_close($curl);
+        return $response;
+    }
+
+    public static function setFirebase(string $rute, $data) {
+        $curl = curl_init();
+        curl_setopt($curl, CURLOPT_URL, 'https://ufe-indonesie-f76c4-default-rtdb.asia-southeast1.firebasedatabase.app/'.$rute.'.json');
+        curl_setopt($curl, CURLOPT_CUSTOMREQUEST, "PUT");
+        curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($curl, CURLOPT_POSTFIELDS, json_encode($data) );
+        $response = curl_exec( $curl );
+        curl_close( $curl );
+        return $response;
+    }
+
+
 }
