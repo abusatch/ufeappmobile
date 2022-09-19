@@ -269,7 +269,7 @@ class ReadingDemarche
         $gambar = $row2->gambar2 ? "https://ufe-section-indonesie.org/ufeapp/images/agent/".$row2->gambar2 : '';
         $gambar_kategori = $row2->gambar_kategori ? "https://ufe-section-indonesie.org/ufeapp/images/menu/".$row2->gambar_kategori : '';
         $gambar_menu = $row2->gambar_menu ? "https://ufe-section-indonesie.org/ufeapp/images/menu/".$row2->gambar_menu : '';
-        $whatsapp = $row->waagent ? "https://api.whatsapp.com/send?phone=".preg_replace("/[^0-9]/", "", $row->waagent) : '';
+        $whatsapp = $row2->waagent ? "https://api.whatsapp.com/send?phone=".preg_replace("/[^0-9]/", "", $row2->waagent) : '';
         $kota = str_replace($row2->kodeposagent, "", $row2->kotaagent);
         $b = array(
         "id_agent" => $row2->id_agent,
@@ -287,10 +287,10 @@ class ReadingDemarche
         "twitter" => $row2->twiteragent,
         "instagram" => $row2->igagent,
         "whatsapp" => $whatsapp, 
-        "telegram" => $row->telegramagent, 
-        "linkedin" => $row->linkedagent, 
-        "youtube" => $row->youtubeagent, 
-        "appstore" => $row->appstoreagent,
+        "telegram" => $row2->telegramagent, 
+        "linkedin" => $row2->linkedagent, 
+        "youtube" => $row2->youtubeagent, 
+        "appstore" => $row2->appstoreagent,
         "playstore" => $row2->playstoreagent,
         "logo" => $logo,
         "gambar" => $gambar,
@@ -303,7 +303,7 @@ class ReadingDemarche
         "id_menu" => $row2->id_menu,
         "judul_menu" => $row2->judul_menu,
         "gambar_menu" => $gambar_menu,
-        "warna" => $row->warna,
+        "warna" => $row2->warna,
         );
         array_push($hasil2, $b);
       }
