@@ -180,6 +180,7 @@ class ReadingDemarche
         $gambar = $row->gambar2 ? "https://ufe-section-indonesie.org/ufeapp/images/agent/".$row->gambar2 : '';
         $gambar_kategori = $row->gambar_kategori ? "https://ufe-section-indonesie.org/ufeapp/images/menu/".$row->gambar_kategori : '';
         $gambar_menu = $row->gambar_menu ? "https://ufe-section-indonesie.org/ufeapp/images/menu/".$row->gambar_menu : '';
+        $whatsapp = $row->waagent ? "https://api.whatsapp.com/send?phone=".preg_replace("/[^0-9]/", "", $row->waagent) : '';
         $kota = str_replace($row->kodeposagent, "", $row->kotaagent);
         $a = array(
         "id_agent" => $row->id_agent,
@@ -196,6 +197,11 @@ class ReadingDemarche
         "facebook" => $row->fbagent,
         "twitter" => $row->twiteragent,
         "instagram" => $row->igagent,
+        "whatsapp" => $whatsapp, 
+        "telegram" => $row->telegramagent, 
+        "linkedin" => $row->linkedagent, 
+        "youtube" => $row->youtubeagent, 
+        "appstore" => $row->appstoreagent,
         "playstore" => $row->playstoreagent,
         "logo" => $logo,
         "gambar" => $gambar,
@@ -263,6 +269,7 @@ class ReadingDemarche
         $gambar = $row2->gambar2 ? "https://ufe-section-indonesie.org/ufeapp/images/agent/".$row2->gambar2 : '';
         $gambar_kategori = $row2->gambar_kategori ? "https://ufe-section-indonesie.org/ufeapp/images/menu/".$row2->gambar_kategori : '';
         $gambar_menu = $row2->gambar_menu ? "https://ufe-section-indonesie.org/ufeapp/images/menu/".$row2->gambar_menu : '';
+        $whatsapp = $row->waagent ? "https://api.whatsapp.com/send?phone=".preg_replace("/[^0-9]/", "", $row->waagent) : '';
         $kota = str_replace($row2->kodeposagent, "", $row2->kotaagent);
         $b = array(
         "id_agent" => $row2->id_agent,
@@ -279,6 +286,11 @@ class ReadingDemarche
         "facebook" => $row2->fbagent,
         "twitter" => $row2->twiteragent,
         "instagram" => $row2->igagent,
+        "whatsapp" => $whatsapp, 
+        "telegram" => $row->telegramagent, 
+        "linkedin" => $row->linkedagent, 
+        "youtube" => $row->youtubeagent, 
+        "appstore" => $row->appstoreagent,
         "playstore" => $row2->playstoreagent,
         "logo" => $logo,
         "gambar" => $gambar,

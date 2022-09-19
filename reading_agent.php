@@ -68,6 +68,7 @@ foreach ($data as $row) {
     "id_menu" => $row->id_menu,
     "judul_menu" => $row->judul_menu,
     "gambar_menu" => $gambar_menu,
+    "warna" => $row->warna,
     );
     array_push($hasil, $a);
 }
