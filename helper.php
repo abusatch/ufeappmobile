@@ -75,9 +75,35 @@ class AFhelper
         return $hasil;
     }
 
+    public static function dbSaveMulti(string $sql, $data = null, string $message = 'Sukses')
+    {
+        global $koneksi;
+        $result = $koneksi->multi_query($sql);
+        if ($result) {
+            return AFhelper::kirimJson($data, $message, 1);
+        } else {
+            return AFhelper::kirimJson($sql, $koneksi->error, 0);
+        }
+    }
+
+    public static function dbSaveCekMulti(string $sql)
+    {
+        global $koneksi;
+        $hasil = array();
+        $result = $koneksi->multi_query($sql);
+        if ($result) {
+            $hasil[0] = true;
+        } else {
+            $hasil[0] = false;
+            $hasil[1] = $koneksi->error;
+            $hasil[2] = $sql;
+        }
+        return $hasil;
+    }
+
     public static function formatText(string $text)
     {
-        $text = str_replace('\n',"-enter-",$text);
+        // $text = str_replace('\n',"-enter-",$text);
         $text = str_replace("'","`",$text);
         $text = str_replace('"',"-petikdua-",$text);
         $text = str_replace(str_split('\\/:*?"<>|'), ' ', $text);
@@ -89,15 +115,15 @@ class AFhelper
         $text = str_replace("é","-ekanan-",$text);
         $text = str_replace("à","-akiri-",$text);
         $text = str_replace("è","-ekiri-",$text);
-        $text = preg_replace("/\r\n|\r|\n/", '-enter-', $text);
-        $text = str_replace(array("\r\n","\r","\n","\\r","\\n","\\r\\n"),"-enter-",$text);
+        // $text = preg_replace("/\r\n|\r|\n/", '-enter-', $text);
+        // $text = str_replace(array("\r\n","\r","\n","\\r","\\n","\\r\\n"),"-enter-",$text);
 
         return $text;
     }
 
     public static function formatTextHTML(string $text)
     {
-        $text = str_replace('\n',"-enter-",$text);
+        // $text = str_replace('\n',"-enter-",$text);
         $text = str_replace("'","`",$text);
         $text = str_replace('"',"-petikdua-",$text);
         $text = str_replace(".","-titik-",$text);
@@ -107,9 +133,28 @@ class AFhelper
         $text = str_replace("é","-ekanan-",$text);
         $text = str_replace("à","-akiri-",$text);
         $text = str_replace("è","-ekiri-",$text);
-        $text = preg_replace("/\r\n|\r|\n/", '-enter-', $text);
-        $text = str_replace(array("\r\n","\r","\n","\\r","\\n","\\r\\n"),"-enter-",$text);
+        // $text = preg_replace("/\r\n|\r|\n/", '-enter-', $text);
+        // $text = str_replace(array("\r\n","\r","\n","\\r","\\n","\\r\\n"),"-enter-",$text);
 
+        return $text;
+    }
+
+    public static function generalText($text)
+    {
+        if($text == null) {
+            return "";
+        }
+        $text = str_replace("-spasi-",' ',$text);
+        $text = str_replace("-enter-",'\n',$text);
+        $text = str_replace("`","'",$text);
+        $text = str_replace("-petikdua-",'"',$text);
+        $text = str_replace("-titik-",".",$text);
+        $text = str_replace("-tandaseru-","!",$text);
+        $text = str_replace("-ekanan-","é",$text);
+        $text = str_replace("-akiri-","à",$text);
+        $text = str_replace("-ekiri-","è",$text);
+        $text = str_replace("&petiksatu&","'",$text);
+        $text = str_replace("&amp;petiksatu&amp;","'",$text);
         return $text;
     }
 
@@ -186,6 +231,5 @@ class AFhelper
         curl_close( $curl );
         return $response;
     }
-
 
 }
