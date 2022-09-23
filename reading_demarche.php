@@ -15,6 +15,15 @@ switch ($mode) {
     case 'demar3':
       $reading->demar3();
       break;
+    case 'subkategori':
+      $reading->subKategori();
+      break;
+    case 'homeagent':
+      $reading->homeagent();
+      break;
+    case 'subagent':
+      $reading->subagent();
+      break;
     case 'searchdemar':
       $reading->searchdemar();
       break;
@@ -133,6 +142,37 @@ class ReadingDemarche
     AFhelper::kirimJson($hasil);
   }
 
+  function subKategori() {
+    $id_subkategori = $_GET['id_subkategori'];
+    
+    $where = "AND id_demar = '$_GET[id_demar]'";
+    
+    if(!empty($id)) {
+      $where = "AND id_subkategori = '$id_subkategori'";
+    }
+
+    $sql = "SELECT id_subkategori, id_demar, judul, gambar, visibility, sort 
+      FROM tb_demar_subkategori 
+      WHERE visibility = '1' $where 
+      ORDER BY sort";
+
+    $data = AFhelper::dbSelectAll($sql);
+    $hasil = array();
+    
+    foreach ($data as $row) {
+      $gambar = $row->gambar ? "https://ufe-section-indonesie.org/ufeapp/images/menu/".$row->gambar : '';
+      $a = array(
+        "id_subkategori" => $row->id_subkategori,
+        "id_demar" => $row->id_demar,
+        "judul" => $row->judul,
+        "gambar" =>  $gambar,
+      );
+      array_push($hasil, $a);
+    }
+      
+    AFhelper::kirimJson($hasil);
+  }
+
   function searchdemar() {
     $sql = "SELECT b.id_demar, b.id_kategori, b.judul, b.judul2, b.short_desc, b.long_desc, b.gambar, b.bg, b.visibility, b.searching,
         a.nama_menu, a.gambar2 AS gambar_kategori, a.warna 
@@ -160,6 +200,133 @@ class ReadingDemarche
       array_push($hasil, $a);
     }
       
+    AFhelper::kirimJson($hasil);
+  }
+
+  function homeagent() {
+    $kategori = $_GET['kategori'];
+    $sql = "SELECT a.id_agent, a.id_kategori, a.judul, a.judul2, a.short_desc, a.long_desc, a.gambar, a.gambar2, a.namaagent, a.gmaps, a.alamatagent, a.alamat2agent, 
+            a.kotaagent, a.kodeposagent, a.telpagent, a.mobileagent, a.emailagent, a.webagent, a.fbagent, a.twiteragent, a.igagent, a.waagent, a.telegramagent, a.linkedagent, a.youtubeagent, a.appstoreagent, a.playstoreagent,
+            a.rating1, a.rating2, a.rating3, a.visibility, b.judul AS judul_kategori, b.gambar AS gambar_kategori, c.id_menu, c.nama_menu AS judul_menu, c.gambar2 AS gambar_menu, c.warna
+        FROM tb_agent a
+        JOIN tb_demar2 b ON(a.id_kategori = b.id_demar)
+        JOIN tb_menu c ON(b.id_kategori = c.id_menu)
+        WHERE a.visibility = '1' AND a.showinhome = '1' AND a.id_kategori = '$kategori'
+        ORDER BY a.topsort DESC, a.sorting";
+
+    $data = AFhelper::dbSelectAll($sql);
+    $hasil = array();
+
+    foreach ($data as $row) {
+        $logo = $row->gambar ? "https://ufe-section-indonesie.org/ufeapp/images/agent/".$row->gambar : '';
+        $gambar = $row->gambar2 ? "https://ufe-section-indonesie.org/ufeapp/images/agent/".$row->gambar2 : '';
+        $gambar_kategori = $row->gambar_kategori ? "https://ufe-section-indonesie.org/ufeapp/images/menu/".$row->gambar_kategori : '';
+        $gambar_menu = $row->gambar_menu ? "https://ufe-section-indonesie.org/ufeapp/images/menu/".$row->gambar_menu : '';
+        $whatsapp = $row->waagent ? "https://api.whatsapp.com/send?phone=".preg_replace("/[^0-9]/", "", $row->waagent) : '';
+        $kota = str_replace($row->kodeposagent, "", $row->kotaagent);
+        $a = array(
+        "id_agent" => $row->id_agent,
+        "deskripsi" => AFhelper::formatText($row->long_desc),
+        "nama" => $row->namaagent,
+        "alamat" => AFhelper::formatText($row->alamatagent),
+        "kota" => $kota,
+        "kode_pos" => $row->kodeposagent,
+        "gmaps" => $row->gmaps,
+        "phone" => $row->telpagent,
+        "mobile" => $row->mobileagent,
+        "email" => $row->emailagent,
+        "web" => $row->webagent,
+        "facebook" => $row->fbagent,
+        "twitter" => $row->twiteragent,
+        "instagram" => $row->igagent,
+        "whatsapp" => $whatsapp, 
+        "telegram" => $row->telegramagent, 
+        "linkedin" => $row->linkedagent, 
+        "youtube" => $row->youtubeagent, 
+        "appstore" => $row->appstoreagent,
+        "playstore" => $row->playstoreagent,
+        "logo" => $logo,
+        "gambar" => $gambar,
+        "rating1" => $row->rating1,
+        "rating2" => $row->rating2,
+        "rating3" => $row->rating3,
+        "id_kategori" => $row->id_kategori,
+        "judul_kategori" => $row->judul_kategori,
+        "gambar_kategori" => $gambar_kategori,
+        "id_menu" => $row->id_menu,
+        "judul_menu" => $row->judul_menu,
+        "gambar_menu" => $gambar_menu,
+        "warna" => $row->warna,
+        );
+        array_push($hasil, $a);
+    }
+        
+    AFhelper::kirimJson($hasil);
+  }
+
+  function subagent() {
+    $subkategori = $_GET['subkategori'];
+    $halaman = $_GET['halaman'];
+    if(empty($halaman)) {
+      $halaman = 0;  
+    }
+  $offset = " offset $halaman";
+    $sql = "SELECT a.id_agent, a.id_kategori, a.judul, a.judul2, a.short_desc, a.long_desc, a.gambar, a.gambar2, a.namaagent, a.gmaps, a.alamatagent, a.alamat2agent, 
+            a.kotaagent, a.kodeposagent, a.telpagent, a.mobileagent, a.emailagent, a.webagent, a.fbagent, a.twiteragent, a.igagent, a.waagent, a.telegramagent, a.linkedagent, a.youtubeagent, a.appstoreagent, a.playstoreagent,
+            a.rating1, a.rating2, a.rating3, a.visibility, b.judul AS judul_kategori, b.gambar AS gambar_kategori, c.id_menu, c.nama_menu AS judul_menu, c.gambar2 AS gambar_menu, c.warna
+        FROM tb_agent a
+        JOIN tb_demar2 b ON(a.id_kategori = b.id_demar)
+        JOIN tb_menu c ON(b.id_kategori = c.id_menu)
+        WHERE a.visibility = '1' AND a.id_subkategori = '$subkategori'
+        ORDER BY a.topsort DESC, a.sorting, a.rating1 DESC, a.rating2 DESC, a.rating3 DESC, a.namaagent, a.id_agent LIMIT 10 $offset";
+
+    $data = AFhelper::dbSelectAll($sql);
+    $hasil = array();
+
+    foreach ($data as $row) {
+        $logo = $row->gambar ? "https://ufe-section-indonesie.org/ufeapp/images/agent/".$row->gambar : '';
+        $gambar = $row->gambar2 ? "https://ufe-section-indonesie.org/ufeapp/images/agent/".$row->gambar2 : '';
+        $gambar_kategori = $row->gambar_kategori ? "https://ufe-section-indonesie.org/ufeapp/images/menu/".$row->gambar_kategori : '';
+        $gambar_menu = $row->gambar_menu ? "https://ufe-section-indonesie.org/ufeapp/images/menu/".$row->gambar_menu : '';
+        $whatsapp = $row->waagent ? "https://api.whatsapp.com/send?phone=".preg_replace("/[^0-9]/", "", $row->waagent) : '';
+        $kota = str_replace($row->kodeposagent, "", $row->kotaagent);
+        $a = array(
+        "id_agent" => $row->id_agent,
+        "deskripsi" => AFhelper::formatText($row->long_desc),
+        "nama" => $row->namaagent,
+        "alamat" => AFhelper::formatText($row->alamatagent),
+        "kota" => $kota,
+        "kode_pos" => $row->kodeposagent,
+        "gmaps" => $row->gmaps,
+        "phone" => $row->telpagent,
+        "mobile" => $row->mobileagent,
+        "email" => $row->emailagent,
+        "web" => $row->webagent,
+        "facebook" => $row->fbagent,
+        "twitter" => $row->twiteragent,
+        "instagram" => $row->igagent,
+        "whatsapp" => $whatsapp, 
+        "telegram" => $row->telegramagent, 
+        "linkedin" => $row->linkedagent, 
+        "youtube" => $row->youtubeagent, 
+        "appstore" => $row->appstoreagent,
+        "playstore" => $row->playstoreagent,
+        "logo" => $logo,
+        "gambar" => $gambar,
+        "rating1" => $row->rating1,
+        "rating2" => $row->rating2,
+        "rating3" => $row->rating3,
+        "id_kategori" => $row->id_kategori,
+        "judul_kategori" => $row->judul_kategori,
+        "gambar_kategori" => $gambar_kategori,
+        "id_menu" => $row->id_menu,
+        "judul_menu" => $row->judul_menu,
+        "gambar_menu" => $gambar_menu,
+        "warna" => $row->warna,
+        );
+        array_push($hasil, $a);
+    }
+        
     AFhelper::kirimJson($hasil);
   }
 
