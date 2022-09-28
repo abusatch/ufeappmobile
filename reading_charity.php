@@ -30,9 +30,9 @@ class ReadingCharity
     
     if(!empty($is_ufe)) {
         if($is_ufe == 'Y') {
-            $where .= "AND a.short_desc = 'ufe'";    
+            $where .= "AND b.judul = 'ufe'";    
         } else {
-            $where .= "AND a.short_desc <> 'ufe'";
+            $where .= "AND b.judul IS NULL";
         }
         
     }
@@ -51,12 +51,13 @@ class ReadingCharity
       $limit = 10;  
     }
 
-    $sql = "SELECT a.id_agent, a.id_kategori, a.judul, a.judul2, a.short_desc, a.long_desc, a.gambar, a.gambar2, a.namaagent, a.gmaps, a.alamatagent, a.alamat2agent, 
+    $sql = "SELECT b.judul AS logo, a.id_agent, a.id_kategori, a.id_subkategori, a.judul, a.judul2, a.short_desc, a.long_desc, a.gambar, a.gambar2, a.namaagent, a.gmaps, a.alamatagent, a.alamat2agent, 
             a.kotaagent, a.kodeposagent, a.telpagent, a.mobileagent, a.emailagent, a.webagent, a.fbagent, a.twiteragent, a.igagent, a.waagent, a.telegramagent, a.linkedagent, a.youtubeagent, a.appstoreagent, a.playstoreagent,
             a.rating1, a.rating2, a.rating3, a.visibility
         FROM tb_agent a
-        WHERE a.visibility = '1' AND a.id_kategori = 'charity' $where
-        ORDER BY sorting, a.rating2 DESC, a.rating3 DESC, a.namaagent, a.id_agent LIMIT $limit $offset";
+        LEFT JOIN tb_demar_subkategori b ON(a.id_subkategori = b.id_subkategori)
+        WHERE a.visibility = '1' AND a.id_kategori = '99' $where
+        ORDER BY a.topsort DESC, a.sorting, a.rating1 DESC, a.rating2 DESC, a.rating3 DESC, a.namaagent, a.id_agent LIMIT $limit $offset";
 
     $data = AFhelper::dbSelectAll($sql);
     $hasil = array();
@@ -86,7 +87,7 @@ class ReadingCharity
         "youtube" => $row->youtubeagent, 
         "appstore" => $row->appstoreagent,
         "playstore" => $row->playstoreagent,
-        "logo" => $row->short_desc,
+        "logo" => $row->logo,
         "gambar" => $gambar,
         "rating1" => $row->rating1,
         "rating2" => $row->rating2,
@@ -107,7 +108,7 @@ class ReadingCharity
   function jumlahAgent() {
     $sql = "SELECT COUNT(a.id_agent) as jumlah
         FROM tb_agent a
-        WHERE a.visibility = '1' AND a.id_kategori = 'charity'";
+        WHERE a.visibility = '1' AND a.id_kategori = '99'";
     $data = AFhelper::dbSelectOne($sql);
     AFhelper::kirimJson($data);
   }
