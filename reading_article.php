@@ -47,7 +47,7 @@ foreach ($data as $row) {
   $tgl = explode("-", $row->tanggal);
   $propic = $row->propic ? "https://ufe-section-indonesie.org/ufeapp/images/propic/".$row->propic : '';
   $a = array(
-    "id_template" => $row->id_template,
+    "id_advert" => $row->id_template,
     "id_member" => $row->id_member_vip,
     "judul" => AFhelper::formatText($row->judul),
     "deskripsi" => AFhelper::formatText($row->deskripsi),

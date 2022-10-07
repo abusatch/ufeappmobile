@@ -9,6 +9,9 @@ switch ($mode) {
     case 'tulisan':
         $reading->tulisan();
         break;
+    case 'text':
+        $reading->text();
+        break;
     case 'artikelambasador':
         $reading->artikelAmbasador();
         break;
@@ -23,6 +26,16 @@ class ReadingHome
         $sql = "SELECT * FROM tb_halaman_depan";
         $data = AFhelper::dbSelectOne($sql);
         AFhelper::kirimJson($data, 'Get tulisan halaman depan');
+    }
+
+    function text() {
+        $sql = "SELECT text_id, text_kode, text_nama, text_isi FROM tb_text";
+        $data = AFhelper::dbSelectAll($sql);
+        $hasil = array();
+        foreach ($data as $r) {
+            $hasil[$r->text_kode] = $r->text_isi;
+        }
+        AFhelper::kirimJson($hasil);
     }
 
     function artikelAmbasador() {
