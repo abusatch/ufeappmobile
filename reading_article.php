@@ -56,7 +56,7 @@ foreach ($data as $row) {
     "tanggal2" => $row->tanggal2,
     "url" => $row->linkweb,
     "email" => $row->username,
-    "urutan" => $urutan,
+    "urutan" => "$urutan",
     "keterangan" =>  AFhelper::formatText($row->keterangan),
     "first_name" => $row->first_name,
     "second_name" => $row->second_name,

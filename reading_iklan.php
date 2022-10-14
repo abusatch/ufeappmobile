@@ -9,6 +9,12 @@ switch ($mode) {
     case 'lihat':
         $reading->lihat();
         break;
+    case 'detil':
+        $reading->detil();
+        break;
+    case 'tambah':
+        $reading->tambah();
+        break;
     case 'listsetting':
         $reading->listSetting();
         break;
@@ -24,6 +30,9 @@ switch ($mode) {
     case 'bayar':
         $reading->bayar();
         break;
+    case 'lihatbayar':
+        $reading->lihatbayar();
+        break;
     default:
         $reading->lihat();
         break;
@@ -33,14 +42,19 @@ class ReadingIklan
 {
 
     private $arr_posisi = array(
-        "ufemonde" => "After Ufe Monde", 
-        "concierge" => "After Conciergerie", 
-        "article" => "After Article Ambassador", 
-        "actualite" => "After Actualités", 
-        "espacemembre" => "After Espace Membre Général",
-        "espaceyoung" => "After Espace Membre Les Jeunes",
-        "charity" => "After Charity", 
-        "menu" => "After Demarches"
+        "ufemonde" => "Après Ufe Monde", 
+        "concierge" => "Après Conciergerie", 
+        "article" => "Après Article Ambassador", 
+        "actualite" => "Après Actualités", 
+        "espacemembre" => "Après Espace Membre Général",
+        "espaceyoung" => "Après Espace Membre Les Jeunes",
+        "charity" => "Après Charity", 
+        "menu" => "Après Demarches"
+    );
+
+    private $arr_tinggi_layout = array(
+        "full" => "200",
+        "half" => "100",
     );
 
   function lihat() {
@@ -58,7 +72,7 @@ class ReadingIklan
         $where .= "AND a.sub_posisi = '0'";
     }
 
-    $sql = "SELECT a.id_iklan, a.posisi, a.sub_posisi, a.customer, a.tanggal, a.expired, a.gambar, a.url, a.visibility 
+    $sql = "SELECT a.id_iklan, a.posisi, a.sub_posisi, a.jenis_layout, a.customer, a.tanggal, a.expired, a.gambar, a.url, a.visibility 
         FROM tb_iklan a
         WHERE a.visibility = '1' AND a.expired >= '$now' AND a.posisi = '$posisi' $where";
     $data = AFhelper::dbSelectAll($sql);
@@ -71,10 +85,81 @@ class ReadingIklan
             "sub_posisi" => $row->sub_posisi,
             "gambar" => $gambar,
             "url" => $row->url,
+            "tinggi" => $this->arr_tinggi_layout[$row->jenis_layout]
         );
         array_push($hasil, $a);
     }
     AFhelper::kirimJson($hasil);
+  }
+
+  function detil() {
+    $id_iklan = $_GET['id_iklan'];
+
+    $sql = "SELECT a.id_iklan, a.posisi, a.sub_posisi, a.jenis_layout, a.customer, a.tanggal, a.expired, a.gambar, a.url, a.visibility 
+        FROM tb_iklan a
+        WHERE a.id_iklan = '$id_iklan'";
+    $row = AFhelper::dbSelectOne($sql);
+    $hasil = array(
+        "id_iklan" => $row->id_iklan,
+        "posisi" => $row->posisi,
+        "sub_posisi" => $row->sub_posisi,
+        "gambar" => $row->gambar ? "https://ufe-section-indonesie.org/ufeapp/images/iklan/".$row->gambar : '',
+        "url" => $row->url,
+        "tinggi" => $this->arr_tinggi_layout[$row->jenis_layout],
+    );
+    AFhelper::kirimJson($hasil);
+  }
+
+  function tambah() {
+    $id_order = $_POST['id_order'];
+    $linkweb = $_POST['linkweb'];
+    $email = $_POST['email'];
+
+    date_default_timezone_set('Asia/Jakarta');
+
+    if (!$_FILES['image']['tmp_name']) {
+        AFhelper::kirimJson(null, "photo ne peut pas être vide", 0);
+    } else {
+        $nama_image = $email.substr(date('YmdHis'),0,-1).$_FILES['image']['name'];
+        $path = "images/iklan/".$nama_image;
+        $uploadimage = move_uploaded_file($_FILES['image']['tmp_name'], $path);
+        if($uploadimage) {
+            $sql = "SELECT * from user where username = '$email'";
+            $user = AFhelper::dbSelectOne($sql);
+            $idUser = $user->idUser;
+
+            $sql = "SELECT b.id_posisi, b.posisi, b.sub_posisi, b.status_1, b.status_2a, b.status_2b, c.jenis_layout, c.periode 
+                FROM tb_iklan_order a
+                JOIN tb_iklan_posisi b ON(a.id_posisi = b.id_posisi)
+                JOIN tb_iklan_harga c ON(a.id_harga = c.id_harga)
+                WHERE a.id_order = '$id_order'";
+            $iklan = AFhelper::dbSelectOne($sql);
+
+            $tanggal = date('Y-m-d');
+            $expired = date('Y-m-d', strtotime("+".$iklan->periode." day"));
+
+            $sql = "INSERT INTO tb_iklan(posisi, sub_posisi, jenis_layout, customer, tanggal, expired, gambar, url, visibility) 
+                VALUES ('$iklan->posisi', '$iklan->sub_posisi', '$iklan->jenis_layout', '$idUser', '$tanggal', '$expired', '$nama_image', '$linkweb', '1')";
+            $hasil = AFhelper::dbSaveReturnID($sql);
+            if ($hasil <> 0 && $hasil <> '') {
+                $sql2 = "UPDATE tb_iklan_order SET id_iklan = '$hasil' WHERE id_order = '$id_order'; ";
+                if($iklan->jenis_layout == "full") {
+                    $sql2 .= "UPDATE tb_iklan_posisi SET status_1 = 'release' WHERE id_posisi = '$iklan->id_posisi'"; 
+                } else if($iklan->jenis_layout == "half" && $iklan->status_2a == "order") {
+                    $sql2 .= "UPDATE tb_iklan_posisi SET status_2a = 'release' WHERE id_posisi = '$iklan->id_posisi'";
+                } else if($iklan->jenis_layout == "half" && $iklan->status_2b == "order") {
+                    $sql2 .= "UPDATE tb_iklan_posisi SET status_2b = 'release' WHERE id_posisi = '$iklan->id_posisi'";
+                }
+                $data = array("tanggal" =>  date('Y-m-d H:i:s'), "judul" => "iklan", "gambar" => $nama_image, "url" => $linkweb);
+		        AFhelper::setFirebase("laporan/4", $data);
+                AFhelper::dbSaveMulti($sql2, null, "matériel téléchargé et publié avec succès");
+            } else {
+                AFhelper::kirimJson(null, "une erreur de connexion s'est produite", 0);
+            }
+        } else {
+            AFhelper::kirimJson(null, "échec du téléchargement de l'image", 0);
+        }
+    }
   }
 
   function listSetting() {
@@ -139,26 +224,33 @@ class ReadingIklan
     $offset = " offset $halaman";
 
     $sql = "SELECT a.id_order, a.id_user, a.id_posisi, a.id_harga, a.harga, a.payment_status, a.payment_type, a.payment_agent, 
-        a.payment_key, a.payment_notif, a.payment_notif_date, a.order_date, a.email, a.id_iklan, b.posisi 
+        a.payment_key, a.payment_notif, a.payment_notif_date, a.order_date, a.email, a.id_iklan, b.posisi, c.mata_uang, c.jenis_layout, c.keterangan, d.expired 
         FROM tb_iklan_order a
         JOIN tb_iklan_posisi b ON(a.id_posisi = b.id_posisi)
+        JOIN tb_iklan_harga c ON(a.id_harga = c.id_harga)
+        LEFT JOIN tb_iklan d ON(a.id_iklan = d.id_iklan)
         WHERE a.id_user = '$idUser'
-        ORDER BY a.id_order DESC limit 10 $offset";
+        ORDER BY a.id_order DESC";
     $data = AFhelper::dbSelectAll($sql);
     $hasil = array();
     foreach ($data as $row) {
+        $expired = "";
+        if($row->expired) {
+            $tgl = explode("-", $row->expired);
+            $expired = $tgl[2]."/".$tgl[1]."/".$tgl[0];
+        }
         $a = array(
             "id_registration" => $row->id_order,
-            "id_user" => $row->id_user,
+            "id_user" => "Taille : ".$this->arr_tinggi_layout[$row->jenis_layout]." x 400+",
             "id_activites" =>  $this->arr_posisi[$row->posisi],
-            "id_harga" => $row->id_harga,
-            "harga" => $row->harga,
+            "id_harga" => $expired,
+            "harga" => $row->mata_uang." ".number_format($row->harga),
             "payment_status" => $row->payment_status,
             "payment_type" => $row->payment_type,
             "payment_agent" => $row->payment_agent,
             "payment_key" => $row->payment_key,
             "registration_date" => $row->order_date,
-            "email" => $row->email,
+            "email" => $this->arr_tinggi_layout[$row->jenis_layout],
             "id_hasil" => $row->id_iklan,
         );
         array_push($hasil, $a);
@@ -222,6 +314,14 @@ class ReadingIklan
         }
     }
 
+    function lihatbayar() {
+        $payment_type = $_POST['payment_type'];
+        $payment_agent = $_POST['payment_agent'];
+        $payment_key = $_POST['payment_key'];
+        $jsresp = json_decode($payment_key);
+        $data = AFhelper::getTampilanMidtrans($payment_type, $payment_agent, $jsresp);
+        AFhelper::kirimJson($data);
+    }
 
 }
 
