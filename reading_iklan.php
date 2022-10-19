@@ -53,7 +53,7 @@ class ReadingIklan
     );
 
     private $arr_tinggi_layout = array(
-        "full" => "200",
+        "full" => "220",
         "half" => "100",
     );
 
@@ -224,7 +224,7 @@ class ReadingIklan
     $offset = " offset $halaman";
 
     $sql = "SELECT a.id_order, a.id_user, a.id_posisi, a.id_harga, a.harga, a.payment_status, a.payment_type, a.payment_agent, 
-        a.payment_key, a.payment_notif, a.payment_notif_date, a.order_date, a.email, a.id_iklan, b.posisi, c.mata_uang, c.jenis_layout, c.keterangan, d.expired 
+        a.payment_key, a.payment_notif, a.payment_notif_date, a.order_date, a.email, a.id_iklan, b.posisi, c.mata_uang, c.jenis_layout, c.keterangan, d.expired, d.visibility 
         FROM tb_iklan_order a
         JOIN tb_iklan_posisi b ON(a.id_posisi = b.id_posisi)
         JOIN tb_iklan_harga c ON(a.id_harga = c.id_harga)
@@ -241,10 +241,10 @@ class ReadingIklan
         }
         $a = array(
             "id_registration" => $row->id_order,
-            "id_user" => "Taille : ".$this->arr_tinggi_layout[$row->jenis_layout]." x 400+",
-            "id_activites" =>  $this->arr_posisi[$row->posisi],
+            "id_user" => "Dimension : 340x".$this->arr_tinggi_layout[$row->jenis_layout],
+            "id_activites" => "Advertisement ".$row->id_posisi.($row->jenis_layout == "full" ? "A" : "B"),
             "id_harga" => $expired,
-            "harga" => $row->mata_uang." ".number_format($row->harga),
+            "harga" => "Forfait : ".$row->keterangan,
             "payment_status" => $row->payment_status,
             "payment_type" => $row->payment_type,
             "payment_agent" => $row->payment_agent,
@@ -252,6 +252,7 @@ class ReadingIklan
             "registration_date" => $row->order_date,
             "email" => $this->arr_tinggi_layout[$row->jenis_layout],
             "id_hasil" => $row->id_iklan,
+            "keterangan" => $row->visibility,
         );
         array_push($hasil, $a);
     }
@@ -271,12 +272,12 @@ class ReadingIklan
 
     function bayar() {
         $username = $_POST['username'];
-        $id_posisi = $_POST['id_posisi'];
-        $id_harga = $_POST['id_harga'];
         $email = $_POST['email'];
         $payment_type = $_POST['payment_type'];
         $payment_agent = $_POST['payment_agent'];
         $order_date = $_POST['order_date'];
+        $id_posisi = $_POST['id_posisi'];
+        $id_harga = $_POST['id_harga'];
         $layout = $_POST['layout'];
         $keterangan = $_POST['keterangan'];
 

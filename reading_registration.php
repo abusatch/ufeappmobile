@@ -81,12 +81,12 @@ class ReadingRegistration
 
   function tambah() {
     $username = $_POST['username'];
-    $id_activites = $_POST['id_activites'];
-    $id_harga = $_POST['id_harga'];
     $email = $_POST['email'];
     $payment_type = $_POST['payment_type'];
     $payment_agent = $_POST['payment_agent'];
     $registration_date = $_POST['registration_date'];
+    $id_activites = $_POST['id_activites'];
+    $id_harga = $_POST['id_harga'];
     $expired_date = $_POST['expired_date'];
 
     $sql = "SELECT * from user where username = '$username'";

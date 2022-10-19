@@ -42,7 +42,37 @@ if($type == "ACT") {
         payment_notif = CONCAT(payment_notif,'@@','$respon'),
         payment_notif_date = CONCAT(payment_notif_date,'@@','$tanggal')
         WHERE id_order = '$id'";
-    AFhelper::dbSave($sql);
+    $cek = AFhelper::dbSaveCek($sql);
+    if($cek[0]) {
+        if($jsresp->transaction_status == "settlement" || $jsresp->transaction_status == "capture") {
+            $sql = "SELECT a.id_user, b.id_posisi, b.posisi, b.sub_posisi, b.status_1, b.status_2a, b.status_2b, c.jenis_layout, c.periode 
+                FROM tb_iklan_order a
+                JOIN tb_iklan_posisi b ON(a.id_posisi = b.id_posisi)
+                JOIN tb_iklan_harga c ON(a.id_harga = c.id_harga)
+                WHERE a.id_order = '$id'";
+            $iklan = AFhelper::dbSelectOne($sql);
+
+            $tanggal2 = date('Y-m-d');
+            $expired = date('Y-m-d', strtotime("+".$iklan->periode." day"));
+
+            $sql = "INSERT INTO tb_iklan(posisi, sub_posisi, jenis_layout, customer, tanggal, expired, gambar, url, visibility) 
+                VALUES ('$iklan->posisi', '$iklan->sub_posisi', '$iklan->jenis_layout', '$iklan->id_user', '$tanggal2', '$expired', '', '', '0')";
+            $hasil = AFhelper::dbSaveReturnID($sql);
+            if ($hasil <> 0 && $hasil <> '') {
+                $sql2 = "UPDATE tb_iklan_order SET id_iklan = '$hasil' WHERE id_order = '$id'; ";
+                if($iklan->jenis_layout == "full") {
+                    $sql2 .= "UPDATE tb_iklan_posisi SET status_1 = 'release' WHERE id_posisi = '$iklan->id_posisi'"; 
+                } else if($iklan->jenis_layout == "half" && $iklan->status_2a == "order") {
+                    $sql2 .= "UPDATE tb_iklan_posisi SET status_2a = 'release' WHERE id_posisi = '$iklan->id_posisi'";
+                } else if($iklan->jenis_layout == "half" && $iklan->status_2b == "order") {
+                    $sql2 .= "UPDATE tb_iklan_posisi SET status_2b = 'release' WHERE id_posisi = '$iklan->id_posisi'";
+                }
+                $data = array("tanggal" =>  date('Y-m-d H:i:s'), "judul" => "iklan", "id" => $hasil);
+		        AFhelper::setFirebase("laporan/4", $data);
+                AFhelper::dbSaveMulti($sql2, null);
+            }
+        }
+    }
 }
 
 ?>
