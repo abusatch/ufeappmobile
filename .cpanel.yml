@@ -42,3 +42,4 @@ deployment:
     - /bin/cp -R reading_charity.php $DEPLOYPATH
     - /bin/cp -R reading_donation.php $DEPLOYPATH
     - /bin/cp -R reading_iklan.php $DEPLOYPATH
+    - /bin/cp -R notif_for_cronjobs.php $DEPLOYPATH

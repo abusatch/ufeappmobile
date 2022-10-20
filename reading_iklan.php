@@ -15,6 +15,9 @@ switch ($mode) {
     case 'tambah':
         $reading->tambah();
         break;
+    case 'ubah':
+        $reading->ubah();
+        break;
     case 'listsetting':
         $reading->listSetting();
         break;
@@ -85,7 +88,8 @@ class ReadingIklan
             "sub_posisi" => $row->sub_posisi,
             "gambar" => $gambar,
             "url" => $row->url,
-            "tinggi" => $this->arr_tinggi_layout[$row->jenis_layout]
+            "tinggi" => $this->arr_tinggi_layout[$row->jenis_layout],
+            "lebar" => "340",
         );
         array_push($hasil, $a);
     }
@@ -106,6 +110,7 @@ class ReadingIklan
         "gambar" => $row->gambar ? "https://ufe-section-indonesie.org/ufeapp/images/iklan/".$row->gambar : '',
         "url" => $row->url,
         "tinggi" => $this->arr_tinggi_layout[$row->jenis_layout],
+        "visibility" => $row->visibility,
     );
     AFhelper::kirimJson($hasil);
   }
@@ -114,6 +119,7 @@ class ReadingIklan
     $id_order = $_POST['id_order'];
     $linkweb = $_POST['linkweb'];
     $email = $_POST['email'];
+    $visibility = $_POST['visibility'];
 
     date_default_timezone_set('Asia/Jakarta');
 
@@ -121,8 +127,7 @@ class ReadingIklan
         AFhelper::kirimJson(null, "photo ne peut pas être vide", 0);
     } else {
         $nama_image = $email.substr(date('YmdHis'),0,-1).$_FILES['image']['name'];
-        $path = "images/iklan/".$nama_image;
-        $uploadimage = move_uploaded_file($_FILES['image']['tmp_name'], $path);
+        $uploadimage = move_uploaded_file($_FILES['image']['tmp_name'], "images/iklan/".$nama_image);
         if($uploadimage) {
             $sql = "SELECT * from user where username = '$email'";
             $user = AFhelper::dbSelectOne($sql);
@@ -139,7 +144,7 @@ class ReadingIklan
             $expired = date('Y-m-d', strtotime("+".$iklan->periode." day"));
 
             $sql = "INSERT INTO tb_iklan(posisi, sub_posisi, jenis_layout, customer, tanggal, expired, gambar, url, visibility) 
-                VALUES ('$iklan->posisi', '$iklan->sub_posisi', '$iklan->jenis_layout', '$idUser', '$tanggal', '$expired', '$nama_image', '$linkweb', '1')";
+                VALUES ('$iklan->posisi', '$iklan->sub_posisi', '$iklan->jenis_layout', '$idUser', '$tanggal', '$expired', '$nama_image', '$linkweb', '$visibility')";
             $hasil = AFhelper::dbSaveReturnID($sql);
             if ($hasil <> 0 && $hasil <> '') {
                 $sql2 = "UPDATE tb_iklan_order SET id_iklan = '$hasil' WHERE id_order = '$id_order'; ";
@@ -160,6 +165,40 @@ class ReadingIklan
             AFhelper::kirimJson(null, "échec du téléchargement de l'image", 0);
         }
     }
+  }
+
+  function ubah() {
+    $id_iklan = $_POST['id_iklan'];
+    $linkweb = $_POST['linkweb'];
+    $email = $_POST['email'];
+    $visibility = $_POST['visibility'];
+
+    $nama_image = "";
+	$sql = "";
+	if ($_FILES['image']['tmp_name']) {
+		$nama_image = $email.substr(date('YmdHis'),0,-1).$_FILES['image']['name'];
+		$uploadimage = move_uploaded_file($_FILES['image']['tmp_name'], "images/iklan/".$nama_image);
+		if(!$uploadimage) {
+			AFhelper::kirimJson(null, "échec du téléchargement de l'image", 0);
+			exit();
+		}
+	}
+
+    if($nama_image != "") {
+        $sql = "UPDATE tb_iklan SET gambar = '$nama_image', url = '$linkweb', visibility = '$visibility' WHERE id_iklan = '$id_iklan'";	
+    } else {
+        $sql = "UPDATE tb_iklan SET url = '$linkweb', visibility = '$visibility' WHERE id_iklan = '$id_iklan'";
+    }
+
+    $hasil = AFhelper::dbSaveCek($sql);
+	if($hasil[0]) {
+		date_default_timezone_set('Asia/Jakarta');
+		$data = array("tanggal" =>  date('Y-m-d H:i:s'), "judul" => "iklan", "id" => $id_iklan, "gambar" => $nama_image, "url" => $linkweb);
+		AFhelper::setFirebase("laporan/4", $data);
+		AFhelper::kirimJson($hasil, "matériel téléchargé et publié avec succès");
+	} else {
+		AFhelper::kirimJson($sql, $hasil[1], 0);	
+	}
   }
 
   function listSetting() {
@@ -224,7 +263,7 @@ class ReadingIklan
     $offset = " offset $halaman";
 
     $sql = "SELECT a.id_order, a.id_user, a.id_posisi, a.id_harga, a.harga, a.payment_status, a.payment_type, a.payment_agent, 
-        a.payment_key, a.payment_notif, a.payment_notif_date, a.order_date, a.email, a.id_iklan, b.posisi, c.mata_uang, c.jenis_layout, c.keterangan, d.expired, d.visibility 
+        a.payment_key, a.payment_notif, a.payment_notif_date, a.order_date, a.email, a.id_iklan, b.posisi, c.mata_uang, c.jenis_layout, c.keterangan, d.expired, d.gambar, d.visibility 
         FROM tb_iklan_order a
         JOIN tb_iklan_posisi b ON(a.id_posisi = b.id_posisi)
         JOIN tb_iklan_harga c ON(a.id_harga = c.id_harga)
@@ -243,7 +282,7 @@ class ReadingIklan
             "id_registration" => $row->id_order,
             "id_user" => "Dimension : 340x".$this->arr_tinggi_layout[$row->jenis_layout],
             "id_activites" => "Advertisement ".$row->id_posisi.($row->jenis_layout == "full" ? "A" : "B"),
-            "id_harga" => $expired,
+            "id_harga" => "Date d'expiration : ".$expired,
             "harga" => "Forfait : ".$row->keterangan,
             "payment_status" => $row->payment_status,
             "payment_type" => $row->payment_type,
@@ -252,6 +291,7 @@ class ReadingIklan
             "registration_date" => $row->order_date,
             "email" => $this->arr_tinggi_layout[$row->jenis_layout],
             "id_hasil" => $row->id_iklan,
+            "gambar" => $row->gambar ? "https://ufe-section-indonesie.org/ufeapp/images/iklan/".$row->gambar : '',
             "keterangan" => $row->visibility,
         );
         array_push($hasil, $a);
