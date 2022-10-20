@@ -45,7 +45,7 @@ if($type == "ACT") {
     $cek = AFhelper::dbSaveCek($sql);
     if($cek[0]) {
         if($jsresp->transaction_status == "settlement" || $jsresp->transaction_status == "capture") {
-            $sql = "SELECT a.id_user, b.id_posisi, b.posisi, b.sub_posisi, b.status_1, b.status_2a, b.status_2b, c.jenis_layout, c.periode 
+            $sql = "SELECT a.id_user, a.layout, b.id_posisi, b.posisi, b.sub_posisi, b.status_1, b.status_2a, b.status_2b, c.jenis_layout, c.periode 
                 FROM tb_iklan_order a
                 JOIN tb_iklan_posisi b ON(a.id_posisi = b.id_posisi)
                 JOIN tb_iklan_harga c ON(a.id_harga = c.id_harga)
@@ -60,13 +60,7 @@ if($type == "ACT") {
             $hasil = AFhelper::dbSaveReturnID($sql);
             if ($hasil <> 0 && $hasil <> '') {
                 $sql2 = "UPDATE tb_iklan_order SET id_iklan = '$hasil' WHERE id_order = '$id'; ";
-                if($iklan->jenis_layout == "full") {
-                    $sql2 .= "UPDATE tb_iklan_posisi SET status_1 = 'release' WHERE id_posisi = '$iklan->id_posisi'"; 
-                } else if($iklan->jenis_layout == "half" && $iklan->status_2a == "order") {
-                    $sql2 .= "UPDATE tb_iklan_posisi SET status_2a = 'release' WHERE id_posisi = '$iklan->id_posisi'";
-                } else if($iklan->jenis_layout == "half" && $iklan->status_2b == "order") {
-                    $sql2 .= "UPDATE tb_iklan_posisi SET status_2b = 'release' WHERE id_posisi = '$iklan->id_posisi'";
-                }
+                $sql2 .= "UPDATE tb_iklan_posisi SET status_$iklan->layout = 'release' WHERE id_posisi = '$iklan->id_posisi'; ";
                 $data = array("tanggal" =>  date('Y-m-d H:i:s'), "judul" => "iklan", "id" => $hasil);
 		        AFhelper::setFirebase("laporan/4", $data);
                 AFhelper::dbSaveMulti($sql2, null);

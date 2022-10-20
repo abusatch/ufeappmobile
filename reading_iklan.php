@@ -328,8 +328,8 @@ class ReadingIklan
         $sql = "SELECT * from tb_iklan_harga where id_harga = '$id_harga'";
         $harga = AFhelper::dbSelectOne($sql);
 
-        $sql = "INSERT INTO tb_iklan_order(id_user, id_posisi, id_harga, harga, payment_type, payment_agent, order_date, email) 
-            VALUES ('$idUser', '$id_posisi', '$id_harga', '$harga->harga', '$payment_type', '$payment_agent', '$order_date', '$email')";
+        $sql = "INSERT INTO tb_iklan_order(id_user, id_posisi, id_harga, harga, payment_type, payment_agent, order_date, email, layout) 
+            VALUES ('$idUser', '$id_posisi', '$id_harga', '$harga->harga', '$payment_type', '$payment_agent', '$order_date', '$email', '$layout')";
         $hasil = AFhelper::dbSaveReturnID($sql);
         if ($hasil <> 0 && $hasil <> '') {
             $customer = array('first_name' => $user->first_name, 'last_name' => $user->second_name, 'email' => $email, 'phone' => $user->phone);
