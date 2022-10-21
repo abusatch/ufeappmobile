@@ -12,6 +12,9 @@ switch ($mode) {
     case 'text':
         $reading->text();
         break;
+    case 'logo':
+        $reading->logo();
+        break;
     case 'artikelambasador':
         $reading->artikelAmbasador();
         break;
@@ -34,6 +37,16 @@ class ReadingHome
         $hasil = array();
         foreach ($data as $r) {
             $hasil[$r->text_kode] = $r->text_isi;
+        }
+        AFhelper::kirimJson($hasil);
+    }
+
+    function logo() {
+        $sql = "SELECT logo_id, logo_kode, logo_nama, logo_isi FROM tb_logo";
+        $data = AFhelper::dbSelectAll($sql);
+        $hasil = array();
+        foreach ($data as $r) {
+            $hasil[$r->logo_kode] = $r->logo_isi ? "https://ufe-section-indonesie.org/ufeapp/images/logo/".$r->logo_isi : "";
         }
         AFhelper::kirimJson($hasil);
     }
