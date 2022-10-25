@@ -133,7 +133,7 @@ class ReadingIklan
             $user = AFhelper::dbSelectOne($sql);
             $idUser = $user->idUser;
 
-            $sql = "SELECT b.id_posisi, b.posisi, b.sub_posisi, b.status_1, b.status_2a, b.status_2b, c.jenis_layout, c.periode 
+            $sql = "SELECT a.layout, b.id_posisi, b.posisi, b.sub_posisi, b.status_1, b.status_2a, b.status_2b, c.jenis_layout, c.periode 
                 FROM tb_iklan_order a
                 JOIN tb_iklan_posisi b ON(a.id_posisi = b.id_posisi)
                 JOIN tb_iklan_harga c ON(a.id_harga = c.id_harga)
@@ -148,16 +148,10 @@ class ReadingIklan
             $hasil = AFhelper::dbSaveReturnID($sql);
             if ($hasil <> 0 && $hasil <> '') {
                 $sql2 = "UPDATE tb_iklan_order SET id_iklan = '$hasil' WHERE id_order = '$id_order'; ";
-                if($iklan->jenis_layout == "full") {
-                    $sql2 .= "UPDATE tb_iklan_posisi SET status_1 = 'release' WHERE id_posisi = '$iklan->id_posisi'"; 
-                } else if($iklan->jenis_layout == "half" && $iklan->status_2a == "order") {
-                    $sql2 .= "UPDATE tb_iklan_posisi SET status_2a = 'release' WHERE id_posisi = '$iklan->id_posisi'";
-                } else if($iklan->jenis_layout == "half" && $iklan->status_2b == "order") {
-                    $sql2 .= "UPDATE tb_iklan_posisi SET status_2b = 'release' WHERE id_posisi = '$iklan->id_posisi'";
-                }
-                $data = array("tanggal" =>  date('Y-m-d H:i:s'), "judul" => "iklan", "gambar" => $nama_image, "url" => $linkweb);
-		        AFhelper::setFirebase("laporan/4", $data);
-                AFhelper::dbSaveMulti($sql2, null, "matériel téléchargé et publié avec succès");
+                $sql2 .= "UPDATE tb_iklan_posisi SET status_$iklan->layout = 'release' WHERE id_posisi = '$iklan->id_posisi'; ";
+                $data = array("tanggal" => date('Y-m-d H:i:s'), "mode" => "iklan", "ispopup" => "N", "ishtml" => "N", "isi" => $hasil, "gambar" => $nama_image);
+		        AFhelper::setFirebase("laporan/all", $data);
+		        AFhelper::dbSaveMulti($sql2, null, "matériel téléchargé et publié avec succès");
             } else {
                 AFhelper::kirimJson(null, "une erreur de connexion s'est produite", 0);
             }
@@ -193,8 +187,8 @@ class ReadingIklan
     $hasil = AFhelper::dbSaveCek($sql);
 	if($hasil[0]) {
 		date_default_timezone_set('Asia/Jakarta');
-		$data = array("tanggal" =>  date('Y-m-d H:i:s'), "judul" => "iklan", "id" => $id_iklan, "gambar" => $nama_image, "url" => $linkweb);
-		AFhelper::setFirebase("laporan/4", $data);
+        $data = array("tanggal" => date('Y-m-d H:i:s'), "mode" => "iklan", "ispopup" => "N", "ishtml" => "N", "isi" => "edit ".$id_iklan, "gambar" => $nama_image);
+		AFhelper::setFirebase("laporan/all", $data);
 		AFhelper::kirimJson($hasil, "matériel téléchargé et publié avec succès");
 	} else {
 		AFhelper::kirimJson($sql, $hasil[1], 0);	

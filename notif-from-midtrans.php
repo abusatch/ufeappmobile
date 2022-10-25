@@ -61,8 +61,8 @@ if($type == "ACT") {
             if ($hasil <> 0 && $hasil <> '') {
                 $sql2 = "UPDATE tb_iklan_order SET id_iklan = '$hasil' WHERE id_order = '$id'; ";
                 $sql2 .= "UPDATE tb_iklan_posisi SET status_$iklan->layout = 'release' WHERE id_posisi = '$iklan->id_posisi'; ";
-                $data = array("tanggal" =>  date('Y-m-d H:i:s'), "judul" => "iklan", "id" => $hasil);
-		        AFhelper::setFirebase("laporan/4", $data);
+                $data = array("tanggal" => date('Y-m-d H:i:s'), "mode" => "iklan", "ispopup" => "N", "ishtml" => "N", "isi" => $hasil, "gambar" => "");
+		        AFhelper::setFirebase("laporan/all", $data);
                 AFhelper::dbSaveMulti($sql2, null);
             }
         }
