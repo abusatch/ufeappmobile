@@ -15,6 +15,9 @@ switch ($mode) {
     case 'changepwd':
         $reading->changePassword();
         break;
+    case 'delete':
+        $reading->delete();
+        break;
     default:
         echo "Mode tidak sesuai";
         break;
@@ -68,7 +71,7 @@ class ReadingUser
                     WHERE username = '$username'";
             }
         }
-        AFhelper::dbSave($sql, null, 'Data changed successfully');
+        AFhelper::dbSave($sql, null, "Données modifiées avec succès");
     }
 
     function changePassword() {
@@ -88,12 +91,27 @@ class ReadingUser
                 $sql = "SELECT * FROM user WHERE username = '$username'";
                 $data2 = AFhelper::dbSelectOne($sql);
                 $data2->propic = $data2->propic ? "https://ufe-section-indonesie.org/ufeapp/images/propic/".$data2->propic : '';
-                AFhelper::kirimJson($data2, 'Password changed successfully');       
+                AFhelper::kirimJson($data2, "Le mot de passe a été changé avec succès");       
             } else {
                 AFhelper::kirimJson($hasil[2], $hasil[1], 0); 
             }
         } else {
-            AFhelper::kirimJson(null, "Current password is not correct", 0);
+            AFhelper::kirimJson(null, "Le mot de passe actuel n'est pas correct", 0);
+        }
+    }
+
+    function delete() {
+        $username = $_POST['username'];
+        $password_lama = $_POST['password_lama'];
+
+        date_default_timezone_set('Asia/Jakarta');
+        $sql = "SELECT * FROM user WHERE username = '$username' AND password = md5('$password_lama')";
+        $data = AFhelper::dbSelectOne($sql);
+        if ($data) {
+            $sql = "DELETE FROM user WHERE username = '$username' AND password = md5('$password_lama')";
+            AFhelper::dbSave($sql, null, "compte supprimé avec succès");
+        } else {
+            AFhelper::kirimJson(null, "Le mot de passe actuel n'est pas correct", 0);
         }
     }
 }

@@ -114,7 +114,7 @@ header('Access-Control-Allow-Origin: *');
 		$namanya = $kg2['first_name']." ".$kg2['second_name'];
 }
 
-    $to = "abusatch@gmail.com,".$kg2['username'];
+    $to = $kg2['username'];
 $subject = "Demande de déblocage refusée";
 
 $message = "
@@ -171,7 +171,6 @@ $headers .= "Content-type:text/html;charset=UTF-8" . "\r\n";
 
 // More headers
 $headers .= 'From: UFE Indonésie<info@ufe-section-indonesie.org>' . "\r\n";
-$headers .= 'Cc: abusatch@gmail.com' . "\r\n";
 
 mail($to,$subject,$message,$headers);
 				

@@ -361,7 +361,7 @@ $erg2 = mysqli_fetch_assoc($erg);
     "tulisan9":"<?php echo $bw2['tulisan8'] ?>",
     "tulisan10":"<?php echo $fr2['propic']; ?>",
     "tulisan11":"<?php echo $fr2['device_id']; ?>",
-    "tulisan12":"<?php echo $nfd2['tulisan1'] ?>",
+    "tulisan12":"<?php echo $fr2['device_id'] ? $nfd2['tulisan1'] : "" ?>",
     "tulisan13":"<?php echo $owd2['version_code'] ?>",
     "tulisan14":"<?php echo $bh2['tulisan2']; ?>",
     "tulisan15":"<?php echo $bh2['tulisan3']; ?>",

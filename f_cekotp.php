@@ -27,30 +27,23 @@ if($de2 == 0){
     $nkw2 = mysqli_fetch_assoc($nkw);
     
     if(empty($nkw2['device_id'])){
-               mysqli_query($koneksi,"update user set device_id = '$_POST[device_info]' where username = '$_POST[emailtujuan]'");
+        if($_POST['device_info'] != 'null') {
+            mysqli_query($koneksi,"update user set device_id = '$_POST[device_info]' where username = '$_POST[emailtujuan]'");
+        }
     }else{
         
         if($_POST['device_info'] == $nkw2['device_id']){
             mysqli_query($koneksi,"update user set device_id = '$_POST[device_info]' where username = '$_POST[emailtujuan]'");
         }else{
-            
-            
-            
-  $kg = mysqli_query($koneksi,"select * from user where idUser = '$_POST[emailtujuan]'");
-  $kg2 = mysqli_fetch_array($kg);
   
   
-  if(empty($kg2['first_name'])){
-    $namanya = $kg2['username'];
-}else{
-        $namanya = $kg2['first_name']." ".$kg2['second_name'];
-}
+            if(empty($nkw2['first_name'])){
+                $namanya = $nkw2['username'];
+            }else{
+                $namanya = $nkw2['first_name']." ".$nkw2['second_name'];
+            }
 
-
-  
-  
-  
-    $to = "abusatch@gmail.com,".$kg2['username'];
+    $to = $nkw2['username'];
 $subject = "Demande de déblocage refusée";
 
 $message = "
@@ -76,7 +69,7 @@ $message = "
 <br><br>
 <table style='width:100%;'>
 <tr><td style='text-align:center;'>
-<a style='text-decoration: none;' href='https://ufe-section-indonesie.org/ufeapp/confirmer.php?e=".$kg2['username']."&t=".$kg2['token_push']."'><span style='padding-left:20px;padding-right:20px;padding-top:5px;padding-bottom:5px;border-radius:15px;border:1px solid blue;cursor:pointer;color:blue;'>Débloquer mon compte</span></a>
+<a style='text-decoration: none;' href='https://ufe-section-indonesie.org/ufeapp/confirmer.php?e=".$nkw2['username']."&t=".$nkw2['token_push']."'><span style='padding-left:20px;padding-right:20px;padding-top:5px;padding-bottom:5px;border-radius:15px;border:1px solid blue;cursor:pointer;color:blue;'>Débloquer mon compte</span></a>
 </td>
 </tr></table>
 </p>
@@ -107,7 +100,7 @@ $headers .= "Content-type:text/html;charset=UTF-8" . "\r\n";
 
 // More headers
 $headers .= 'From: UFE Indonésie<info@ufe-section-indonesie.org>' . "\r\n";
-$headers .= 'Cc: abusatch@gmail.com' . "\r\n";
+// $headers .= 'Cc: artoviris@gmail.com' . "\r\n";
 
 mail($to,$subject,$message,$headers);
 

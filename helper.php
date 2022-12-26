@@ -234,10 +234,18 @@ class AFhelper
 
     public static function setMidtrans(string $payment_type, string $payment_agent, string $order_id, $harga, string $product_id = "", string $product_name = "", $customer = null) 
     {
+        // Sandbox
+        // Merchant ID : G769478283
+        // Client Key  : SB-Mid-client-1La3o-bKzCq-oD2W
+        // Server Key  : SB-Mid-server-Tawty3s8XDXcLjqDYWlbpPk0
+        // Production
+        // Merchant ID : G769478283
+        // Client Key  : Mid-client-iw51ExEKVIlLdwgv
+        // Server Key  : Mid-server-37Ayh2gHmUf_xu0i_sAGN2rz
         $header = array(
             'Content-Type: application/json',
             'Accept: application/json',
-            'Authorization: Basic ' . base64_encode('SB-Mid-server-mMfDlH9AGc8QGwK6DtK0ggVK:')
+            'Authorization: Basic ' . base64_encode('Mid-server-2DDg_LyJp2SaCKVhoRb7lQPJ:')
         );
         $post_data = array(
             "payment_type" => $payment_type,
@@ -278,8 +286,10 @@ class AFhelper
         } else if($payment_type == "shopeepay") {
             $post_data["shopeepay"] = array("callback_url" => "https://ufe-section-indonesie.org/");
         }
+        // sandox     : 'https://api.sandbox.midtrans.com/v2/charge'
+        // production : 'https://api.midtrans.com/v2/charge'
         $curl = curl_init();
-        curl_setopt($curl, CURLOPT_URL, 'https://api.sandbox.midtrans.com/v2/charge');
+        curl_setopt($curl, CURLOPT_URL, 'https://api.midtrans.com/v2/charge');
         curl_setopt($curl, CURLOPT_HTTPHEADER, $header);
         curl_setopt($curl, CURLOPT_POST, true);
         curl_setopt($curl, CURLOPT_POSTFIELDS, json_encode($post_data));

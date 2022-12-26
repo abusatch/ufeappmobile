@@ -47,10 +47,19 @@ if($kj2 == 0){
   <?php  
 }else{
 
+  date_default_timezone_set('Asia/Jakarta');
+	$now = date('Y-m-d H:i:s');
+  
+  if($kj3['kode_verif_tgl']) {
+    $batasverif = date('Y-m-d H:i:s', strtotime($kj3['kode_verif_tgl']. ' + 3 hours'));
+    if($now < $batasverif) {
+      $randd = $kj3['kode_verif'];
+    }
+  }
 
-mysqli_query($koneksi,"update user set kode_verif = '$randd' where username = '$_GET[emailtujuan]'");
+  mysqli_query($koneksi,"UPDATE user set kode_verif = '$randd', kode_verif_tgl = '$now' where username = '$_GET[emailtujuan]'");
 
-$to = $_GET['emailtujuan'].",abusatch@gmail.com";
+$to = $_GET['emailtujuan'];
 $subject = "Code de vérification";
 
 $message = "
