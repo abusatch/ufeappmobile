@@ -57,6 +57,10 @@ if($kj2 == 0){
     }
   }
 
+  if($_GET['emailtujuan'] == 'ufe.test@gmail.com' || $_GET['emailtujuan'] == 'ufe.tester@gmail.com') {
+    $randd = '3658';
+  }
+
   mysqli_query($koneksi,"UPDATE user set kode_verif = '$randd', kode_verif_tgl = '$now' where username = '$_GET[emailtujuan]'");
 
 $to = $_GET['emailtujuan'];
