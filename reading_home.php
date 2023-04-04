@@ -109,7 +109,7 @@ class ReadingHome
     }
 
     function getUFeMenu() {
-        $sql = "SELECT * from tb_ufemenu";
+        $sql = "SELECT * from tb_ufemenu order by sort";
         $hasil = AFhelper::dbSelectAll($sql);
         AFhelper::kirimJson($hasil);
     }
