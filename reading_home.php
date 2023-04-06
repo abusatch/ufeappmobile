@@ -15,6 +15,9 @@ switch ($mode) {
     case 'logo':
         $reading->logo();
         break;
+    case 'profil':
+        $reading->profil();
+        break;
     case 'artikelambasador':
         $reading->artikelAmbasador();
         break;
@@ -60,6 +63,28 @@ class ReadingHome
         foreach ($data as $r) {
             $hasil[$r->logo_kode] = $r->logo_isi ? "https://ufe-section-indonesie.org/ufeapp/images/logo/".$r->logo_isi : "";
         }
+        AFhelper::kirimJson($hasil);
+    }
+
+    function profil() {
+        $hasil = array();
+        
+        $sql = "SELECT id_version, version_code, build_number, download, download_ios FROM tb_version_code LIMIT 1";
+        $v = AFhelper::dbSelectOne($sql);
+        $hasil['version_code'] = $v->version_code;
+        $hasil['build_number'] = $v->build_number;
+        $hasil['download'] = $v->download;
+        $hasil['download_ios'] = $v->download_ios;
+
+        $sql = "SELECT * FROM user WHERE username = '$_POST[email]' LIMIT 1";
+        $u = AFhelper::dbSelectOne($sql);
+        $hasil['device_id'] = $u->device_id;
+        $hasil['verifikasi_admin'] = $u->verifikasi_admin;
+
+        $sql = "SELECT text_isi FROM tb_text WHERE text_kode = 'blocked'";
+        $t = AFhelper::dbSelectOne($sql);
+        $hasil['blocked_text'] = $t->text_isi;
+        
         AFhelper::kirimJson($hasil);
     }
 
