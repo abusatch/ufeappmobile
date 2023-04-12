@@ -18,6 +18,9 @@ switch ($mode) {
     case 'profil':
         $reading->profil();
         break;
+    case 'saveip':
+        $reading->saveIP();
+        break;
     case 'artikelambasador':
         $reading->artikelAmbasador();
         break;
@@ -81,11 +84,32 @@ class ReadingHome
         $hasil['device_id'] = $u->device_id;
         $hasil['verifikasi_admin'] = $u->verifikasi_admin;
 
-        $sql = "SELECT text_isi FROM tb_text WHERE text_kode = 'blocked'";
+        $sql = "SELECT * FROM tb_tulisan WHERE jenis = 'update_versi'";
         $t = AFhelper::dbSelectOne($sql);
-        $hasil['blocked_text'] = $t->text_isi;
+        $hasil['upgrade_tulisan1'] = $t->tulisan1;
+        $hasil['upgrade_tulisan2'] = $t->tulisan2;
+        $hasil['upgrade_tulisan3'] = $t->tulisan3;
+        $hasil['upgrade_tulisan4'] = $t->tulisan4;
+
+        $sql = "SELECT text_isi FROM tb_text WHERE text_kode = 'verification_rule'";
+        $t = AFhelper::dbSelectOne($sql);
+        $hasil['verification_rule'] = $t->text_isi;
+
+        $sql = "SELECT text_isi FROM tb_text WHERE text_kode = 'two_device_rule'";
+        $t = AFhelper::dbSelectOne($sql);
+        $hasil['two_device_rule'] = $t->text_isi;
+
+        $hasil['url_check_ip'] = 'http://ip-api.com/json';
         
         AFhelper::kirimJson($hasil);
+    }
+
+    function saveIP() {
+        $ip_address = $_POST['query'];
+        $ip_country = $_POST['countryCode'];
+        $ip_city = $_POST['city'];
+        $sql = "UPDATE user SET ip_address = '$ip_address', ip_country = '$ip_country', ip_city = '$ip_city' WHERE username = '$_GET[email]'";
+        AFhelper::dbSave($sql);
     }
 
     function artikelAmbasador() {

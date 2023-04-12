@@ -18,6 +18,9 @@ switch ($mode) {
     case 'delete':
         $reading->delete();
         break;
+    case 'ufecountry':
+        $reading->ufeCountry();
+        break;
     default:
         echo "Mode tidak sesuai";
         break;
@@ -27,13 +30,14 @@ class ReadingUser
 {
     function detil() {
         $email = $_GET['email'];
-        $sql = "SELECT idUser, username, masa_aktif, first_name, second_name, deskripsi, tempat_lahir, tanggal_lahir, phone, mobile, password, 
-                propic, level, kode_vip, member_dari, device_id, token_push, alamat, link_alamat, kota, kodepos, ket2, fax, website, cover, 
-                logo, company, email_company, alamat_company, kota_company, kodepos_company, telp_company, fax_company, mobile_company, employement, 
-                facebook, twitter, instagram, verifikasi, verifikasi_admin, kode_verif, tgl_daftar, tgl_daftar2, warning_member, kirim_email, otp_lupa, 
-                last_online, last_online2, kuota_advert, kuota_terpakai
-            FROM user 
-            WHERE username = '$email'";
+        $sql = "SELECT u.idUser, u.username, u.masa_aktif, u.first_name, u.second_name, u.deskripsi, u.tempat_lahir, u.tanggal_lahir, u.phone, u.mobile, 
+            u.password, u.propic, u.level, u.kode_vip, u.member_dari, u.device_id, u.token_push, u.alamat, u.link_alamat, u.kota, u.kodepos, u.ket2, u.fax, 
+            u.website, u.cover, u.logo, u.company, u.email_company, u.alamat_company, u.kota_company, u.kodepos_company, u.telp_company, u.fax_company, u.mobile_company, 
+            u.employement, u.facebook, u.twitter, u.instagram, u.verifikasi, u.verifikasi_admin, u.kode_verif, u.tgl_daftar, u.tgl_daftar2, u.warning_member, u.kirim_email,
+            u.otp_lupa, u.last_online, u.last_online2, u.kuota_advert, u.kuota_terpakai, u.ip_address, u.ip_country, u.ip_city, c.name AS country_name
+            FROM user u
+            LEFT JOIN country c ON(u.ip_country = c.code)  
+            WHERE u.username = '$email'";
         $data = AFhelper::dbSelectOne($sql);
         $data->propic = $data->propic ? "https://ufe-section-indonesie.org/ufeapp/images/propic/".$data->propic : '';
         AFhelper::kirimJson($data, 'Get Detail User');
@@ -113,6 +117,13 @@ class ReadingUser
         } else {
             AFhelper::kirimJson(null, "Le mot de passe actuel n'est pas correct", 0);
         }
+    }
+
+    function ufeCountry() {
+        $email = $_GET['email'];
+        $sql = "SELECT * from country ORDER BY name";
+        $data = AFhelper::dbSelectAll($sql);
+        AFhelper::kirimJson($data);
     }
 }
 
