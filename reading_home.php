@@ -71,6 +71,7 @@ class ReadingHome
 
     function profil() {
         $hasil = array();
+        $email = $_POST['email'];
         
         $sql = "SELECT id_version, version_code, build_number, download, download_ios FROM tb_version_code LIMIT 1";
         $v = AFhelper::dbSelectOne($sql);
@@ -79,7 +80,7 @@ class ReadingHome
         $hasil['download'] = $v->download;
         $hasil['download_ios'] = $v->download_ios;
 
-        $sql = "SELECT * FROM user WHERE username = '$_POST[email]' LIMIT 1";
+        $sql = "SELECT * FROM user WHERE username = '$email' LIMIT 1";
         $u = AFhelper::dbSelectOne($sql);
         $hasil['device_id'] = $u->device_id;
         $hasil['verifikasi_admin'] = $u->verifikasi_admin;
@@ -98,6 +99,9 @@ class ReadingHome
         $sql = "SELECT text_isi FROM tb_text WHERE text_kode = 'two_device_rule'";
         $t = AFhelper::dbSelectOne($sql);
         $hasil['two_device_rule'] = $t->text_isi;
+        if($email == 'ufe.test@gmail.com' || $email == 'ufe.tester@gmail.com') {
+            $hasil['can_two_device'] = 'Y';
+        }
 
         $hasil['url_check_ip'] = 'http://ip-api.com/json';
         

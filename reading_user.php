@@ -34,9 +34,10 @@ class ReadingUser
             u.password, u.propic, u.level, u.kode_vip, u.member_dari, u.device_id, u.token_push, u.alamat, u.link_alamat, u.kota, u.kodepos, u.ket2, u.fax, 
             u.website, u.cover, u.logo, u.company, u.email_company, u.alamat_company, u.kota_company, u.kodepos_company, u.telp_company, u.fax_company, u.mobile_company, 
             u.employement, u.facebook, u.twitter, u.instagram, u.verifikasi, u.verifikasi_admin, u.kode_verif, u.tgl_daftar, u.tgl_daftar2, u.warning_member, u.kirim_email,
-            u.otp_lupa, u.last_online, u.last_online2, u.kuota_advert, u.kuota_terpakai, u.ip_address, u.ip_country, u.ip_city, c.name AS country_name
+            u.otp_lupa, u.last_online, u.last_online2, u.kuota_advert, u.kuota_terpakai, u.country_id, u.ip_address, u.ip_country, u.ip_city, c.name AS country_name, d.name AS ip_country_name
             FROM user u
-            LEFT JOIN country c ON(u.ip_country = c.code)  
+            LEFT JOIN country c ON(u.country_id = c.code)  
+            LEFT JOIN country d ON(u.ip_country = d.code)  
             WHERE u.username = '$email'";
         $data = AFhelper::dbSelectOne($sql);
         $data->propic = $data->propic ? "https://ufe-section-indonesie.org/ufeapp/images/propic/".$data->propic : '';
