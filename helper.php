@@ -6,6 +6,11 @@ $koneksi->set_charset("utf8mb4");
 
 class AFhelper
 {
+    public static function countryID() {
+      $country_id = $_GET['country_id'] ? $_GET['country_id'] : 'ID';
+      return $country_id;
+    }
+    
     public static function kirimJson($data, string $msg = '', $status = 1)
     {
         $response = array(

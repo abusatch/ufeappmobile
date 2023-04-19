@@ -24,6 +24,9 @@ switch ($mode) {
     case 'artikelambasador':
         $reading->artikelAmbasador();
         break;
+    case 'ufe':
+        $reading->getUFe();
+        break;
     case 'ufemenu':
         $reading->getUFeMenu();
         break;
@@ -50,7 +53,8 @@ class ReadingHome
     }
 
     function text() {
-        $sql = "SELECT text_id, text_kode, text_nama, text_isi FROM tb_text";
+        $country_id = AFhelper::countryID();
+        $sql = "SELECT text_id, text_kode, text_nama, text_isi FROM tb_text WHERE country_id = '$country_id'";
         $data = AFhelper::dbSelectAll($sql);
         $hasil = array();
         foreach ($data as $r) {
@@ -60,7 +64,8 @@ class ReadingHome
     }
 
     function logo() {
-        $sql = "SELECT logo_id, logo_kode, logo_nama, logo_isi FROM tb_logo";
+        $country_id = AFhelper::countryID();
+        $sql = "SELECT logo_id, logo_kode, logo_nama, logo_isi FROM tb_logo WHERE country_id = '$country_id'";
         $data = AFhelper::dbSelectAll($sql);
         $hasil = array();
         foreach ($data as $r) {
@@ -117,9 +122,9 @@ class ReadingHome
     }
 
     function artikelAmbasador() {
+        $country_id = AFhelper::countryID();
         $hasil = array();
-
-        $sql = "SELECT * from user where idUser = '56'";
+        $sql = "SELECT * from user where kode_vip = '$country_id'";
         $user = AFhelper::dbSelectOne($sql);
         $a = array(
             "id_template" => $user->idUser,
@@ -134,7 +139,7 @@ class ReadingHome
         $sql_get_data = "SELECT a.*, b.username, b.first_name, b.second_name, b.propic
         FROM tb_template a
         JOIN user b ON(a.id_member_vip = b.idUser)
-        WHERE a.visibility = '1' AND a.keterangan = 'release' AND a.id_member_vip = '56' ORDER BY a.id_template DESC limit 3";
+        WHERE a.visibility = '1' AND a.keterangan = 'release' AND a.id_member_vip = '$user->idUser' ORDER BY a.id_template DESC limit 3";
 
         $data = AFhelper::dbSelectAll($sql_get_data);
 
@@ -161,8 +166,49 @@ class ReadingHome
         AFhelper::kirimJson($hasil);
     }
 
+    function getUFe() {
+        $country_id = AFhelper::countryID();
+        $sql = "SELECT * from tb_profile_ufe WHERE country_id = '$country_id' LIMIT 1";
+        $r = AFhelper::dbSelectOne($sql);
+        $hasil = [
+            "idUser" => $r->id_profile,
+            "username" => $r->nama_ufe,
+            "first_name" => $r->nama_ufe,
+            "second_name" => $r->nama_ufe,
+            "deskripsi" => AFhelper::formatTextHTML($r->deskripsi),
+            "phone" => $r->telepon,
+            "mobile" => $r->mobile,
+            "propic" => $r->logo_ufe,
+            "token_push" => $r->token_push,
+            "alamat" => $r->alamat,
+            "link_alamat" => $r->link_alamat,
+            "kota" => $r->kota,
+            "kodepos" => $r->kodepos,
+            "ket2" => AFhelper::formatTextHTML($r->deskripsi2),
+            "fax" => $r->fax,
+            "website" => $r->website,
+            "cover" => $r->foto_cover,
+            "logo" => $r->logo_ufe,
+            "company" => $r->company,
+            "email_company" => $r->email,
+            "alamat_company" => $r->alamat,
+            "kota_company" => $r->kota_company,
+            "kodepos_company" => $r->kodepos,
+            "telp_company" => $r->telepon,
+            "fax_company" => $r->fax_company,
+            "mobile_company" => $r->mobile,
+            "facebook" => $r->facebook,
+            "twitter" => $r->twitter,
+            "instagram" => $r->instagram,
+            "datanotfound" => "pas encore de données. si vous avez des informations sur ce programme, merci de contacter notre admin, merci pour votre contribution.",
+          ];
+        
+        AFhelper::kirimJson($hasil);
+    }
+
     function getUFeMenu() {
-        $sql = "SELECT * from tb_ufemenu order by sort";
+        $country_id = AFhelper::countryID();
+        $sql = "SELECT * from tb_ufemenu WHERE country_id = '$country_id' ORDER BY sort";
         $hasil = AFhelper::dbSelectAll($sql);
         AFhelper::kirimJson($hasil);
     }
@@ -224,9 +270,10 @@ class ReadingHome
         $email = $_POST['email'];
         $jenis = $_POST['jenis'];
         $for_id = $_POST['for_id'];
+        $country_id = AFhelper::countryID();
         
-        $sql = "INSERT INTO tb_contribute(email, jenis, for_id, status) 
-            VALUES ('$email', '$jenis', '$for_id', 'R')";
+        $sql = "INSERT INTO tb_contribute(email, jenis, for_id, status, country_id) 
+            VALUES ('$email', '$jenis', '$for_id', 'R', '$country_id')";
         $hasil = AFhelper::dbSaveCek($sql);
         if($hasil[0]) {
             AFhelper::kirimJson(null, "Les données sont enregistrées avec succès, l'administrateur les examinera. Merci pour votre contribution.");
@@ -234,7 +281,6 @@ class ReadingHome
             AFhelper::kirimJson(null, "une erreur de connexion s'est produite ".$hasil[1], 0);
         }
     }
-
 
 }
 

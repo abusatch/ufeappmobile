@@ -1,7 +1,7 @@
 <?php
 
 require_once "helper.php";
-
+$country_id = AFhelper::countryID();
 $email = $_GET['email'];
 $halaman = $_GET['halaman'];
 $jenis = $_GET['jenis'];
@@ -53,7 +53,7 @@ $sql_get_data = "SELECT a.*, b.username, b.first_name, b.second_name, b.propic, 
   LEFT JOIN (
     SELECT id_advert, COUNT(*) AS jumlah_view FROM tb_advert_view GROUP BY id_advert
   ) c ON(a.id_advert = c.id_advert)
-  WHERE a.visibility = '1' $where ORDER BY a.id_advert DESC limit $limit $offset";
+  WHERE a.visibility = '1' AND a.country_id = '$country_id' $where ORDER BY a.id_advert DESC limit $limit $offset";
 
 $data = AFhelper::dbSelectAll($sql_get_data);
 $hasil = array();

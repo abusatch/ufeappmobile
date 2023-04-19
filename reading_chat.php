@@ -96,16 +96,17 @@ class Chat
 
     function onlineUser()
     {
+        $country_id = AFhelper::countryID();
         if($_POST['isonline'] == 'Y') {
-            $where = "isonline = 'Y'";
+            $where = " AND isonline = 'Y'";
         } else if($_POST['isonline'] == 'all') {
             $where = "";
         } else {
-            $where = "isonline <> 'Y' OR isonline IS NULL";
+            $where = " AND (isonline <> 'Y' OR isonline IS NULL)";
         }
         $sql = "SELECT idUser, username, CONCAT(first_name, ' ', second_name) fullname, token_push, propic, last_online2 AS last_seen, isonline 
             FROM user
-            WHERE $where
+            WHERE country_id = '$country_id' $where
             ORDER BY first_name, second_name";
         $data = AFhelper::dbSelectAll($sql);
         $hasil = array();

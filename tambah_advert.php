@@ -2,6 +2,7 @@
 
 require_once "helper.php";
 
+$country_id = AFhelper::countryID();
 $image = $_POST['image'];
 $judul = $_POST['judul'];
 $deskripsi = $_POST['name'];
@@ -35,11 +36,11 @@ if (empty($deskripsi)) {
                     id_category, judul, deskripsi, id_member,
                     gambar, linkweb, tanggal,
                     tanggal2, tanggal_edit2, user_edit,
-                    keterangan, visibility, long_textt) VALUES (
+                    keterangan, visibility, long_textt, country_id) VALUES (
                     '$kategori', '$judul', '$deskripsi', '$idUser',
                     '$path', '$linkweb', '$tanggal',
                     '$tanggal2', '', '$idUser',
-                    'pending', '1', '$image')";
+                    'pending', '1', '$image', '$country_id')";
                 $hasil = AFhelper::dbSaveCek($sql);
                 if($hasil[0]) {
                     AFhelper::kirimJson(null, "Téléchargement réussi..");         

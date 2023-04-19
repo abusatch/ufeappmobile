@@ -32,6 +32,7 @@ switch ($mode) {
 class ReadingNotif
 {
   function lihat() {
+    $country_id = AFhelper::countryID();
     $email = $_GET['email'];
     $halaman = $_GET['halaman'];
     $id_notif = $_GET['id_notif'];
@@ -57,7 +58,7 @@ class ReadingNotif
 
     $sql = "SELECT a.id_notif, a.kategori, a.judul, a.isi, a.keterangan, a.tanggal, a.gambar, a.data, a.kepada, a.dibaca, a.dihapus 
         FROM tb_notification a
-        WHERE 1=1 AND a.dihapus NOT LIKE '%$dibaca%' AND (a.kepada = 'all' OR a.kepada = '$idUser') $where 
+        WHERE a.country_id = '$country_id' AND a.dihapus NOT LIKE '%$dibaca%' AND (a.kepada = 'all' OR a.kepada = '$idUser') $where 
         ORDER BY a.id_notif DESC limit 15 $offset";
 
     $data = AFhelper::dbSelectAll($sql, 'Get Notification');
@@ -114,6 +115,7 @@ class ReadingNotif
   }
 
   function belumdibaca() {
+    $country_id = AFhelper::countryID();
     $email = $_GET['email'];
 
     if(!empty($email)) {
@@ -125,21 +127,25 @@ class ReadingNotif
 
     $sql = "SELECT count(*) AS jumlah
         FROM tb_notification
-        WHERE dihapus NOT LIKE '%$useridstrip%' AND dibaca NOT LIKE '%$useridstrip%' AND (kepada = 'all' OR kepada = '$idUser')";
+        WHERE country_id = '$country_id' AND dihapus NOT LIKE '%$useridstrip%' AND dibaca NOT LIKE '%$useridstrip%' AND (kepada = 'all' OR kepada = '$idUser')";
     $data = AFhelper::dbSelectOne($sql);
     AFhelper::kirimJson($data);  
   }
 
   function reginfo() {
-    $sql = "SELECT id_info, jenis, tanggal, judul, isi, isaktif FROM tb_informasi
-        WHERE jenis = '2' AND isaktif = '1' ORDER BY id_info DESC LIMIT 1";
+    $country_id = AFhelper::countryID();
+    $sql = "SELECT id_info, jenis, tanggal, judul, isi, isaktif 
+        FROM tb_informasi
+        WHERE country_id = '$country_id' AND jenis = '2' AND isaktif = '1' ORDER BY id_info DESC LIMIT 1";
     $data = AFhelper::dbSelectOne($sql);
     AFhelper::kirimJson($data);  
   }
 
   function moninfo() {
-    $sql = "SELECT id_info, jenis, tanggal, judul, isi, isaktif FROM tb_informasi
-        WHERE jenis = '1' AND isaktif = '1' ORDER BY id_info DESC LIMIT 1";
+    $country_id = AFhelper::countryID();
+    $sql = "SELECT id_info, jenis, tanggal, judul, isi, isaktif
+        FROM tb_informasi
+        WHERE country_id = '$country_id' AND jenis = '1' AND isaktif = '1' ORDER BY id_info DESC LIMIT 1";
     $data = AFhelper::dbSelectOne($sql);
     AFhelper::kirimJson($data);  
   }

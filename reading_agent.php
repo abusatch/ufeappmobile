@@ -18,6 +18,7 @@ class ReadingAgent
     function view() {
         $id = $_GET['id'];
         $halaman = $_GET['halaman'];
+        $country_id = AFhelper::countryID();
             
         $where = "AND a.id_kategori = '$_GET[kategori]'";
 
@@ -37,7 +38,7 @@ class ReadingAgent
             FROM tb_agent a
             JOIN tb_demar2 b ON(a.id_kategori = b.id_demar)
             JOIN tb_menu c ON(b.id_kategori = c.id_menu)
-            WHERE a.visibility = '1' $where
+            WHERE a.visibility = '1' AND a.country_id = '$country_id' $where
             ORDER BY a.topsort DESC, a.sorting, a.rating1 DESC, a.rating2 DESC, a.rating3 DESC, a.namaagent, a.id_agent LIMIT 10 $offset";
 
         $data = AFhelper::dbSelectAll($sql);
@@ -111,6 +112,7 @@ class ReadingAgent
         $txt_appstore = $_POST["txt_appstore"];
         $txt_description = AFhelper::formatTextHTML($_POST["txt_description"]);
         $id = $_POST['txt_id'];
+        $country_id = AFhelper::countryID();
     
         date_default_timezone_set('Asia/Jakarta');
     
@@ -190,13 +192,13 @@ class ReadingAgent
                 alamat2agent, kotaagent, kodeposagent, telpagent, mobileagent,
                 emailagent, webagent, fbagent, twiteragent, igagent,
                 waagent, telegramagent, linkedagent, youtubeagent, playstoreagent,
-                appstoreagent, visibility) 
+                appstoreagent, visibility, country_id) 
                 VALUES ('$txt_id_demar', '', '', '', '$txt_description',
                 '', '$nama_image', '$txt_name', '$txt_maps', '$txt_address',
                 '', '$txt_city', '$txt_postal', '$txt_phone', '$txt_mobile',
                 '$txt_email', '$txt_web', '$txt_facebook', '$txt_twitter', '$txt_instagram',
                 '$txt_whatsapp', '$txt_telegram', '$txt_linkedin', '$txt_youtube', '$txt_playstore',
-                '$txt_appstore', '3')";
+                '$txt_appstore', '3', '$country_id')";
             $hasil = AFhelper::dbSaveReturnID($sql);
             if ($hasil <> 0 && $hasil <> '') {
                 AFhelper::kirimJson($hasil, "Les données sont enregistrées avec succès, l'administrateur les examinera. Merci pour votre contribution.");

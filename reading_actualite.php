@@ -45,6 +45,7 @@ class ReadingActualite
   }
 
   function lihat() {
+    $country_id = AFhelper::countryID();
     $halaman = $_GET['halaman'];
     $kategori = $_GET['kategori'];
     $id_actualite = $_GET['id_actualite'];
@@ -75,7 +76,7 @@ class ReadingActualite
         CASE WHEN a.id_kate2 = 2 THEN 'fr' ELSE 'id' END AS jenis, b.nama_kategori
       FROM tb_actualite a
       JOIN tb_kategori_artikel b ON(a.id_kate = b.id_kategori) 
-      where a.visibility = '1' $where 
+      where a.visibility = '1' AND a.country_id = '$country_id' $where 
       ORDER BY a.tanggal DESC LIMIT $limit $offset";
 
     $data = AFhelper::dbSelectAll($sql);

@@ -25,6 +25,7 @@ class ReadingCharity
     $is_ufe = $_GET['is_ufe'];
     $halaman = $_GET['halaman'];
     $limit = $_GET['limit'];
+    $country_id = AFhelper::countryID();
     
     $where = "";
     
@@ -56,7 +57,7 @@ class ReadingCharity
             a.rating1, a.rating2, a.rating3, a.visibility
         FROM tb_agent a
         LEFT JOIN tb_demar_subkategori b ON(a.id_subkategori = b.id_subkategori)
-        WHERE a.visibility = '1' AND a.id_kategori = '99' $where
+        WHERE a.visibility = '1' AND a.id_kategori = '99' AND a.country_id = '$country_id' $where
         ORDER BY a.topsort DESC, a.sorting, a.rating1 DESC, a.rating2 DESC, a.rating3 DESC, a.namaagent, a.id_agent LIMIT $limit $offset";
 
     $data = AFhelper::dbSelectAll($sql);
@@ -106,9 +107,10 @@ class ReadingCharity
   }
 
   function jumlahAgent() {
+    $country_id = AFhelper::countryID();
     $sql = "SELECT COUNT(a.id_agent) as jumlah
         FROM tb_agent a
-        WHERE a.visibility = '1' AND a.id_kategori = '99'";
+        WHERE a.visibility = '1' AND a.id_kategori = '99' AND a.country_id = '$country_id'";
     $data = AFhelper::dbSelectOne($sql);
     AFhelper::kirimJson($data);
   }

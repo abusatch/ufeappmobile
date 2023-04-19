@@ -32,10 +32,11 @@ switch ($mode) {
 class ReadingActivites
 {
     function lihat() {
+        $country_id = AFhelper::countryID();
         $sql = "SELECT id_activites, judul, deskripsi, id_jenis, CONCAT('https://ufe-section-indonesie.org/ufeapp/images/activites/',gambar) AS gambar, gambar2, 
                 harga1, harga2, harga3, tanggal, tanggal2, keterangan, hargaa1, hargaa2, hargaa3, instruktur, ket_instruktur, jadwal1, jadwal2, jadwal3 
             FROM tb_activites 
-            WHERE id_jenis IN(1,2)
+            WHERE id_jenis IN(1,2) AND country_id = '$country_id'
             ORDER BY id_activites DESC";
         $data = AFhelper::dbSelectAll($sql);
         AFhelper::kirimJson($data, 'Get List Activites');
@@ -87,6 +88,7 @@ class ReadingActivites
 
     function mylist() {
         $email = $_GET['email'];
+        $country_id = AFhelper::countryID();
 
         $sql = "SELECT * from user where username = '$email'";
         $user = AFhelper::dbSelectOne($sql);
@@ -96,7 +98,7 @@ class ReadingActivites
             b.harga1, b.harga2, b.harga3, b.tanggal, b.tanggal2, b.keterangan, b.hargaa1, b.hargaa2, b.hargaa3, b.instruktur, b.ket_instruktur, b.jadwal1, b.jadwal2, b.jadwal3 
             FROM tb_user_activites a
             JOIN tb_activites b ON(a.id_activites = b.id_activites)
-            WHERE a.id_user = '$idUser'
+            WHERE a.id_user = '$idUser' AND b.country_id = '$country_id'
             ORDER BY a.registration_date DESC";
         $data = AFhelper::dbSelectAll($sql);
         AFhelper::kirimJson($data, 'Get My List Activites');

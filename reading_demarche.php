@@ -42,6 +42,7 @@ class ReadingDemarche
 {
   function menu() {
     $id = $_GET['id'];
+    $country_id = AFhelper::countryID();
     $where = "";
     if(!empty($id)) {
       $where = "AND a.id_menu = '$id'";
@@ -50,7 +51,7 @@ class ReadingDemarche
     $sql = "SELECT a.id_menu, a.id_kategori, a.jenis, a.nama_menu, a.short_desc, a.long_desc, a.gambar, a.gambar2, a.gambar3, a.bg, a.bg2, a.ket, 
       a.tanggal, a.tanggal2, a.linkweb, a.id_kate, a.menu_bg, a.menu_drop1, a.menu_drop2, a.sort, a.warna 
     FROM tb_menu a
-    WHERE a.jenis = 'DEMARCHES' $where 
+    WHERE a.jenis = 'DEMARCHES' AND a.country_id = '$country_id' $where 
     ORDER BY a.sort";
 
     $data = AFhelper::dbSelectAll($sql);
@@ -174,11 +175,12 @@ class ReadingDemarche
   }
 
   function searchdemar() {
+    $country_id = AFhelper::countryID();
     $sql = "SELECT b.id_demar, b.id_kategori, b.judul, b.judul2, b.short_desc, b.long_desc, b.gambar, b.bg, b.visibility, b.searching,
         a.nama_menu, a.gambar2 AS gambar_kategori, a.warna 
       FROM tb_demar2 b
       JOIN tb_menu a ON(b.id_kategori = a.id_menu) 
-      WHERE b.visibility = '1' AND b.searching = '1'";
+      WHERE b.visibility = '1' AND b.searching = '1' AND a.country_id = '$country_id'";
 
     $data = AFhelper::dbSelectAll($sql);
     $hasil = array();
@@ -331,13 +333,14 @@ class ReadingDemarche
   }
 
   function searchagent() {
+    $country_id = AFhelper::countryID();
     $sql = "SELECT a.id_agent, a.id_kategori, a.judul, a.judul2, a.short_desc, a.long_desc, a.gambar, a.gambar2, a.namaagent, a.gmaps, a.alamatagent, a.alamat2agent, 
             a.kotaagent, a.kodeposagent, a.telpagent, a.mobileagent, a.emailagent, a.webagent, a.fbagent, a.twiteragent, a.igagent, a.waagent, a.telegramagent, a.linkedagent, a.youtubeagent, a.appstoreagent, a.playstoreagent,
             a.rating1, a.rating2, a.rating3, a.visibility, b.judul AS judul_kategori, b.gambar AS gambar_kategori, c.id_menu, c.nama_menu AS judul_menu, c.gambar2 AS gambar_menu, c.warna
         FROM tb_agent a
         JOIN tb_demar2 b ON(a.id_kategori = b.id_demar)
         JOIN tb_menu c ON(b.id_kategori = c.id_menu)
-        WHERE a.visibility = '1' AND a.searching = '1'";
+        WHERE a.visibility = '1' AND a.searching = '1' AND a.country_id = '$country_id'";
 
     $data = AFhelper::dbSelectAll($sql);
     $hasil = array();
@@ -390,6 +393,7 @@ class ReadingDemarche
   }
 
   function searching() {
+    $country_id = AFhelper::countryID();
     $cari = strtolower($_POST['cari']);
     if(empty($cari)) {
       AFhelper::kirimJson(null, "word search cannot be empty", 0);
@@ -398,7 +402,7 @@ class ReadingDemarche
           a.nama_menu, a.gambar2 AS gambar_kategori, a.warna 
         FROM tb_demar2 b
         JOIN tb_menu a ON(b.id_kategori = a.id_menu) 
-        WHERE b.visibility = '1' AND ( LOWER(b.judul) LIKE '%$cari%' OR LOWER(b.long_desc) LIKE '%$cari%' )";
+        WHERE b.visibility = '1' AND a.country_id = '$country_id' AND ( LOWER(b.judul) LIKE '%$cari%' OR LOWER(b.long_desc) LIKE '%$cari%' )";
 
       $data = AFhelper::dbSelectAll($sql);
       $hasil = array();
@@ -426,7 +430,7 @@ class ReadingDemarche
           FROM tb_agent a
           JOIN tb_demar2 b ON(a.id_kategori = b.id_demar)
           JOIN tb_menu c ON(b.id_kategori = c.id_menu)
-          WHERE a.visibility = '1' AND ( LOWER(a.long_desc) LIKE '%$cari%' OR LOWER(a.namaagent) LIKE '%$cari%' OR LOWER(a.alamatagent) LIKE '%$cari%' )";
+          WHERE a.visibility = '1' AND a.country_id = '$country_id' AND ( LOWER(a.long_desc) LIKE '%$cari%' OR LOWER(a.namaagent) LIKE '%$cari%' OR LOWER(a.alamatagent) LIKE '%$cari%' )";
 
       $data2 = AFhelper::dbSelectAll($sql2);
       $hasil2 = array();

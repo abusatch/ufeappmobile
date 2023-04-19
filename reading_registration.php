@@ -50,7 +50,8 @@ class ReadingRegistration
     $sql = "SELECT id_registration, id_user, id_activites, id_harga, harga, payment_status, payment_type, payment_agent, payment_key, 
       payment_notif, payment_notif_date, registration_date, email 
       FROM tb_registration 
-      WHERE id_user = '$idUser' AND id_activites = '$id_activites' AND payment_status = 'pending' ORDER BY id_registration DESC";
+      WHERE id_user = '$idUser' AND id_activites = '$id_activites' AND payment_status = 'pending' 
+      ORDER BY id_registration DESC";
     $regis = AFhelper::dbSelectOne($sql);
     if($regis) {
         $jsresp = json_decode($regis->payment_key);

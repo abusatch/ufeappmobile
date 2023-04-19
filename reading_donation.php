@@ -30,11 +30,12 @@ class ReadingDonation
 {
 
     function lihat() {
+        $country_id = AFhelper::countryID();
         $sql = "SELECT a.id_donation, a.id_user, a.harga, a.payment_status, a.payment_type, a.payment_agent, a.donation_date, a.email,
                 CONCAT(b.first_name,' ',b.second_name) AS username 
             FROM tb_donation a
             JOIN user b ON(a.id_user = b.idUser)
-            WHERE a.payment_status IN('settlement', 'capture')";
+            WHERE a.payment_status IN('settlement', 'capture') AND a.country_id = '$country_id'";
         $data = AFhelper::dbSelectAll($sql);
         AFhelper::kirimJson($data, 'Get List Donation');
     }
@@ -54,12 +55,13 @@ class ReadingDonation
 
     function myPending() {
         $username = $_POST['username'];
+        $country_id = AFhelper::countryID();
         $sql = "SELECT * from user where username = '$username'";
         $user = AFhelper::dbSelectOne($sql);
         $idUser = $user->idUser;
         $sql = "SELECT id_donation, id_user, harga, payment_status, payment_type, payment_agent, payment_key, payment_notif, payment_notif_date, donation_date, email 
             FROM tb_donation 
-            WHERE id_user = '$idUser' AND payment_status = 'pending' ORDER BY id_donation DESC";
+            WHERE id_user = '$idUser' AND payment_status = 'pending' AND country_id = '$country_id' ORDER BY id_donation DESC";
         $donasi = AFhelper::dbSelectOne($sql);
         if($donasi) {
             $jsresp = json_decode($donasi->payment_key);
@@ -95,13 +97,14 @@ class ReadingDonation
         $payment_agent = $_POST['payment_agent'];
         $donation_date = $_POST['donation_date'];
         $harga = $_POST['harga'];
+        $country_id = AFhelper::countryID();
 
         $sql = "SELECT * from user where username = '$username'";
         $user = AFhelper::dbSelectOne($sql);
         $idUser = $user->idUser;
         
-        $sql = "INSERT INTO tb_donation(id_user, harga, payment_type, payment_agent, donation_date, email) 
-        VALUES ('$idUser', '$harga', '$payment_type', '$payment_agent', '$donation_date', '$email')";
+        $sql = "INSERT INTO tb_donation(id_user, harga, payment_type, payment_agent, donation_date, email, country_id) 
+        VALUES ('$idUser', '$harga', '$payment_type', '$payment_agent', '$donation_date', '$email', '$country_id')";
         $hasil = AFhelper::dbSaveReturnID($sql);
         if ($hasil <> 0 && $hasil <> '') {
             $customer = array('first_name' => $user->first_name, 'last_name' => $user->second_name, 'email' => $email, 'phone' => $user->phone);
