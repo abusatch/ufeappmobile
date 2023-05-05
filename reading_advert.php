@@ -2,7 +2,7 @@
 
 require_once "helper.php";
 $country_id = AFhelper::countryID();
-$email = $_GET['email'];
+$username = $_GET['username'];
 $halaman = $_GET['halaman'];
 $jenis = $_GET['jenis'];
 $kategori = $_GET['kategori'];
@@ -11,8 +11,8 @@ $limit = $_GET['limit'];
 
 $where = "";
 
-if(!empty($email)) {
-  $sql = "SELECT * from user where username = '$email'";
+if(!empty($username)) {
+  $sql = "SELECT * from user where username = '$username'";
   $user = AFhelper::dbSelectOne($sql);
   $idUser = $user->idUser;
   $where .= " AND a.id_member = '$idUser'";

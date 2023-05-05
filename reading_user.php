@@ -15,11 +15,23 @@ switch ($mode) {
     case 'changepwd':
         $reading->changePassword();
         break;
+    case 'changeshowprofil':
+        $reading->changeShowProfil();
+        break;
+    case 'changeshowpost':
+        $reading->changeShowPost();
+        break;
+    case 'changeshowchat':
+        $reading->changeShowChat();
+        break;
     case 'delete':
         $reading->delete();
         break;
     case 'ufecountry':
         $reading->ufeCountry();
+        break;
+    case 'addufecountry':
+        $reading->addUfeCountry();
         break;
     default:
         echo "Mode tidak sesuai";
@@ -30,11 +42,7 @@ class ReadingUser
 {
     function detil() {
         $email = $_GET['email'];
-        $sql = "SELECT u.idUser, u.username, u.masa_aktif, u.first_name, u.second_name, u.deskripsi, u.tempat_lahir, u.tanggal_lahir, u.phone, u.mobile, 
-            u.password, u.propic, u.level, u.kode_vip, u.member_dari, u.device_id, u.token_push, u.alamat, u.link_alamat, u.kota, u.kodepos, u.ket2, u.fax, 
-            u.website, u.cover, u.logo, u.company, u.email_company, u.alamat_company, u.kota_company, u.kodepos_company, u.telp_company, u.fax_company, u.mobile_company, 
-            u.employement, u.facebook, u.twitter, u.instagram, u.verifikasi, u.verifikasi_admin, u.kode_verif, u.tgl_daftar, u.tgl_daftar2, u.warning_member, u.kirim_email,
-            u.otp_lupa, u.last_online, u.last_online2, u.kuota_advert, u.kuota_terpakai, u.country_id, u.ip_address, u.ip_country, u.ip_city, c.name AS country_name, d.name AS ip_country_name
+        $sql = "SELECT u.*, c.name AS country_name, d.name AS ip_country_name
             FROM user u
             LEFT JOIN country c ON(u.country_id = c.code)  
             LEFT JOIN country d ON(u.ip_country = d.code)  
@@ -120,11 +128,61 @@ class ReadingUser
         }
     }
 
-    function ufeCountry() {
+    function changeShowProfil() {
         $email = $_GET['email'];
-        $sql = "SELECT * from country ORDER BY name";
+        $nilai = $_POST['nilai'];
+        $sql = "UPDATE user SET show_profil = '$nilai' WHERE username = '$email'";
+        AFhelper::dbSave($sql);
+    }
+
+    function changeShowPost() {
+        $email = $_GET['email'];
+        $nilai = $_POST['nilai'];
+        $sql = "UPDATE user SET show_post = '$nilai' WHERE username = '$email'";
+        AFhelper::dbSave($sql);
+    }
+
+    function changeShowChat() {
+        $email = $_GET['email'];
+        $nilai = $_POST['nilai'];
+        $sql = "UPDATE user SET show_chat = '$nilai' WHERE username = '$email'";
+        AFhelper::dbSave($sql);
+    }
+
+    function ufeCountry() {
+        $arr_status = array(
+            "O" => "demander l'autorisation",
+            "P" => "en attente de confirmation",
+            "A" => "autorisation approuvée",
+            "R" => "autorisation refusée",
+        );
+        $email = $_GET['email'];
+        $sql = "SELECT * from user where username = '$email'";
+        $user = AFhelper::dbSelectOne($sql);
+
+        $sql = "SELECT c.code, c.dial_code, c.code_3, c.name_french AS name , COALESCE(b.status, 'O') AS status
+            FROM country c
+            LEFT JOIN user_country b ON(c.code = b.country_code AND b.username = '$email')
+            WHERE c.is_active = 'Y' 
+            ORDER BY c.name_french";
         $data = AFhelper::dbSelectAll($sql);
-        AFhelper::kirimJson($data);
+        $hasil = array();
+        foreach ($data as $r) {
+            if($r->code == $user->country_id) {
+                $r->status = 'A';
+            }
+            $r->status_label = $arr_status[$r->status];
+            array_push($hasil, $r);
+        }
+        AFhelper::kirimJson($hasil);
+    }
+
+    function addUfeCountry() {
+        $email = $_GET['email'];
+        $country_code = $_GET['country_code'];
+        $sql = "INSERT INTO user_country (username, country_code, status) 
+            VALUES ('$email', '$country_code', 'P')";
+        AFhelper::dbSave($sql, null, "autorisation appliquée avec succès");
     }
 }
 
